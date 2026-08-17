@@ -1,38 +1,23 @@
-import { getEnumValues, OptionsSpecV2 } from '@gamepark/rules-api'
-import { PlayerColor } from './PlayerColor'
-
-/**
- * This is the options for each player in the game.
- */
-type PlayerOptions = { id: PlayerColor }
+import { OptionsSpecV2 } from '@gamepark/rules-api'
 
 /**
  * This is the type of object that the game receives when a new game is started.
- * The first generic parameter, "{}", can be changed to include game options like variants or expansions.
+ * Aurealis has no player identity and no variant, so there is nothing to configure.
  */
-export type AurealisOptions = {
-  players: PlayerOptions[]
-}
+export type AurealisOptions = object
 
 /**
- * The structure of everything a host can choose before the game starts — and nothing else.
+ * The option space of aurealis: structure only.
  *
- * Two things are deliberately absent, both because they change without the game changing:
+ * Labels live in the game's presentation document, published beside its translations at
+ * `/options/<locale>.json` and keyed by convention. Subscription and competitive gates live in
+ * the platform database, so they can change without releasing the game again.
  *
- * - **Text.** No labels, no help. They live in `app/public/options/<locale>.json`, published beside the
- *   game's translations and keyed by convention: `option.<option>`, `option.<option>.<value>`,
- *   `identities.<value>`, plus optional `.help` variants. See the files in that folder.
- * - **Subscription and competitive gates.** Which options require a subscription, and which are allowed
- *   in ranked play, are the platform's decisions. They live in its database and are edited there.
- *
- * The declaration is plain JSON on purpose: the platform snapshots it when the bundle is prepared, so
- * every screen reads the option space without downloading and running a game bundle.
- *
- * `players` must match the range declared for the game on the platform — it is the root that every other
- * range narrows, and a disagreement silently changes which tables exist.
+ * The game has no `identities`: nothing in the box tells the players apart — the Archéologue
+ * pawns are all one colour, and every component is either shared or lives in a player's own
+ * space. Game Park assigns the player ids 1, 2, ... itself.
  */
 export const AurealisOptionsSpecV2: OptionsSpecV2 = {
   specVersion: 2,
-  players: { min: 2, max: 4 },
-  identities: { values: getEnumValues(PlayerColor) }
+  players: { min: 2, max: 2 }
 }
