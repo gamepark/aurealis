@@ -1,3 +1,3 @@
-export { GameTemplateRules } from './GameTemplateRules'
-export { GameTemplateOptionsSpecV2 } from './GameTemplateOptions'
-export { GameTemplateSetup } from './GameTemplateSetup'
+export { AurealisRules } from './AurealisRules'
+export { AurealisOptionsSpecV2 } from './AurealisOptions'
+export { AurealisSetup } from './AurealisSetup'

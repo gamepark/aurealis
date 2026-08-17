@@ -1,6 +1,6 @@
-import { GameTemplateOptionsSpecV2 } from '@gamepark/game-template/GameTemplateOptions'
-import { GameTemplateRules } from '@gamepark/game-template/GameTemplateRules'
-import { GameTemplateSetup } from '@gamepark/game-template/GameTemplateSetup'
+import { AurealisOptionsSpecV2 } from '@gamepark/aurealis/AurealisOptions'
+import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
+import { AurealisSetup } from '@gamepark/aurealis/AurealisSetup'
 import { GameProvider } from '@gamepark/react-game'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -12,10 +12,10 @@ import { Material } from './material/Material'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GameProvider
-      game="game-template"
-      Rules={GameTemplateRules}
-      optionsSpec={GameTemplateOptionsSpecV2}
-      GameSetup={GameTemplateSetup}
+      game="aurealis"
+      Rules={AurealisRules}
+      optionsSpec={AurealisOptionsSpecV2}
+      GameSetup={AurealisSetup}
       material={Material}
       locators={Locators}
       animations={gameAnimations}

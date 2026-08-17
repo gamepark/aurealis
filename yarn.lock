@@ -573,18 +573,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gamepark/avataaars@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@gamepark/avataaars@npm:3.0.0"
-  peerDependencies:
-    react: ">=18"
-  checksum: 10c0/52b8ba5c804908f61f9b7a12bce44d9e1c55025c290a327d103b70549f0fe4ed0332a4a0ed9a10b3c93543c58194b80534fb743b7ad515fd2fee53c5cb422ba1
-  languageName: node
-  linkType: hard
-
-"@gamepark/game-template-app@workspace:app":
+"@gamepark/aurealis-app@workspace:app":
   version: 0.0.0-use.local
-  resolution: "@gamepark/game-template-app@workspace:app"
+  resolution: "@gamepark/aurealis-app@workspace:app"
   dependencies:
     "@dnd-kit/core": "npm:~6.3.1"
     "@emotion/react": "npm:^11.14.0"
@@ -618,18 +609,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gamepark/game-template@workspace:rules":
+"@gamepark/aurealis@workspace:rules":
   version: 0.0.0-use.local
-  resolution: "@gamepark/game-template@workspace:rules"
+  resolution: "@gamepark/aurealis@workspace:rules"
   dependencies:
+    "@eslint/js": "npm:^10.0.1"
     "@gamepark/rules-api": "npm:~7.7.2"
+    "@typescript/native": "npm:typescript@^7.0.2"
     es-toolkit: "npm:^1.50.0"
+    eslint: "npm:^10.8.1"
+    globals: "npm:^17.11.0"
+    typescript: "npm:@typescript/typescript6@^6.0.2"
+    typescript-eslint: "npm:^8.67.0"
     vitest: "npm:^4.1.10"
   peerDependencies:
     "@gamepark/rules-api": ">=7.7"
     es-toolkit: ^1.45.1
   languageName: unknown
   linkType: soft
+
+"@gamepark/avataaars@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@gamepark/avataaars@npm:3.0.0"
+  peerDependencies:
+    react: ">=18"
+  checksum: 10c0/52b8ba5c804908f61f9b7a12bce44d9e1c55025c290a327d103b70549f0fe4ed0332a4a0ed9a10b3c93543c58194b80534fb743b7ad515fd2fee53c5cb422ba1
+  languageName: node
+  linkType: hard
 
 "@gamepark/react-client@npm:^7.7.6":
   version: 7.7.7

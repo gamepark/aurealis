@@ -1,6 +1,6 @@
-# Game Park - Board Game Template
+# Aurealis
 
-Template to adapt board games for [Game Park](https://game-park.com/).
+Adaptation of **Aurealis** (La Boite de Jeu) for [Game Park](https://game-park.com/).
 
 ## Documentation
 
@@ -8,7 +8,6 @@ Template to adapt board games for [Game Park](https://game-park.com/).
 
 ## Prerequisites
 
-- Agreement with Game Park for the game to adapt
 - [Git](https://git-scm.com/) and [GitHub](https://github.com/) account
 - [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/)
 
@@ -29,14 +28,6 @@ game.monkeyOpponents(true) // Opponents play automatically
 game.undo()               // Undo last move
 ```
 
-## Project Setup
-
-Search and replace in all files:
-
-- `Game Template` → `Your Game Name`
-- `GameTemplate` → `YourGameName`
-- `game-template` → `your-game-name`
-
 ## Deployment
 
 Rules are deployed by the Game Park team.
@@ -46,7 +37,7 @@ To deploy the React app, install [rclone](https://rclone.org/) then configure:
 ```
 rclone config
 > n
-name> game-template
+name> aurealis
 Storage> s3
 provider> Other
 env_auth> false
