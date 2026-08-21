@@ -1,1 +1,41 @@
-export enum LocationType {}
+export enum LocationType {
+  /** The 5 Adventurer cards a player holds on their card stand. Backs face the opponent. */
+  PlayerHand = 1,
+  /** The face-down Adventurer draw pile, between the two players. */
+  AdventurerDeck,
+  /** The 4 face-down Adventurer cards beside the deck. With the deck they form the "river" of 5 backs. */
+  AdventurerRiver,
+  /** Face-up discard, kept apart from the deck so the two piles stay distinguishable. */
+  AdventurerDiscard,
+
+  /** The face-up Jungle draw pile. */
+  JungleDeck,
+  /** The 2 Jungle cards beside the deck. With the deck they form the market of 3. */
+  JungleMarket,
+  /** A player's row of Jungle cards, growing rightwards from the Camp de base. `x` is the position. */
+  PlayerJungle,
+
+  /** The Camp de base card in front of a player's stand. */
+  BaseCamp,
+
+  /** Archaeologist slots printed on a Jungle card (`parent` is the card, `x` the slot). */
+  JungleArchaeologistSpace,
+  /** Animal slots printed on a Jungle card (`parent` is the card, `x` the slot). */
+  JungleAnimalSpace,
+  /** The Dig Site bonus space of a Jungle card (`parent` is the card). */
+  JungleDigSiteBonus,
+  /** The Animal bonus space of a Jungle card (`parent` is the card). */
+  JungleAnimalBonus,
+
+  /** The 4 Temple tiles drawn for the game, under the Jungle market. */
+  TempleTilesRow,
+  /** The 4 Fame tiles, under the Temple tiles. Fame tiles move from one player to the other. */
+  FameTilesRow,
+  /** Discovery and Fame tiles won by a player: 7 of them ends the game. */
+  PlayerTiles,
+  /** A player's gold. One Coin item per denomination, each carrying a quantity. */
+  PlayerCoins,
+
+  /** The general supply everyone draws from: coins, Dig Site and Animal pawns, Relic and Legendary Animal tiles. */
+  Reserve
+}
