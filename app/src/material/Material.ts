@@ -4,6 +4,7 @@ import { adventurerCardDescription } from './AdventurerCardDescription'
 import { baseCampCardDescription } from './BaseCampCardDescription'
 import { coinDescription } from './CoinDescription'
 import { jungleCardDescription } from './JungleCardDescription'
+import { animalPawnDescription, archaeologistPawnDescription, digSitePawnDescription } from './PawnDescriptions'
 import {
   fameTileDescription,
   instantVictoryTileDescription,
@@ -12,10 +13,6 @@ import {
   templeTileDescription
 } from './TileDescriptions'
 
-/**
- * The Archaeologist, Dig Site and Animal pawns are missing: they are moulded pieces, and no artwork
- * for them came with the print files, so they have no description yet.
- */
 export const Material: Partial<Record<MaterialType, MaterialDescription>> = {
   [MaterialType.AdventurerCard]: adventurerCardDescription,
   [MaterialType.JungleCard]: jungleCardDescription,
@@ -25,5 +22,8 @@ export const Material: Partial<Record<MaterialType, MaterialDescription>> = {
   [MaterialType.RelicTile]: relicTileDescription,
   [MaterialType.LegendaryAnimalTile]: legendaryAnimalTileDescription,
   [MaterialType.InstantVictoryTile]: instantVictoryTileDescription,
-  [MaterialType.Coin]: coinDescription
+  [MaterialType.Coin]: coinDescription,
+  [MaterialType.ArchaeologistPawn]: archaeologistPawnDescription,
+  [MaterialType.DigSitePawn]: digSitePawnDescription,
+  [MaterialType.AnimalPawn]: animalPawnDescription
 }
