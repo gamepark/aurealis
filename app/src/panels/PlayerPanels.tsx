@@ -2,6 +2,10 @@ import { css } from '@emotion/react'
 import { StyledPlayerPanel, usePlayers } from '@gamepark/react-game'
 import { createPortal } from 'react-dom'
 
+/**
+ * Each panel sits at the left end of its owner's row of cards, in the space left empty for it there:
+ * mine along the bottom edge of the table, my opponent's along the top one.
+ */
 export const PlayerPanels = () => {
   const players = usePlayers<number>({ sortFromMe: true })
   const root = document.getElementById('root')
@@ -19,9 +23,17 @@ export const PlayerPanels = () => {
   )
 }
 
-const panelPosition = (index: number) => css`
-  position: absolute;
-  right: 1em;
-  top: ${8.5 + index * 16}em;
-  width: 28em;
-`
+const panelPosition = (index: number) =>
+  index === 0
+    ? css`
+        position: absolute;
+        left: 2em;
+        bottom: 2em;
+        width: 28em;
+      `
+    : css`
+        position: absolute;
+        left: 2em;
+        top: 9em;
+        width: 28em;
+      `

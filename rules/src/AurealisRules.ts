@@ -1,4 +1,13 @@
-import { hideFront, hideFrontToOthers, MaterialGame, MaterialMove, SecretMaterialRules, TimeLimit } from '@gamepark/rules-api'
+import {
+  FillGapStrategy,
+  hideFront,
+  hideFrontToOthers,
+  MaterialGame,
+  MaterialMove,
+  PositiveSequenceStrategy,
+  SecretMaterialRules,
+  TimeLimit
+} from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { RuleId } from './rules/RuleId'
@@ -13,8 +22,7 @@ import { TheFirstStepRule } from './rules/TheFirstStepRule'
  */
 export class AurealisRules
   extends SecretMaterialRules<number, MaterialType, LocationType>
-  implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number>
-{
+  implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
   rules = {
     [RuleId.TheFirstStep]: TheFirstStepRule
   }
@@ -35,7 +43,30 @@ export class AurealisRules
     }
   }
 
-  locationsStrategies = {}
+  /**
+   * Every pile and every row where items simply follow one another keeps a `x` sequence: it is what
+   * orders a deck (the top card is the highest `x`), and what the display needs to tell two items of
+   * the same location apart instead of stacking them all at its first spot.
+   *
+   * The river and the market are the other case: their slots are fixed, so a card taken leaves its
+   * slot empty until the next one comes and fills the gap.
+   */
+  locationsStrategies = {
+    [MaterialType.AdventurerCard]: {
+      [LocationType.AdventurerDeck]: new PositiveSequenceStrategy(),
+      [LocationType.AdventurerDiscard]: new PositiveSequenceStrategy(),
+      [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
+      [LocationType.AdventurerRiver]: new FillGapStrategy()
+    },
+    [MaterialType.JungleCard]: {
+      [LocationType.JungleDeck]: new PositiveSequenceStrategy(),
+      [LocationType.PlayerJungle]: new PositiveSequenceStrategy(),
+      [LocationType.JungleMarket]: new FillGapStrategy()
+    },
+    [MaterialType.ArchaeologistPawn]: {
+      [LocationType.BaseCampArchaeologists]: new FillGapStrategy()
+    }
+  }
 
   giveTime(): number {
     return 60

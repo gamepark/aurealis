@@ -37,12 +37,20 @@ class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType
   image = archaeologist
 }
 
+/**
+ * The general supply is treated as inexhaustible: its pawns are static items of their description,
+ * shown on the table but absent from the game state, and a pawn only becomes an item of the game
+ * once it is on a card. The rulebook never says what happens when the box runs out (it only rules
+ * on an empty Adventurer deck and on unavailable Temple tiles), so nothing here may depend on the
+ * count — the quantities are the box's, so that the heap looks right, not so that it can empty.
+ */
 class DigSitePawnDescription extends TokenDescription<number, MaterialType, LocationType> {
   transparency = true
   width = 1.7
   height = 1.7
   image = digSite
   stockLocation = { type: LocationType.Reserve }
+  staticItems = [{ quantity: 6, location: this.stockLocation }]
 }
 
 class AnimalPawnDescription extends RoundTokenDescription<number, MaterialType, LocationType> {
@@ -50,6 +58,7 @@ class AnimalPawnDescription extends RoundTokenDescription<number, MaterialType, 
   diameter = 1
   image = animal
   stockLocation = { type: LocationType.Reserve }
+  staticItems = [{ quantity: 16, location: this.stockLocation }]
 }
 
 export const archaeologistPawnDescription = new ArchaeologistPawnDescription()

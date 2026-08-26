@@ -17,6 +17,11 @@ export enum LocationType {
 
   /** The Camp de base card in front of a player's stand. */
   BaseCamp,
+  /**
+   * The Archaeologist pawns still waiting on a player's Camp de base: the 7 they start with, minus
+   * those already sent into the jungle. Nothing is printed under them, they simply sit on the card.
+   */
+  BaseCampArchaeologists,
 
   /** Archaeologist slots printed on a Jungle card (`parent` is the card, `x` the slot). */
   JungleArchaeologistSpace,

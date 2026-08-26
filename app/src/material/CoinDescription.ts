@@ -21,7 +21,7 @@ class CoinDescription extends MoneyDescription {
   }
 
   getSize(itemId: number): ComponentSize {
-    return itemId === 3 ? { width: 2.93, height: 3.11 } : { width: 2.14, height: 2.24 }
+    return itemId === 3 ? { width: 2.9, height: 2.6 } : { width: 2, height: 2.2 }
   }
 
   stockLocation = { type: LocationType.Reserve }
