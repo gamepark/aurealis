@@ -1,4 +1,5 @@
 import {
+  CompetitiveRank,
   FillGapStrategy,
   hideFront,
   hideFrontToOthers,
@@ -10,8 +11,18 @@ import {
 } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
+import { Memory } from './Memory'
+import { AcquireJungleRule } from './rules/AcquireJungleRule'
+import { BaseCampDiscardRule } from './rules/BaseCampDiscardRule'
+import { CheckFameRule } from './rules/CheckFameRule'
+import { ChooseActionRule } from './rules/ChooseActionRule'
+import { ChooseTempleTileRule } from './rules/ChooseTempleTileRule'
+import { MoveArchaeologistsRule } from './rules/MoveArchaeologistsRule'
+import { PlaceAnimalsRule } from './rules/PlaceAnimalsRule'
+import { RefillHandRule } from './rules/RefillHandRule'
+import { ResolveEffectsRule } from './rules/ResolveEffectsRule'
 import { RuleId } from './rules/RuleId'
-import { TheFirstStepRule } from './rules/TheFirstStepRule'
+import { SendArchaeologistsRule } from './rules/SendArchaeologistsRule'
 
 /**
  * This class implements the rules of the board game.
@@ -22,9 +33,19 @@ import { TheFirstStepRule } from './rules/TheFirstStepRule'
  */
 export class AurealisRules
   extends SecretMaterialRules<number, MaterialType, LocationType>
-  implements TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number> {
+  implements CompetitiveRank<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>, number>,
+    TimeLimit<MaterialGame<number, MaterialType, LocationType>, MaterialMove<number, MaterialType, LocationType>> {
   rules = {
-    [RuleId.TheFirstStep]: TheFirstStepRule
+    [RuleId.ChooseAction]: ChooseActionRule,
+    [RuleId.BaseCampDiscard]: BaseCampDiscardRule,
+    [RuleId.ResolveEffects]: ResolveEffectsRule,
+    [RuleId.MoveArchaeologists]: MoveArchaeologistsRule,
+    [RuleId.SendArchaeologists]: SendArchaeologistsRule,
+    [RuleId.PlaceAnimals]: PlaceAnimalsRule,
+    [RuleId.AcquireJungle]: AcquireJungleRule,
+    [RuleId.ChooseTempleTile]: ChooseTempleTileRule,
+    [RuleId.CheckFame]: CheckFameRule,
+    [RuleId.RefillHand]: RefillHandRule
   }
 
   /**
@@ -39,6 +60,7 @@ export class AurealisRules
     [MaterialType.AdventurerCard]: {
       [LocationType.AdventurerDeck]: hideFront,
       [LocationType.AdventurerRiver]: hideFront,
+      [LocationType.DrawnCards]: hideFront,
       [LocationType.PlayerHand]: hideFrontToOthers
     }
   }
@@ -55,6 +77,7 @@ export class AurealisRules
     [MaterialType.AdventurerCard]: {
       [LocationType.AdventurerDeck]: new PositiveSequenceStrategy(),
       [LocationType.AdventurerDiscard]: new PositiveSequenceStrategy(),
+      [LocationType.DrawnCards]: new PositiveSequenceStrategy(),
       [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
       [LocationType.AdventurerRiver]: new FillGapStrategy()
     },
@@ -64,8 +87,25 @@ export class AurealisRules
       [LocationType.JungleMarket]: new FillGapStrategy()
     },
     [MaterialType.ArchaeologistPawn]: {
-      [LocationType.BaseCampArchaeologists]: new FillGapStrategy()
+      [LocationType.BaseCampArchaeologists]: new FillGapStrategy(),
+      [LocationType.JungleArchaeologistSpace]: new PositiveSequenceStrategy(),
+      [LocationType.JungleExtraArchaeologists]: new FillGapStrategy()
+    },
+    [MaterialType.AnimalPawn]: {
+      [LocationType.JungleAnimalSpace]: new PositiveSequenceStrategy()
     }
+  }
+
+  /**
+   * There is one winner and no score: the game stops the moment someone has 7 tiles at the start of
+   * their turn, or reaches their third Temple tile. The rule that ended it is gone by the time the
+   * players are ranked, hence the memory.
+   */
+  rankPlayers(playerA: number, playerB: number): number {
+    const winner = this.remind<number>(Memory.Winner)
+    if (playerA === winner) return -1
+    if (playerB === winner) return 1
+    return 0
   }
 
   giveTime(): number {

@@ -2,6 +2,7 @@ import { MaterialGameSetup } from '@gamepark/rules-api'
 import { shuffle } from 'es-toolkit'
 import { AurealisOptions } from './AurealisOptions'
 import { AurealisRules } from './AurealisRules'
+import { HAND_SIZE, JUNGLE_MARKET_SIZE, RIVER_SIZE } from './Constants'
 import { adventurers, getAdventurerId } from './material/Adventurer'
 import { baseCamps } from './material/BaseCamp'
 import { coins } from './material/Coin'
@@ -13,14 +14,8 @@ import { MaterialType } from './material/MaterialType'
 import { temples } from './material/Temple'
 import { RuleId } from './rules/RuleId'
 
-/** Cards each player holds on their stand (rulebook p.2, step 1). */
-const HAND_SIZE = 5
 /** Archaeologist pawns each player starts with, waiting on their Camp de base (step 2). */
 const ARCHAEOLOGISTS_PER_PLAYER = 7
-/** Adventurer cards laid beside the deck: with the deck's own back, the river shows 5 backs (step 4). */
-const RIVER_SIZE = 4
-/** Jungle cards laid beside the deck: with the deck's face-up top card, the market shows 3 (step 6). */
-const JUNGLE_MARKET_SIZE = 2
 /** Temple tiles drawn among the 6; the other 2 go back in the box (step 7). */
 const TEMPLE_TILES = 4
 const RELIC_TILES = 9
@@ -121,17 +116,17 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
    */
   setupSecondPlayerHeadStart(player: number) {
     const parent = this.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).getIndex()
-    // The 7 pawns of a Camp de base are one item carrying a quantity, so the move takes a single one out of the stack.
+    // The 7 pawns of a Camp de base are 7 items, each with a spot of its own on the card: one leaves.
     this.material(MaterialType.ArchaeologistPawn)
       .location(LocationType.BaseCampArchaeologists)
       .player(player)
       .limit(1)
-      .moveItem({ type: LocationType.JungleArchaeologistSpace, parent, x: 0 }, 1)
+      .moveItem({ type: LocationType.JungleArchaeologistSpace, parent, x: 0 })
     // The Animal pawn comes from the inexhaustible supply, which holds no item: it is born on the card.
     this.material(MaterialType.AnimalPawn).createItem({ location: { type: LocationType.JungleAnimalSpace, parent, x: 0 } })
   }
 
   start() {
-    this.startPlayerTurn(RuleId.TheFirstStep, this.players[0])
+    this.startPlayerTurn(RuleId.ChooseAction, this.players[0])
   }
 }

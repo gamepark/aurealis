@@ -1,1 +1,44 @@
-{}
+{
+  "header": {
+    "choose-action": {
+      "you": "Jouez une carte Aventurier, construisez un Site de fouilles ou réalisez une action de votre Camp de base",
+      "player": "{player} réalise son action"
+    },
+    "base-camp-discard": {
+      "you": "Défaussez {count, plural, one {# carte Aventurier} other {# cartes Aventurier}} pour l'action de votre Camp de base",
+      "player": "{player} défausse {count, plural, one {# carte Aventurier} other {# cartes Aventurier}}"
+    },
+    "choose-effect": {
+      "you": "Choisissez l'un des deux gains de la carte",
+      "player": "{player} choisit l'un des deux gains de sa carte"
+    },
+    "move-archaeologists": {
+      "you": "Déplacez vos Archéologues sur une carte voisine : {count, plural, one {# déplacement} other {# déplacements}} <pass>Passer</pass>",
+      "player": "{player} déplace ses Archéologues"
+    },
+    "move-archaeologists-or-gold": {
+      "you": "{count, plural, one {# déplacement d'Archéologue} other {# déplacements d'Archéologue}} : déplacez vos pions, ou <gold>prenez le reste en Pièces d'or</gold>",
+      "player": "{player} répartit ses déplacements d'Archéologue et ses Pièces d'or"
+    },
+    "send-archaeologists": {
+      "you": "Envoyez {count, plural, one {# Archéologue} other {# Archéologues}} sur les cartes Jungle de votre choix",
+      "player": "{player} envoie ses Archéologues dans la jungle"
+    },
+    "place-animals": {
+      "you": "Placez {count, plural, one {# pion Animal} other {# pions Animal}} sur vos cartes Jungle",
+      "player": "{player} place ses pions Animal"
+    },
+    "acquire-jungle": {
+      "you": "{cost, plural, =0 {Prenez une carte Jungle} one {Achetez une carte Jungle pour # Pièce d'or} other {Achetez une carte Jungle pour # Pièces d'or}}",
+      "player": "{player} choisit une carte Jungle"
+    },
+    "choose-temple-tile": {
+      "you": "Choisissez une tuile Temple et appliquez son effet",
+      "player": "{player} choisit une tuile Temple"
+    },
+    "refill-hand": {
+      "you": "Complétez votre main : choisissez {count, plural, one {# carte} other {# cartes}} dans la rivière, sans en regarder le recto",
+      "player": "{player} complète sa main de cartes"
+    }
+  }
+}

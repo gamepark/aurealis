@@ -5,7 +5,19 @@ export enum LocationType {
   AdventurerDeck,
   /** The 4 face-down Adventurer cards beside the deck. With the deck they form the "river" of 5 backs. */
   AdventurerRiver,
-  /** Face-up discard, kept apart from the deck so the two piles stay distinguishable. */
+  /**
+   * The cards a player is drawing at the end of their turn, laid just above their stand, still face
+   * down — to themselves as well as to their opponent. "Sélectionnez vos cartes d'un seul coup, sans
+   * les remplacer ni regarder leurs effets" (rulebook p.11): the 3 cards drawn after a Camp de base
+   * action are picked among the same 5 backs, and one of them cannot be read before the next is
+   * chosen. They all turn over together, once the hand is full.
+   */
+  DrawnCards,
+  /**
+   * Face-up discard, kept apart from the deck so the two piles stay distinguishable. A card being
+   * played goes there straight away rather than waiting somewhere in between: the pile is face up,
+   * so it lies on top of it in plain sight for as long as its effects are being resolved.
+   */
   AdventurerDiscard,
 
   /** The face-up Jungle draw pile. */
@@ -25,6 +37,13 @@ export enum LocationType {
 
   /** Archaeologist slots printed on a Jungle card (`parent` is the card, `x` the slot). */
   JungleArchaeologistSpace,
+  /**
+   * The Archaeologists standing on a Jungle card outside its printed slots: the ones that arrived
+   * once the slots were full, and the ones left on a card turned onto its completed face, which has
+   * no slot at all. They gather in the middle of the card, the way the team waits on the Camp de
+   * base — and for the same reason: they are on the card, but not on anything printed.
+   */
+  JungleExtraArchaeologists,
   /** Animal slots printed on a Jungle card (`parent` is the card, `x` the slot). */
   JungleAnimalSpace,
   /** The Dig Site bonus space of a Jungle card (`parent` is the card). */

@@ -1,5 +1,22 @@
 import { getRelativePlayerIndex, MaterialContext } from '@gamepark/react-game'
 import { Location, XYCoordinates } from '@gamepark/rules-api'
+import { ARCHAEOLOGISTS_HEX_RADIUS } from './TableLayout'
+
+/**
+ * The flat-topped hexagon a team of Archaeologists standing on a card forms: the first pawn in the
+ * middle, the 6 others on the ring around them, the first of those due right and the rest every
+ * sixth of a turn from there. Flat-topped means the two vertices are the ones left and right, so the
+ * team is wider than it is tall — the way round that suits a card standing upright.
+ *
+ * Given as an offset from the middle of the team, so that it serves the Camp de base and the middle
+ * of a Jungle card alike: an Archaeologist is either on something printed, or standing with the
+ * others in the middle of the card.
+ */
+export const archaeologistsHexagon = (index: number): XYCoordinates => {
+  if (index <= 0) return { x: 0, y: 0 }
+  const angle = ((index - 1) * Math.PI) / 3
+  return { x: ARCHAEOLOGISTS_HEX_RADIUS * Math.cos(angle), y: ARCHAEOLOGISTS_HEX_RADIUS * Math.sin(angle) }
+}
 
 /** True for the player looking at the table, whose area is displayed at the bottom. */
 export const isNearPlayer = (location: Location, context: MaterialContext) => getRelativePlayerIndex(context, location.player) === 0

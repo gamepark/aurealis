@@ -10,11 +10,18 @@ import {
   jungleMarketLocator,
   templeTilesRowLocator
 } from './CommonLocators'
-import { jungleAnimalBonusLocator, jungleAnimalSpaceLocator, jungleArchaeologistSpaceLocator, jungleDigSiteBonusLocator } from './JungleCardLocators'
+import {
+  jungleAnimalBonusLocator,
+  jungleAnimalSpaceLocator,
+  jungleArchaeologistSpaceLocator,
+  jungleDigSiteBonusLocator,
+  jungleExtraArchaeologistsLocator
+} from './JungleCardLocators'
 import {
   baseCampArchaeologistsLocator,
   baseCampLocator,
   playerCoinsLocator,
+  playerDrawnCardsLocator,
   playerHandLocator,
   playerJungleLocator,
   playerTilesLocator
@@ -25,6 +32,7 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
   [LocationType.PlayerHand]: playerHandLocator,
   [LocationType.AdventurerDeck]: adventurerDeckLocator,
   [LocationType.AdventurerRiver]: adventurerRiverLocator,
+  [LocationType.DrawnCards]: playerDrawnCardsLocator,
   [LocationType.AdventurerDiscard]: adventurerDiscardLocator,
   [LocationType.JungleDeck]: jungleDeckLocator,
   [LocationType.JungleMarket]: jungleMarketLocator,
@@ -32,6 +40,7 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
   [LocationType.BaseCamp]: baseCampLocator,
   [LocationType.BaseCampArchaeologists]: baseCampArchaeologistsLocator,
   [LocationType.JungleArchaeologistSpace]: jungleArchaeologistSpaceLocator,
+  [LocationType.JungleExtraArchaeologists]: jungleExtraArchaeologistsLocator,
   [LocationType.JungleAnimalSpace]: jungleAnimalSpaceLocator,
   [LocationType.JungleDigSiteBonus]: jungleDigSiteBonusLocator,
   [LocationType.JungleAnimalBonus]: jungleAnimalBonusLocator,

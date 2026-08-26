@@ -122,6 +122,14 @@ export const PLAYER_HAND: XYCoordinates = { x: -20.1, y: 11.7 }
 export const PLAYER_HAND_RADIUS = 400
 export const PLAYER_HAND_MAX_ANGLE = 2.5
 
+/**
+ * The cards a player is drawing, laid out just above their stand for as long as they are choosing
+ * them. They lie face down — their owner cannot read them either — so they are laid in a row rather
+ * than fanned, and they start right of the tiles a player is likely to hold at that point.
+ */
+export const PLAYER_DRAWN_CARDS: XYCoordinates = { x: -22, y: 6.4 }
+export const PLAYER_DRAWN_CARDS_GAP: XYCoordinates = { x: ADVENTURER_STEP, y: 0 }
+
 export const PLAYER_BASE_CAMP: XYCoordinates = { x: -5.65, y: 10.8 }
 /**
  * The Archaeologist pawns waiting at the camp, over the illustration of the card: a team of 7 stands
@@ -189,6 +197,13 @@ export const JUNGLE_ARCHAEOLOGIST_SPACE_STEP = 11.9
 /** Likewise, and a disc of 0.97 cm: an Animal pawn lies flat in it, so it needs no lift. */
 export const JUNGLE_ANIMAL_SPACE: XYCoordinates = { x: 84.7, y: 67.5 }
 export const JUNGLE_ANIMAL_SPACE_STEP = 13.3
+/**
+ * The middle of the card, where the Archaeologists with no slot of their own gather. Between the two
+ * columns of spaces, which the hexagon of a full team of 7 clears by a little over a centimetre on
+ * either side.
+ */
+export const JUNGLE_EXTRA_ARCHAEOLOGISTS: XYCoordinates = { x: 50, y: 45 }
+
 /** The bonus bar at the foot of the card, 1.43 x 1.19 cm. */
 export const JUNGLE_DIG_SITE_BONUS: XYCoordinates = { x: 17.3, y: 87.7 }
 export const JUNGLE_ANIMAL_BONUS: XYCoordinates = { x: 80.6, y: 87.4 }

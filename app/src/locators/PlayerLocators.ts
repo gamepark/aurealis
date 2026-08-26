@@ -1,7 +1,6 @@
 import { FlexLocator, HandLocator, ItemContext, ListLocator, Locator, MaterialContext } from '@gamepark/react-game'
 import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
 import {
-  ARCHAEOLOGISTS_HEX_RADIUS,
   BASE_CAMP_ARCHAEOLOGISTS_OFFSET,
   PLAYER_BASE_CAMP,
   PLAYER_COINS,
@@ -9,6 +8,8 @@ import {
   PLAYER_HAND,
   PLAYER_HAND_MAX_ANGLE,
   PLAYER_HAND_RADIUS,
+  PLAYER_DRAWN_CARDS,
+  PLAYER_DRAWN_CARDS_GAP,
   PLAYER_JUNGLE,
   PLAYER_JUNGLE_GAP,
   PLAYER_TILES,
@@ -16,7 +17,7 @@ import {
   PLAYER_TILES_LINE_GAP,
   PLAYER_TILES_PER_LINE
 } from './TableLayout'
-import { playerRotation, playerSide } from './utils'
+import { archaeologistsHexagon, playerRotation, playerSide } from './utils'
 
 /**
  * A player's own area, described once for the player facing the table: {@link playerSide} reflects it
@@ -55,10 +56,7 @@ class BaseCampLocator extends PlayerAreaLocator {
 }
 
 /**
- * A flat-topped hexagon: the first pawn in the middle, the 6 others on the ring, the first of them
- * due right and the rest every sixth of a turn from there. Flat-topped means the two vertices are
- * the ones left and right, so the team is wider than it is tall — which is the way round that suits
- * a card standing upright.
+ * The team waiting on the Camp de base, as the hexagon of {@link archaeologistsHexagon}.
  *
  * The pawns keep the spot they were given: their location follows a {@link FillGapStrategy}, so
  * nobody closes ranks when one leaves, and a pawn coming back from the jungle takes an empty spot
@@ -70,15 +68,18 @@ class BaseCampLocator extends PlayerAreaLocator {
 class BaseCampArchaeologistsLocator extends Locator {
   getItemCoordinates(item: MaterialItem, context: ItemContext) {
     const { x, y } = playerSide(PLAYER_BASE_CAMP, item.location, context)
-    const centre = { x: x + BASE_CAMP_ARCHAEOLOGISTS_OFFSET.x, y: y + BASE_CAMP_ARCHAEOLOGISTS_OFFSET.y }
-    const index = this.getItemIndex(item, context)
-    if (index === 0) return centre
-    const angle = ((index - 1) * Math.PI) / 3
-    return {
-      x: centre.x + ARCHAEOLOGISTS_HEX_RADIUS * Math.cos(angle),
-      y: centre.y + ARCHAEOLOGISTS_HEX_RADIUS * Math.sin(angle)
-    }
+    const offset = archaeologistsHexagon(this.getItemIndex(item, context))
+    return { x: x + BASE_CAMP_ARCHAEOLOGISTS_OFFSET.x + offset.x, y: y + BASE_CAMP_ARCHAEOLOGISTS_OFFSET.y + offset.y }
   }
+}
+
+/**
+ * The cards being drawn, in a row above the stand. They are face down for both players, so nothing
+ * here needs to be told apart — only counted, and put back in the same order they were taken.
+ */
+class PlayerDrawnCardsLocator extends PlayerAreaLocator {
+  areaCoordinates = PLAYER_DRAWN_CARDS
+  areaGap = PLAYER_DRAWN_CARDS_GAP
 }
 
 /** The row of Jungle cards, growing away from the Camp de base. Never compressed: no card may hide another. */
@@ -114,6 +115,7 @@ class PlayerTilesLocator extends FlexLocator {
 export const playerHandLocator = new PlayerHandLocator()
 export const baseCampLocator = new BaseCampLocator()
 export const baseCampArchaeologistsLocator = new BaseCampArchaeologistsLocator()
+export const playerDrawnCardsLocator = new PlayerDrawnCardsLocator()
 export const playerJungleLocator = new PlayerJungleLocator()
 export const playerCoinsLocator = new PlayerCoinsLocator()
 export const playerTilesLocator = new PlayerTilesLocator()
