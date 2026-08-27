@@ -7,6 +7,7 @@ import { faPersonHiking } from '@fortawesome/free-solid-svg-icons/faPersonHiking
 import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { lastArchaeologistOn } from '@gamepark/aurealis/material/Archaeologists'
+import { EffectOf, EffectType } from '@gamepark/aurealis/material/Effect'
 import { Jungle } from '@gamepark/aurealis/material/Jungle'
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
@@ -66,6 +67,17 @@ const BUTTON_Y = -3
 /** Jungle cards are standard 63 x 88 mm. */
 const WIDTH = 6.3
 const HEIGHT = 8.8
+
+/**
+ * The Buy button stands in the top right corner rather than in the row: the Plant badges the Fame
+ * objectives count are printed in the top *left* corner, up to two of them side by side, and a button
+ * in the middle of the top edge lands on the second one (see `getPlantIcons`). The corner it takes
+ * instead carries nothing but the white palm that says "Jungle card", which is the one thing a buyer
+ * already knows about the card being bought.
+ *
+ * Half a button in from the top edge and from the right one, the button being 2.2 cm across.
+ */
+const BUY_BUTTON = { x: WIDTH / 2 - 1.35, y: -HEIGHT / 2 + 1.35 }
 
 /**
  * The Dig Site button stands under the space it fills rather than in the row: it is the one action of
@@ -132,12 +144,32 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
   ) {
     // No legal move at all means it is not this player's turn: nothing on the table is theirs to press.
     if (!legalMoves.length) return null
-    // A card of the deck is buried under the pile, where a button has nowhere to stand: the 3 cards
-    // at its bottom are picked in a dialog of their own (see {@link DeckBottomJungleDialog}).
-    if (item.location.type === LocationType.JungleDeck) return null
+    if (item.location.type === LocationType.JungleDeck) return this.deckMenu(context, legalMoves)
     const actions = [...this.actionMenu(context, legalMoves), ...this.archaeologistMenu(item, context, legalMoves)]
     if (!actions.length) return null
     return <ItemMenuActions actions={actions} y={BUTTON_Y} />
+  }
+
+  /**
+   * The Jungle deck, whose face-up top is the third card of the market: that one card is bought where
+   * it lies, and carries the same Buy button as the two laid beside the pile.
+   *
+   * Nothing else on the pile carries anything. The cards under the top are a thickness drawn 0.5 mm
+   * apart (see {@link StackLocator}), so a button of theirs would stand over the card on top and play
+   * a move nobody can read there — which is the case of the 3 cards at the *bottom* a Temple tile
+   * reaches for, and those are picked in a dialog of their own (see {@link DeckBottomJungleDialog}).
+   */
+  private deckMenu(context: ItemContext<number, MaterialType, LocationType>, legalMoves: MaterialMove<number, MaterialType, LocationType>[]) {
+    const rules = context.rules as AurealisRules
+    if (rules.remind<EffectOf<EffectType.BuyJungle> | undefined>(Memory.CurrentEffect)?.fromDeckBottom) return null
+    const top = rules
+      .material(MaterialType.JungleCard)
+      .location(LocationType.JungleDeck)
+      .maxBy((card) => card.location.x ?? 0)
+    if (top.getIndex() !== context.index) return null
+    const actions = this.actionMenu(context, legalMoves)
+    if (!actions.length) return null
+    return <ItemMenuActions actions={actions} />
   }
 
   /** The three things a whole card is picked for: it is bought, it is dug, or an Animal lands on it. */
@@ -147,7 +179,7 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
   ): ItemMenuAction[] {
     const card = context.index
     const buy = legalMoves.find((move) => isMoveItemType(MaterialType.JungleCard)(move) && move.itemIndex === card)
-    if (buy) return [{ move: buy, icon: faSackDollar, title: 'button.buy-jungle' }]
+    if (buy) return [{ move: buy, icon: faSackDollar, title: 'button.buy-jungle', ...BUY_BUTTON }]
     const digSite = legalMoves.find((move) => isCreateItemType(MaterialType.DigSitePawn)(move) && move.item.location.parent === card)
     if (digSite) return [{ move: digSite, icon: faPersonDigging, title: 'button.build-dig-site', ...DIG_SITE_BUTTON }]
     const animal = legalMoves.find(
