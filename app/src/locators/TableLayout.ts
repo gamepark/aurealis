@@ -179,19 +179,23 @@ const longestJungle = (rules: MaterialRules<number, MaterialType, LocationType>)
 
 // Just above, towards the middle of the table: the gold over the panel, the tiles over the hand.
 
-/** High enough to clear the panel, which grows taller in centimetres as the table gets shorter. */
-export const PLAYER_COINS: XYCoordinates = { x: -39.5, y: 10.7 }
 /**
- * From the middle of the heap of 3s to the middle of the heap of 1s. Wide enough for the two of them
- * to stay apart once spread: a 3 is 2.9 cm across and a 1 is 2 cm, so half of each plus the spread of
- * both comes to a little over 4 cm.
+ * The gold, spread over the whole strip left over above the panel. Centred on the panel rather than
+ * on any of its own material: the strip is what the gold is given, and the middle of the panel is
+ * the middle of that strip. High enough to clear the panel, which grows taller in centimetres as the
+ * table gets shorter.
  */
-export const PLAYER_COINS_GAP: XYCoordinates = { x: 4.4, y: 0 }
+export const PLAYER_COINS: XYCoordinates = { x: -37, y: 10 }
 /**
- * How far a coin may fall from the middle of its heap. Wider than tall: the gold lies in the strip
- * left over above the panel, which has room sideways and none to spare downwards.
+ * How far a coin may fall from the middle of the strip. Far wider than tall, which is the shape of
+ * what is free there: the panel is some 11 cm wide, so 4 cm either way plus half of the widest coin
+ * fills it edge to edge, while downwards there is nothing to spare — the lowest coin a scatter this
+ * tall can drop stops just short of the top of the panel, which would otherwise cover it.
+ *
+ * The 3s and the 1s share it: they are one player's gold, not two heaps to be read apart, and a
+ * strip this wide is what lets a handful of coins lie in it without any one covering another.
  */
-export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 0.8, y: 0.45 }
+export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 4, y: 0.5 }
 
 /**
  * Won tiles, in a single line over the hand: the 7th one ends the game, and one line of 7 is 3.3 cm

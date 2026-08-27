@@ -1,3 +1,4 @@
+import { pointerWithin } from '@dnd-kit/core'
 import { css } from '@emotion/react'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { DevToolsHub, GameTable, GameTableNavigation, useRules } from '@gamepark/react-game'
@@ -28,6 +29,7 @@ export function GameDisplay() {
         yMin={-TABLE_HEIGHT / 2}
         yMax={TABLE_HEIGHT / 2}
         margin={margin}
+        collisionAlgorithm={pointerWithin}
         css={process.env.NODE_ENV === 'development' && tableBorder}
       >
         <GameTableNavigation />

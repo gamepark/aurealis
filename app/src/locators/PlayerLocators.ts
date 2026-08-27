@@ -5,7 +5,6 @@ import {
   BASE_CAMP_ARCHAEOLOGISTS_OFFSET,
   PLAYER_BASE_CAMP,
   PLAYER_COINS,
-  PLAYER_COINS_GAP,
   PLAYER_COINS_RADIUS,
   PLAYER_HAND,
   PLAYER_HAND_MAX_ANGLE,
@@ -94,34 +93,40 @@ class PlayerJungleLocator extends PlayerAreaLocator {
   areaGap = PLAYER_JUNGLE_GAP
 }
 
+/** Far beyond any quantity a player can hold: see {@link PlayerCoinsLocator.getItemCoordinates}. */
+const COINS_INDEX_SPREAD = 100
+
 /**
- * A player's gold, as two heaps side by side: the 3s and the 1s.
+ * A player's gold, scattered over the strip above their panel: one purse, the 3s and the 1s mixed.
  *
  * Money is one item per denomination carrying a quantity, and the framework draws one coin per unit
  * of that quantity. So the copies have to be spread out: laid on one spot, four 3s look exactly like
  * a single 3, and the table then states a number that is not the player's — 10 gold read as 4.
  *
- * Hence a heap rather than a spot, and a minimum distance so that no coin can ever hide another
- * whole. A heap is not a count, and it is not meant to be one: it says "some gold, more than a
+ * Hence a scatter rather than a spot, over a strip far wider than tall ({@link PLAYER_COINS_RADIUS}),
+ * and a minimum distance so that no coin can ever hide another whole: half a centimetre is more than
+ * the 0.4 by which a 3 is wider than a 1, which is all it takes for the smaller one to keep an edge
+ * showing. A scatter is not a count, and it is not meant to be one: it says "some gold, more than a
  * couple of pieces", and the exact amount is one hover away (see {@link MoneyDescription}).
  */
 class PlayerCoinsLocator extends PileLocator {
   radius = PLAYER_COINS_RADIUS
   maxAngle = 15
-  minimumDistance = 0.3
+  minimumDistance = 0.5
 
   getCoordinates(location: Location, context: MaterialContext) {
     return playerSide(PLAYER_COINS, location, context)
   }
 
-  /** One heap per denomination, so a 1 is never spread against the 3s it is kept apart from. */
-  getPileId(item: MaterialItem) {
-    return `${item.location.player}_${item.id}`
-  }
-
+  /**
+   * The 3s and the 1s are one scatter, and a scatter tells its coins apart by `index + displayIndex`
+   * — the item and which copy of its quantity. Two items of the same purse, whose indexes are next
+   * to each other, would collide on that: the second 1 would be given the very spot of the first 3,
+   * exactly under it. Hence the denomination pushing the indexes apart, far beyond any quantity a
+   * player can hold — the box has 18 coins worth 1.
+   */
   getItemCoordinates(item: MaterialItem, context: ItemContext) {
-    const { x = 0, y = 0, z = 0 } = super.getItemCoordinates(item, context)
-    return { x: x + (item.id === 3 ? 0 : PLAYER_COINS_GAP.x), y, z }
+    return super.getItemCoordinates(item, { ...context, index: context.index + item.id * COINS_INDEX_SPREAD })
   }
 }
 
