@@ -1,18 +1,17 @@
 export enum LocationType {
-  /** The 5 Adventurer cards a player holds on their card stand. Backs face the opponent. */
+  /**
+   * The 5 Adventurer cards a player holds on their card stand. Backs face the opponent.
+   *
+   * A card drawn at the end of a turn arrives here **rotated**, which means it is face down on the
+   * stand: hidden from its owner as much as from the opponent (see {@link RefillHandRule}). The
+   * rotation is lifted from all of them at once when the hand is full, and that is the only moment
+   * of the game when a card on a stand is unreadable to the player holding it.
+   */
   PlayerHand = 1,
   /** The face-down Adventurer draw pile, between the two players. */
   AdventurerDeck,
   /** The 4 face-down Adventurer cards beside the deck. With the deck they form the "river" of 5 backs. */
   AdventurerRiver,
-  /**
-   * The cards a player is drawing at the end of their turn, laid just above their stand, still face
-   * down — to themselves as well as to their opponent. "Sélectionnez vos cartes d'un seul coup, sans
-   * les remplacer ni regarder leurs effets" (rulebook p.11): the 3 cards drawn after a Camp de base
-   * action are picked among the same 5 backs, and one of them cannot be read before the next is
-   * chosen. They all turn over together, once the hand is full.
-   */
-  DrawnCards,
   /**
    * Face-up discard, kept apart from the deck so the two piles stay distinguishable. A card being
    * played goes there straight away rather than waiting somewhere in between: the pile is face up,

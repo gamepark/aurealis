@@ -1,6 +1,7 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
 import { RoundTokenDescription, TokenDescription } from '@gamepark/react-game'
+import { AnimalPawnHelp, ArchaeologistPawnHelp, DigSitePawnHelp } from './help/PawnHelps'
 import animal from '../images/pawns/Animal.png'
 import archaeologist from '../images/pawns/Archaeologist.png'
 import digSite from '../images/pawns/DigSite.png'
@@ -31,6 +32,7 @@ import digSite from '../images/pawns/DigSite.png'
  * A standing pawn is anchored by its base, not its centre — that offset belongs to the locators.
  */
 class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType, LocationType> {
+  help = ArchaeologistPawnHelp
   transparency = true
   width = 1.3
   height = 1.3
@@ -45,6 +47,7 @@ class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType
  * count — the quantities are the box's, so that the heap looks right, not so that it can empty.
  */
 class DigSitePawnDescription extends TokenDescription<number, MaterialType, LocationType> {
+  help = DigSitePawnHelp
   transparency = true
   width = 1.7
   height = 1.7
@@ -54,6 +57,7 @@ class DigSitePawnDescription extends TokenDescription<number, MaterialType, Loca
 }
 
 class AnimalPawnDescription extends RoundTokenDescription<number, MaterialType, LocationType> {
+  help = AnimalPawnHelp
   transparency = true
   diameter = 1
   image = animal

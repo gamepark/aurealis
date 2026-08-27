@@ -8,6 +8,7 @@ import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
 import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
+import { AdventurerCardHelp } from './help/AdventurerCardHelp'
 import naturalist1 from '../images/cards/adventurers/Naturalist1.jpg'
 import naturalist2 from '../images/cards/adventurers/Naturalist2.jpg'
 import naturalist3 from '../images/cards/adventurers/Naturalist3.jpg'
@@ -133,6 +134,9 @@ class AdventurerCardDescription extends CardDescription<number, MaterialType, Lo
    * the decision — and a click is left free to open the card's help.
    */
   menuAlwaysVisible = true
+
+  /** Its two types, its lines, and which of them the table makes worth playing (see {@link AdventurerCardHelp}). */
+  help = AdventurerCardHelp
 
   images = {
     [Adventurer.Naturalist1]: naturalist1,

@@ -11,9 +11,14 @@ import { RuleId } from './RuleId'
  * the 3 cards drawn after a Camp de base action a single pick among the same 5 backs.
  *
  * A drawn card is not read before the last one is picked: "sélectionnez vos cartes d'un seul coup,
- * sans les remplacer ni regarder leurs effets" (rulebook p.11). Hence {@link LocationType.DrawnCards}
- * between the river and the hand — the cards wait there face down, backs up, and all turn over at
- * once when the hand is full.
+ * sans les remplacer ni regarder leurs effets" (rulebook p.11). It goes onto the stand all the same,
+ * where it belongs — face down, which on a stand is a rotated card hidden from its owner as much as
+ * from the opponent (see {@link AurealisRules.hidingStrategies}). Nothing waits anywhere else: a
+ * card taken is a card in hand, only one nobody may read yet.
+ *
+ * The last card of the draw has nothing left to hide, since no other card will be picked after it,
+ * so it lands face up. Which means an ordinary turn — one card played, one card drawn — never turns
+ * a card face down at all.
  */
 export class RefillHandRule extends AurealisRule {
   onRuleStart(): AurealisMove[] {
@@ -29,25 +34,36 @@ export class RefillHandRule extends AurealisRule {
    * the deck uncovers the next one, which is then the fifth back and can be taken in turn.
    */
   get drawMoves(): AurealisMove[] {
-    if (this.hand().length + this.drawnCards.length >= HAND_SIZE) return []
-    return this.river.moveItems({ type: LocationType.DrawnCards, player: this.player })
+    const missing = HAND_SIZE - this.hand().length
+    if (missing <= 0) return []
+    return this.river.moveItems({ type: LocationType.PlayerHand, player: this.player, ...(missing > 1 ? { rotation: true } : {}) })
   }
 
-  get drawnCards(): AurealisMaterial {
-    return this.adventurers.location(LocationType.DrawnCards).player(this.player)
+  /** The cards just drawn that are still lying face down on the stand. */
+  get faceDownCards(): AurealisMaterial {
+    return this.hand().filter((item) => !!item.location.rotation)
   }
 
+  /**
+   * A card taken from the river. The cards turned over at the end of the turn are not one of those:
+   * they turn over together, in a single move (see {@link endOfTurn}), which is what keeps this from
+   * ending the same turn twice.
+   */
   afterItemMove(move: AurealisItemMove): AurealisMove[] {
-    if (isMoveItemType(MaterialType.AdventurerCard)(move) && move.location.type === LocationType.DrawnCards) {
+    if (isMoveItemType(MaterialType.AdventurerCard)(move) && move.location.type === LocationType.PlayerHand) {
       return this.drawMoves.length ? [] : this.endOfTurn()
     }
     return super.afterItemMove(move)
   }
 
-  /** The drawn cards join the stand — and only there does their owner get to read them. */
+  /**
+   * The hand is full: whatever is still face down on the stand turns over. All of it in one move —
+   * the cards were picked without being read, and their owner discovers them together.
+   */
   endOfTurn(): AurealisMove[] {
+    const faceDown = this.faceDownCards
     return [
-      ...this.drawnCards.moveItems({ type: LocationType.PlayerHand, player: this.player }),
+      ...(faceDown.length ? [faceDown.moveItemsAtOnce({ type: LocationType.PlayerHand, player: this.player })] : []),
       ...this.refillRiver(),
       ...this.refillJungleMarket(),
       this.startPlayerTurn(RuleId.ChooseAction, this.nextPlayer)

@@ -21,7 +21,6 @@ import {
   baseCampArchaeologistsLocator,
   baseCampLocator,
   playerCoinsLocator,
-  playerDrawnCardsLocator,
   playerHandLocator,
   playerJungleLocator,
   playerTilesLocator
@@ -32,7 +31,6 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
   [LocationType.PlayerHand]: playerHandLocator,
   [LocationType.AdventurerDeck]: adventurerDeckLocator,
   [LocationType.AdventurerRiver]: adventurerRiverLocator,
-  [LocationType.DrawnCards]: playerDrawnCardsLocator,
   [LocationType.AdventurerDiscard]: adventurerDiscardLocator,
   [LocationType.JungleDeck]: jungleDeckLocator,
   [LocationType.JungleMarket]: jungleMarketLocator,

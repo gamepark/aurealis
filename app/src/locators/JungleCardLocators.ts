@@ -1,7 +1,7 @@
 import { getAnimalSpaces, getArchaeologistSpaces, Jungle } from '@gamepark/aurealis/material/Jungle'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { ItemContext, Locator, MaterialContext, ParentFace } from '@gamepark/react-game'
-import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
+import { ListLocator, Locator, MaterialContext, ParentFace } from '@gamepark/react-game'
+import { Location, XYCoordinates } from '@gamepark/rules-api'
 import {
   ARCHAEOLOGIST_ON_SPACE_OFFSET,
   DIG_SITE_ON_SPACE_OFFSET,
@@ -11,9 +11,10 @@ import {
   JUNGLE_ARCHAEOLOGIST_SPACE,
   JUNGLE_ARCHAEOLOGIST_SPACE_STEP,
   JUNGLE_DIG_SITE_BONUS,
-  JUNGLE_EXTRA_ARCHAEOLOGISTS
+  JUNGLE_EXTRA_ARCHAEOLOGISTS,
+  JUNGLE_EXTRA_ARCHAEOLOGISTS_GAP,
+  JUNGLE_EXTRA_ARCHAEOLOGISTS_MAX
 } from './TableLayout'
-import { archaeologistsHexagon } from './utils'
 
 /**
  * The spaces printed on a Jungle card. They are positioned on the card itself, so they follow it
@@ -65,15 +66,21 @@ class JungleAnimalSpaceLocator extends JungleCardSpaceLocator {
 /**
  * The Archaeologists standing on the card outside its printed spaces: the ones that arrived once the
  * column was full, and the ones left on a card turned onto its completed face, which has no space at
- * all. They gather in the middle of the card, as the same hexagon the team forms on the Camp de base
- * — hence {@link ParentFace.Up}: they belong to the card, not to one of its faces.
+ * all. Hence {@link ParentFace.Up}: they belong to the card, not to one of its faces.
+ *
+ * A column of their own down the middle of the card, built like the printed one — from the same
+ * bottom line, upwards, at the same step, the pawns lifted the same way. The team simply carries on
+ * where the card ran out of slots, and past 3 of them the column tightens rather than grows.
  */
-class JungleExtraArchaeologistsLocator extends JungleCardSpaceLocator {
+class JungleExtraArchaeologistsLocator extends ListLocator {
+  parentItemType = MaterialType.JungleCard
   parentFace = ParentFace.Up
   positionOnParent = JUNGLE_EXTRA_ARCHAEOLOGISTS
+  gap = JUNGLE_EXTRA_ARCHAEOLOGISTS_GAP
+  maxCount = JUNGLE_EXTRA_ARCHAEOLOGISTS_MAX
 
-  getItemCoordinates(item: MaterialItem, context: ItemContext) {
-    return archaeologistsHexagon(this.getItemIndex(item, context))
+  getCoordinates() {
+    return ARCHAEOLOGIST_ON_SPACE_OFFSET
   }
 }
 

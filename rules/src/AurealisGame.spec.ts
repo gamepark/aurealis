@@ -40,8 +40,7 @@ const check = (game: Game) => {
   expect(rules.material(MaterialType.JungleCard).length).toBe(20)
   for (const player of game.players) {
     const hand = rules.material(MaterialType.AdventurerCard).location(LocationType.PlayerHand).player(player).length
-    const drawn = rules.material(MaterialType.AdventurerCard).location(LocationType.DrawnCards).player(player).length
-    expect(hand + drawn).toBeLessThanOrEqual(HAND_SIZE)
+    expect(hand).toBeLessThanOrEqual(HAND_SIZE)
     // The 7 pawns of a player are somewhere, and nowhere else than on their camp or their jungle.
     const camp = rules.material(MaterialType.ArchaeologistPawn).location(LocationType.BaseCampArchaeologists).player(player).length
     const cards = rules.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).getIndexes()

@@ -16,6 +16,9 @@ import { RuleId } from './rules/RuleId'
 
 type Game = MaterialGame<number, MaterialType, LocationType, RuleId>
 
+/** The dearest thing a Camp de base ever asks for: its common Jungle power, at 7 gold. */
+const RICH_ENOUGH_FOR_ANY_POWER = 7
+
 const newGame = (): Game => new AurealisSetup().setup({ players: 2 })
 
 /** Plays a move the way the framework does: consequences first, depth first, until nothing is left. */
@@ -50,6 +53,16 @@ const playUntilNextTurn = (game: Game) => {
   expect(game.rule).toEqual({ id: RuleId.ChooseAction, player: 2 })
 }
 
+/** Plays the first legal move over and over until the turn reaches step IV, the draw. */
+const playUntilRefill = (game: Game) => {
+  for (let step = 0; step < 50 && game.rule?.id !== RuleId.RefillHand; step++) {
+    const move = new AurealisRules(game).getLegalMoves(game.rule!.player!)[0]
+    expect(move).toBeDefined()
+    play(game, move)
+  }
+  expect(game.rule?.id).toBe(RuleId.RefillHand)
+}
+
 /** Step IV: the player picks the cards they draw, so the turn only ends once the hand is full. */
 const refillHand = (game: Game) => {
   while (game.rule?.id === RuleId.RefillHand) {
@@ -65,8 +78,27 @@ const campOf = (game: Game) =>
 const improvedPowerOf = (game: Game): BaseCampPower =>
   [BaseCampPower.Gold, BaseCampPower.Animal, BaseCampPower.Moves, BaseCampPower.Jungle].find((power) => isImprovedPower(campOf(game).id, power))!
 
+const handOf = (game: Game, player: number) =>
+  new AurealisRules(game).material(MaterialType.AdventurerCard).location(LocationType.PlayerHand).player(player)
+
+/** The cards just drawn that are still lying face down on the stand: on a stand, rotated is face down. */
+const faceDownIn = (game: Game, player: number) => handOf(game, player).filter((item) => !!item.location.rotation)
+
 const gold = (game: Game, player: number) =>
   new AurealisRules(game).material(MaterialType.Coin).location(LocationType.PlayerCoins).player(player).money(coins).count
+
+/**
+ * Gold in front of a player, counted out in coins the way the game itself hands it out.
+ *
+ * Buying a Jungle card is the one gain that can be out of reach before it is even started, so a
+ * power or a card that offers nothing else is simply never proposed (see {@link ChooseActionRule}).
+ * A starting purse of 3 gold does not cover the 5 an improved Camp de base asks, let alone the 7 of
+ * a common one — which a test about anything other than money has to get out of its own way of.
+ */
+const giveGold = (game: Game, player: number, amount: number) => {
+  const purse = new AurealisRules(game).material(MaterialType.Coin).location(LocationType.PlayerCoins).player(player).money(coins)
+  for (const move of purse.addMoney(amount, { type: LocationType.PlayerCoins, player })) play(game, move)
+}
 
 describe('A turn of Aurealis', () => {
   let game: Game
@@ -135,6 +167,9 @@ describe('A turn of Aurealis', () => {
    * turns the card over. Any other power leaves it as it is.
    */
   it('turns the Camp de base onto its face B when its improved power is used', () => {
+    // Whichever Camp de base was drawn, both halves need every one of its four powers on the table:
+    // one of them is a purchase, and a player who cannot pay for it is never offered it.
+    giveGold(game, 1, RICH_ENOUGH_FOR_ANY_POWER)
     const camp = new AurealisRules(game).material(MaterialType.BaseCampCard).location(LocationType.BaseCamp).player(1).getItems<BaseCamp>()[0]
     const commonPower = [BaseCampPower.Gold, BaseCampPower.Animal, BaseCampPower.Moves, BaseCampPower.Jungle].find(
       (power) => !isImprovedPower(camp.id, power)
@@ -143,6 +178,7 @@ describe('A turn of Aurealis', () => {
     expect(campOf(game).location.rotation).toBeUndefined()
 
     game = newGame()
+    giveGold(game, 1, RICH_ENOUGH_FOR_ANY_POWER)
     chooseBaseCampPower(game, improvedPowerOf(game))
     expect(campOf(game).location.rotation).toBe(true)
   })
@@ -224,22 +260,58 @@ describe('A turn of Aurealis', () => {
 
   /**
    * "Sélectionnez vos cartes d'un seul coup, sans les remplacer ni regarder leurs effets": a card
-   * drawn waits above the stand, face down for its owner too, until the last one is picked.
+   * drawn goes onto the stand at once, but face down — a rotated card, hidden from its owner too —
+   * and they all turn over together once the hand is full.
    */
-  it('keeps the drawn cards face down until the hand is full again', () => {
+  it('keeps the drawn cards face down on the stand until the hand is full again', () => {
     chooseBaseCampPower(game, BaseCampPower.Gold)
     discardWholeCost(game)
     expect(game.rule!.id).toBe(RuleId.RefillHand)
 
     play(game, new AurealisRules(game).getLegalMoves(1)[0])
-    const midway = new AurealisRules(game)
-    expect(midway.material(MaterialType.AdventurerCard).location(LocationType.DrawnCards).player(1).length).toBe(1)
-    expect(midway.material(MaterialType.AdventurerCard).location(LocationType.PlayerHand).player(1).length).toBe(2)
+    expect(handOf(game, 1).length).toBe(3)
+    expect(faceDownIn(game, 1).length).toBe(1)
 
     refillHand(game)
-    const after = new AurealisRules(game)
-    expect(after.material(MaterialType.AdventurerCard).location(LocationType.DrawnCards).length).toBe(0)
-    expect(after.material(MaterialType.AdventurerCard).location(LocationType.PlayerHand).player(1).length).toBe(HAND_SIZE)
+    expect(handOf(game, 1).length).toBe(HAND_SIZE)
+    expect(faceDownIn(game, 1).length).toBe(0)
+  })
+
+  /** Face down on a stand is hidden from its owner as much as from the opponent. */
+  it('hides a face-down card from the player holding it', () => {
+    chooseBaseCampPower(game, BaseCampPower.Gold)
+    discardWholeCost(game)
+    play(game, new AurealisRules(game).getLegalMoves(1)[0])
+
+    const drawn = faceDownIn(game, 1).getIndexes()[0]
+    const view = new AurealisRules(game).getPlayerView(1)
+    expect(view.items[MaterialType.AdventurerCard]![drawn].id.front).toBeUndefined()
+    expect(view.items[MaterialType.AdventurerCard]![drawn].id.back).toBeDefined()
+
+    // And once the hand is full again, its owner reads it like any other card on their stand.
+    refillHand(game)
+    const revealed = new AurealisRules(game).getPlayerView(1)
+    expect(revealed.items[MaterialType.AdventurerCard]![drawn].id.front).toBeDefined()
+    expect(new AurealisRules(game).getPlayerView(2).items[MaterialType.AdventurerCard]![drawn].id.front).toBeUndefined()
+  })
+
+  /**
+   * The waiting room only earns its place while a card is still to be chosen after the one just
+   * taken. So every card of a draw but the last waits above the stand, and the last one lands on it
+   * — which means a turn costing a single card, as an ordinary turn does, never uses it at all.
+   */
+  it('draws the last card of a turn face up, and the others face down', () => {
+    playUntilRefill(game)
+
+    while (game.rule?.id === RuleId.RefillHand) {
+      const last = HAND_SIZE - handOf(game, 1).length === 1
+      play(game, new AurealisRules(game).getLegalMoves(1)[0])
+      // Every card but the last lands rotated, and the last one is what turns them all over.
+      expect(faceDownIn(game, 1).length === 0).toBe(last)
+    }
+
+    expect(handOf(game, 1).length).toBe(HAND_SIZE)
+    expect(game.rule).toEqual({ id: RuleId.ChooseAction, player: 2 })
   })
 
   /** Past the printed slots of a card, the Archaeologists gather in the middle of it. */

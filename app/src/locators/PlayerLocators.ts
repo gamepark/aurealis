@@ -9,8 +9,6 @@ import {
   PLAYER_HAND,
   PLAYER_HAND_MAX_ANGLE,
   PLAYER_HAND_RADIUS,
-  PLAYER_DRAWN_CARDS,
-  PLAYER_DRAWN_CARDS_GAP,
   PLAYER_JUNGLE,
   PLAYER_JUNGLE_GAP,
   PLAYER_TILES,
@@ -75,15 +73,6 @@ class BaseCampArchaeologistsLocator extends Locator {
   }
 }
 
-/**
- * The cards being drawn, in a row above the stand. They are face down for both players, so nothing
- * here needs to be told apart — only counted, and put back in the same order they were taken.
- */
-class PlayerDrawnCardsLocator extends PlayerAreaLocator {
-  areaCoordinates = PLAYER_DRAWN_CARDS
-  areaGap = PLAYER_DRAWN_CARDS_GAP
-}
-
 /** The row of Jungle cards, growing away from the Camp de base. Never compressed: no card may hide another. */
 class PlayerJungleLocator extends PlayerAreaLocator {
   areaCoordinates = PLAYER_JUNGLE
@@ -138,7 +127,6 @@ class PlayerTilesLocator extends FlexLocator {
 export const playerHandLocator = new PlayerHandLocator()
 export const baseCampLocator = new BaseCampLocator()
 export const baseCampArchaeologistsLocator = new BaseCampArchaeologistsLocator()
-export const playerDrawnCardsLocator = new PlayerDrawnCardsLocator()
 export const playerJungleLocator = new PlayerJungleLocator()
 export const playerCoinsLocator = new PlayerCoinsLocator()
 export const playerTilesLocator = new PlayerTilesLocator()

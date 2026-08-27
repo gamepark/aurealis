@@ -1,5 +1,6 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { ComponentSize, MoneyDescription } from '@gamepark/react-game'
+import { CoinHelp } from './help/CoinHelp'
 import coin1 from '../images/tokens/Coin1.png'
 import coin3 from '../images/tokens/Coin3.png'
 
@@ -13,6 +14,7 @@ import coin3 from '../images/tokens/Coin3.png'
  * shadow of its own, and the coin renders at its true 16 mm / 24 mm.
  */
 class CoinDescription extends MoneyDescription {
+  help = CoinHelp
   transparency = true
 
   images = {

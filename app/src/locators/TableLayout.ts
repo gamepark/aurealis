@@ -1,4 +1,4 @@
-import { XYCoordinates } from '@gamepark/rules-api'
+import { Coordinates, XYCoordinates } from '@gamepark/rules-api'
 
 /**
  * The whole table, in centimetres, x rightwards and y downwards from the centre.
@@ -127,14 +127,6 @@ export const PLAYER_HAND: XYCoordinates = { x: -20.1, y: 11.7 }
 export const PLAYER_HAND_RADIUS = 400
 export const PLAYER_HAND_MAX_ANGLE = 2.5
 
-/**
- * The cards a player is drawing, laid out just above their stand for as long as they are choosing
- * them. They lie face down — their owner cannot read them either — so they are laid in a row rather
- * than fanned, and they start right of the tiles a player is likely to hold at that point.
- */
-export const PLAYER_DRAWN_CARDS: XYCoordinates = { x: -22, y: 6.4 }
-export const PLAYER_DRAWN_CARDS_GAP: XYCoordinates = { x: ADVENTURER_STEP, y: 0 }
-
 export const PLAYER_BASE_CAMP: XYCoordinates = { x: -5.65, y: 10.8 }
 /**
  * The Archaeologist pawns waiting at the camp, over the illustration of the card: a team of 7 stands
@@ -213,11 +205,19 @@ export const JUNGLE_ARCHAEOLOGIST_SPACE_STEP = 11.9
 export const JUNGLE_ANIMAL_SPACE: XYCoordinates = { x: 84.7, y: 67.5 }
 export const JUNGLE_ANIMAL_SPACE_STEP = 13.3
 /**
- * The middle of the card, where the Archaeologists with no slot of their own gather. Between the two
- * columns of spaces, which the hexagon of a full team of 7 clears by a little over a centimetre on
- * either side.
+ * The Archaeologists with no slot of their own: a column of their own down the middle of the card,
+ * between the two printed ones and clear of both. It starts on the very line the lowest printed slot
+ * stands on and grows upwards, exactly as the printed column does — so a card whose slots are full
+ * reads as two columns of pawns side by side, not as a heap beside a row.
  */
-export const JUNGLE_EXTRA_ARCHAEOLOGISTS: XYCoordinates = { x: 50, y: 45 }
+export const JUNGLE_EXTRA_ARCHAEOLOGISTS: XYCoordinates = { x: 50, y: JUNGLE_ARCHAEOLOGIST_SPACE.y }
+/** Upwards, in centimetres: the step of the printed column, 11.9% of a card 8.8 cm tall. */
+export const JUNGLE_EXTRA_ARCHAEOLOGISTS_GAP: Partial<Coordinates> = { x: 0, y: -1.5, z: -0.1 }
+/**
+ * Past 3 the column stops growing and the pawns close ranks inside the height it already takes: a
+ * card can end up holding a whole team of 7, and 7 of them at full step would run off the top of it.
+ */
+export const JUNGLE_EXTRA_ARCHAEOLOGISTS_MAX = 3
 
 /** The bonus bar at the foot of the card, 1.43 x 1.19 cm. */
 export const JUNGLE_DIG_SITE_BONUS: XYCoordinates = { x: 17.3, y: 87.7 }
@@ -231,5 +231,5 @@ export const JUNGLE_ANIMAL_BONUS: XYCoordinates = { x: 80.6, y: 87.4 }
  * Hence half the difference between the two heights, which is a lift since the piece is the taller:
  * (0.90 - 1.3) / 2 for the Archaeologist, (1.19 - 1.7) / 2 for the Dig Site.
  */
-export const ARCHAEOLOGIST_ON_SPACE_OFFSET: XYCoordinates = { x: 0, y: -0.2 }
+export const ARCHAEOLOGIST_ON_SPACE_OFFSET: Partial<Coordinates> = { x: 0, y: -0.2, z: 1 }
 export const DIG_SITE_ON_SPACE_OFFSET: XYCoordinates = { x: 0, y: -0.26 }

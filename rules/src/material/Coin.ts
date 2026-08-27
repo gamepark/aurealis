@@ -1,3 +1,7 @@
+import { LocationType } from './LocationType'
+import { MaterialSource } from './MaterialSource'
+import { MaterialType } from './MaterialType'
+
 /**
  * Gold coins are not distinct pieces of material: a coin item is a denomination plus a quantity, and
  * `MaterialMoney` adds, spends and makes change across the denominations on its own. The item id is
@@ -9,3 +13,7 @@
  * array it is given ascending. Passed to `this.material(MaterialType.Coin).money(coins)`.
  */
 export const coins = [3, 1]
+
+/** What a player has to spend, whichever pieces it is made of. */
+export const playerGold = (source: MaterialSource, player: number): number =>
+  source.material(MaterialType.Coin).location(LocationType.PlayerCoins).player(player).money(coins).count

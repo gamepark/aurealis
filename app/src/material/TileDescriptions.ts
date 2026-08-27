@@ -4,6 +4,7 @@ import { Fame } from '@gamepark/aurealis/material/Fame'
 import { LegendaryAnimal } from '@gamepark/aurealis/material/LegendaryAnimal'
 import { Temple } from '@gamepark/aurealis/material/Temple'
 import { TokenDescription } from '@gamepark/react-game'
+import { FameTileHelp, InstantVictoryTileHelp, LegendaryAnimalTileHelp, RelicTileHelp, TempleTileHelp } from './help/TileHelps'
 import fameJungle from '../images/tiles/FameJungle.jpg'
 import fameLegendaryAnimal from '../images/tiles/FameLegendaryAnimal.jpg'
 import famePlant from '../images/tiles/FamePlant.jpg'
@@ -34,6 +35,8 @@ abstract class SquareTileDescription<Id = number> extends TokenDescription<numbe
 }
 
 class TempleTileDescription extends SquareTileDescription<Temple> {
+  help = TempleTileHelp
+
   images = {
     [Temple.Temple1]: temple1,
     [Temple.Temple2]: temple2,
@@ -45,6 +48,8 @@ class TempleTileDescription extends SquareTileDescription<Temple> {
 }
 
 class FameTileDescription extends SquareTileDescription<Fame> {
+  help = FameTileHelp
+
   images = {
     [Fame.Plant]: famePlant,
     [Fame.Jungle]: fameJungle,
@@ -54,6 +59,8 @@ class FameTileDescription extends SquareTileDescription<Fame> {
 }
 
 class LegendaryAnimalTileDescription extends SquareTileDescription<LegendaryAnimal> {
+  help = LegendaryAnimalTileHelp
+
   images = {
     [LegendaryAnimal.LegendaryAnimal1]: legendaryAnimal1,
     [LegendaryAnimal.LegendaryAnimal2]: legendaryAnimal2,
@@ -69,10 +76,12 @@ class LegendaryAnimalTileDescription extends SquareTileDescription<LegendaryAnim
 
 /** The 9 Relic tiles are identical, and the Instant Victory tile is unique: a single image each. */
 class RelicTileDescription extends SquareTileDescription {
+  help = RelicTileHelp
   image = relic
 }
 
 class InstantVictoryTileDescription extends SquareTileDescription {
+  help = InstantVictoryTileHelp
   image = instantVictory
 }
 

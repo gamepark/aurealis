@@ -13,6 +13,7 @@ import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
 import { isCustomMoveType, isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
+import { BaseCampCardHelp } from './help/BaseCampCardHelp'
 import baseCamp1A from '../images/cards/basecamps/BaseCamp1A.jpg'
 import baseCamp1B from '../images/cards/basecamps/BaseCamp1B.jpg'
 import baseCamp2A from '../images/cards/basecamps/BaseCamp2A.jpg'
@@ -72,6 +73,9 @@ class BaseCampCardDescription extends CardDescription<number, MaterialType, Loca
    * so they have to be readable side by side rather than one click away from each other.
    */
   menuAlwaysVisible = true
+
+  /** Its four powers, and the one face A still improves (see {@link BaseCampCardHelp}). */
+  help = BaseCampCardHelp
 
   /**
    * The player's own Camp de base is where a turn starts and where what is left of it is cashed in:

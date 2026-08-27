@@ -3,7 +3,9 @@ import {
   FillGapStrategy,
   hideFront,
   hideFrontToOthers,
+  HidingSecretsStrategy,
   MaterialGame,
+  MaterialItem,
   MaterialMove,
   PositiveSequenceStrategy,
   SecretMaterialRules,
@@ -23,6 +25,19 @@ import { RefillHandRule } from './rules/RefillHandRule'
 import { ResolveEffectsRule } from './rules/ResolveEffectsRule'
 import { RuleId } from './rules/RuleId'
 import { SendArchaeologistsRule } from './rules/SendArchaeologistsRule'
+
+/**
+ * A card on a stand is hidden from everyone but the player holding it — unless it is rotated, and
+ * then from that player too.
+ *
+ * A rotated card on a stand is one just drawn and not yet turned over: "sélectionnez vos cartes d'un
+ * seul coup, sans les remplacer ni regarder leurs effets" (rulebook p.11). A card picked among the 5
+ * backs of the river must stay unread while the next one is being chosen, and it is picked into the
+ * hand straight away — so the hand is where it waits, face down, until they all turn over together
+ * (see {@link RefillHandRule}).
+ */
+const hideHandCard: HidingSecretsStrategy<number, LocationType> = (item: MaterialItem<number, LocationType>, player?: number) =>
+  item.location.rotation ? hideFront(item) : hideFrontToOthers(item, player)
 
 /**
  * This class implements the rules of the board game.
@@ -60,8 +75,7 @@ export class AurealisRules
     [MaterialType.AdventurerCard]: {
       [LocationType.AdventurerDeck]: hideFront,
       [LocationType.AdventurerRiver]: hideFront,
-      [LocationType.DrawnCards]: hideFront,
-      [LocationType.PlayerHand]: hideFrontToOthers
+      [LocationType.PlayerHand]: hideHandCard
     }
   }
 
@@ -77,7 +91,6 @@ export class AurealisRules
     [MaterialType.AdventurerCard]: {
       [LocationType.AdventurerDeck]: new PositiveSequenceStrategy(),
       [LocationType.AdventurerDiscard]: new PositiveSequenceStrategy(),
-      [LocationType.DrawnCards]: new PositiveSequenceStrategy(),
       [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
       [LocationType.AdventurerRiver]: new FillGapStrategy()
     },

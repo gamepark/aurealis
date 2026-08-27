@@ -1,17 +1,18 @@
 import { CustomMove, isCreateItem, isCustomMoveType, isMoveItem, ItemMove, Location, Material, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
-import { AdventurerId, getBackMainType } from '../material/Adventurer'
 import {
   archaeologistsAtCamp,
   archaeologistsOn,
   archaeologistsOnSlots,
   extraArchaeologistsOn
 } from '../material/Archaeologists'
-import { coins } from '../material/Coin'
-import { CardsInPlay, noCards, TypeCount } from '../material/Condition'
+import { coins, playerGold } from '../material/Coin'
+import { adventurerDeckTop, adventurerRiver, getCardsInPlay } from '../material/CardsInPlay'
+import { CardsInPlay } from '../material/Condition'
 import { Effect, EffectOf, EffectType } from '../material/Effect'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, Jungle } from '../material/Jungle'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
+import { countPlayerTiles } from '../material/PlayerTiles'
 import { Memory } from '../Memory'
 import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
@@ -57,35 +58,16 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     return this.adventurers.location(LocationType.AdventurerDeck)
   }
 
-  /** The top of the Adventurer deck: the highest x of the pile, and the fifth back of the river. */
   get adventurerDeckTop(): AurealisMaterial {
-    return this.adventurerDeck.maxBy((item) => item.location.x ?? 0)
+    return adventurerDeckTop(this)
   }
 
-  /**
-   * The Adventurer river: the 4 cards laid beside the deck *and* the top of the deck, which is the
-   * fifth visible back (rulebook p.6). It is what a player draws from at the end of their turn, and
-   * one of the three places the conditions of a card look at.
-   */
   get river(): AurealisMaterial {
-    return this.adventurers.index([...this.adventurers.location(LocationType.AdventurerRiver).getIndexes(), ...this.adventurerDeckTop.getIndexes()])
-  }
-
-  /**
-   * How many cards of each main type a set of cards holds. Read off the backs, which carry the main
-   * type and are visible wherever the cards are — and the main type is the only one a condition ever
-   * counts (rulebook p.4).
-   */
-  countTypes(material: AurealisMaterial): TypeCount {
-    const counts = noCards()
-    for (const item of material.getItems<AdventurerId>()) {
-      counts[getBackMainType(item.id.back)]++
-    }
-    return counts
+    return adventurerRiver(this)
   }
 
   get cardsInPlay(): CardsInPlay {
-    return { hand: this.countTypes(this.hand()), opponent: this.countTypes(this.hand(this.opponent)), river: this.countTypes(this.river) }
+    return getCardsInPlay(this, this.player, this.opponent)
   }
 
   // ------------------------------------------------------------------ Jungle cards
@@ -179,7 +161,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   }
 
   get gold(): number {
-    return this.playerCoins().money(coins).count
+    return playerGold(this, this.player)
   }
 
   /**
@@ -206,8 +188,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
 
   /** Discovery and Fame tiles alike: 7 of them in front of a player ends the game (rulebook p.11). */
   countTiles(player: number): number {
-    const types = [MaterialType.RelicTile, MaterialType.TempleTile, MaterialType.LegendaryAnimalTile, MaterialType.FameTile]
-    return types.reduce((total, type) => total + this.material(type).location(LocationType.PlayerTiles).player(player).length, 0)
+    return countPlayerTiles(this, player)
   }
 
   /**
