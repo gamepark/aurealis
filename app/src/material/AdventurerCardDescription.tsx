@@ -9,6 +9,7 @@ import { CardDescription, ItemContext, MaterialContentProps } from '@gamepark/re
 import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { AdventurerCardHelp } from './help/AdventurerCardHelp'
+import { pileTopHelp } from './PileTopHelp'
 import { PlayableLineFrame } from './PlayableLineFrame'
 import naturalist1 from '../images/cards/adventurers/Naturalist1.jpg'
 import naturalist2 from '../images/cards/adventurers/Naturalist2.jpg'
@@ -85,6 +86,9 @@ import expeditionLeaderExpeditionLeaderBack from '../images/cards/adventurers/ba
  */
 const BUTTON_Y = -4
 
+/** The two piles an Adventurer card can be in, where only the card on top is being looked at. */
+const PILES = [LocationType.AdventurerDeck, LocationType.AdventurerDiscard]
+
 /**
  * Drawing is the other way round: the button sits at the foot of the card, three quarters of the disc
  * over it. The cards of the river stand in the middle of the table with the two players facing each
@@ -138,6 +142,15 @@ class AdventurerCardDescription extends CardDescription<number, MaterialType, Lo
 
   /** Its two types, its lines, and which of them the table makes worth playing (see {@link AdventurerCardHelp}). */
   help = AdventurerCardHelp
+
+  /**
+   * Adventurer cards live in two piles — the deck and the discard — and a pile answers as the one
+   * card it shows, whichever of its cards the pointer landed on (see {@link pileTopHelp}).
+   */
+  displayHelp(item: MaterialItem<number, LocationType, AdventurerId>, context: ItemContext<number, MaterialType, LocationType>) {
+    if (PILES.includes(item.location.type)) return pileTopHelp(item, context)
+    return super.displayHelp(item, context)
+  }
 
   /**
    * On the player's own stand, the line that would apply if the card were played is framed on the

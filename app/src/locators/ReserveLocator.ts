@@ -1,7 +1,8 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { DeckLocator, DelegateLocator, FlexLocator, isItemContext, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
+import { DelegateLocator, FlexLocator, isItemContext, ItemContext, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
 import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
+import { StackLocator, zoomOnHover } from './HoverZoom'
 import {
   ANIMAL_PAWNS,
   DIG_SITE_PAWNS,
@@ -28,10 +29,15 @@ class ReserveLocator extends DelegateLocator<number, MaterialType, LocationType>
   getPositionDependencies(location: Location, context: MaterialContext<number, MaterialType, LocationType>) {
     return this.getDelegate(context).getPositionDependencies(location, context)
   }
+
+  /** Tiles grow under the pointer, gold and pawns do not: what a delegate says goes here too. */
+  getHoverTransform(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>) {
+    return this.getDelegate(context).getHoverTransform(item, context)
+  }
 }
 
 /** The 9 Relic tiles are identical, hence one item with a quantity of 9, drawn as a stack of 9. */
-const relicDeckLocator = new DeckLocator({ coordinates: RELIC_DECK })
+const relicDeckLocator = new StackLocator({ coordinates: RELIC_DECK })
 
 /** The 9 Legendary Animal tiles all differ, and none ever comes back: each keeps its own square. */
 class LegendaryAnimalTilesLocator extends FlexLocator {
@@ -42,6 +48,10 @@ class LegendaryAnimalTilesLocator extends FlexLocator {
 
   getItemIndex(item: MaterialItem) {
     return item.id - 1
+  }
+
+  getHoverTransform(item: MaterialItem, context: ItemContext) {
+    return zoomOnHover(this, item, context)
   }
 }
 
@@ -69,7 +79,15 @@ class SupplyPileLocator extends PileLocator {
  * Unique, so nothing to spread and no heap to suggest: it waits squarely on its own spot, next to
  * the Relic deck. A pile's tilt would only push it into its neighbour for no gain.
  */
-const instantVictoryLocator = new Locator({ coordinates: INSTANT_VICTORY_TILE })
+class InstantVictoryLocator extends Locator<number, MaterialType, LocationType> {
+  coordinates = INSTANT_VICTORY_TILE
+
+  getHoverTransform(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>) {
+    return zoomOnHover(this, item, context)
+  }
+}
+
+const instantVictoryLocator = new InstantVictoryLocator()
 
 const reserveLocators: Partial<Record<MaterialType, Locator<number, MaterialType, LocationType>>> = {
   [MaterialType.RelicTile]: relicDeckLocator,

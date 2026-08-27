@@ -1,4 +1,6 @@
-import { Coordinates, XYCoordinates } from '@gamepark/rules-api'
+import { LocationType } from '@gamepark/aurealis/material/LocationType'
+import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
+import { Coordinates, MaterialRules, XYCoordinates } from '@gamepark/rules-api'
 
 /**
  * The whole table, in centimetres, x rightwards and y downwards from the centre.
@@ -160,6 +162,20 @@ export const PLAYER_JUNGLE_GAP: XYCoordinates = { x: JUNGLE_ROW_STEP, y: 0 }
  * grows only rightwards, nothing of the common area moves, it simply stops short of the new edge.
  */
 export const jungleRowEnd = (cards: number): number => PLAYER_JUNGLE.x + JUNGLE_ROW_STEP * (cards - 1) + JUNGLE_WIDTH / 2 + 0.5
+
+/**
+ * The right edge of the table as it stands: the common area, unless somebody's jungle reaches
+ * further. Asked by the display to size the table, and by a hovered piece to know where the screen
+ * stops (see HoverZoom).
+ */
+export const tableRight = (rules: MaterialRules<number, MaterialType, LocationType>): number => Math.max(COMMON_AREA_RIGHT, jungleRowEnd(longestJungle(rules)))
+
+/** The longest jungle in play: it is the row that reaches furthest right, whoever it belongs to. */
+const longestJungle = (rules: MaterialRules<number, MaterialType, LocationType>): number =>
+  rules.players.reduce(
+    (longest, player) => Math.max(longest, rules.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).length),
+    0
+  )
 
 // Just above, towards the middle of the table: the gold over the panel, the tiles over the hand.
 

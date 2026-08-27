@@ -1,5 +1,6 @@
 import { FlexLocator, HandLocator, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
 import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
+import { zoomOnHover } from './HoverZoom'
 import {
   BASE_CAMP_ARCHAEOLOGISTS_OFFSET,
   PLAYER_BASE_CAMP,
@@ -36,11 +37,25 @@ class PlayerHandLocator extends HandLocator {
   getBaseAngle(location: Location, context: MaterialContext) {
     return playerRotation(location, context)
   }
+
+  /**
+   * The shared zoom rather than the one {@link HandLocator} brings, which doubles a card wherever it
+   * lies: the hand runs along the very edge of the table, so a card doubled in place would grow half
+   * of itself off the bottom of the screen.
+   */
+  getHoverTransform(item: MaterialItem, context: ItemContext) {
+    return zoomOnHover(this, item, context)
+  }
 }
 
 class PlayerAreaLocator extends ListLocator {
   getCoordinates(location: Location, context: MaterialContext) {
     return playerSide(this.areaCoordinates, location, context)
+  }
+
+  /** Both areas hold cards, and both are along an edge of the table (see {@link zoomOnHover}). */
+  getHoverTransform(item: MaterialItem, context: ItemContext) {
+    return zoomOnHover(this, item, context)
   }
 
   getGap(location: Location, context: MaterialContext) {
@@ -121,6 +136,10 @@ class PlayerTilesLocator extends FlexLocator {
 
   getLineGap(location: Location, context: MaterialContext) {
     return playerSide(PLAYER_TILES_LINE_GAP, location, context)
+  }
+
+  getHoverTransform(item: MaterialItem, context: ItemContext) {
+    return zoomOnHover(this, item, context)
   }
 }
 

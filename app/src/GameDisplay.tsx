@@ -1,9 +1,7 @@
 import { css } from '@emotion/react'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
-import { LocationType } from '@gamepark/aurealis/material/LocationType'
-import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
 import { DevToolsHub, GameTable, GameTableNavigation, useRules } from '@gamepark/react-game'
-import { COMMON_AREA_RIGHT, jungleRowEnd, TABLE_HEIGHT, TABLE_LEFT } from './locators/TableLayout'
+import { COMMON_AREA_RIGHT, TABLE_HEIGHT, TABLE_LEFT, tableRight } from './locators/TableLayout'
 import { PlayerPanels } from './panels/PlayerPanels'
 
 /**
@@ -21,7 +19,7 @@ import { PlayerPanels } from './panels/PlayerPanels'
  */
 export function GameDisplay() {
   const margin = { top: 7, left: 0, right: 0, bottom: 0 }
-  const xMax = Math.max(COMMON_AREA_RIGHT, jungleRowEnd(useLongestJungle()))
+  const xMax = useTableRight()
   return (
     <>
       <GameTable
@@ -40,14 +38,10 @@ export function GameDisplay() {
   )
 }
 
-/** The longest jungle in play: it is the row that reaches furthest right, whoever it belongs to. */
-function useLongestJungle(): number {
+/** Where the table stops on the right, which the material asks too when it grows under the pointer. */
+function useTableRight(): number {
   const rules = useRules<AurealisRules>()
-  if (!rules) return 0
-  return rules.players.reduce(
-    (longest, player) => Math.max(longest, rules.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).length),
-    0
-  )
+  return rules ? tableRight(rules) : COMMON_AREA_RIGHT
 }
 
 const tableBorder = css`

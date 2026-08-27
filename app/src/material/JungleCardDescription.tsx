@@ -18,6 +18,7 @@ import { isCreateItemType, isMoveItemType, MaterialItem, MaterialMove } from '@g
 import { JUNGLE_DIG_SITE_BONUS } from '../locators/TableLayout'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { JungleCardHelp } from './help/JungleCardHelp'
+import { pileTopHelp } from './PileTopHelp'
 import jungle1 from '../images/cards/jungle/Jungle1.jpg'
 import jungle2 from '../images/cards/jungle/Jungle2.jpg'
 import jungle3 from '../images/cards/jungle/Jungle3.jpg'
@@ -106,6 +107,15 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
 
   /** Its spaces and its three bonuses, and which of them are still to be had (see {@link JungleCardHelp}). */
   help = JungleCardHelp
+
+  /**
+   * The Jungle deck is face up and its top card is the third card of the market, so the pile is read
+   * as that one card whichever of its cards the pointer landed on (see {@link pileTopHelp}).
+   */
+  displayHelp(item: MaterialItem<number, LocationType, Jungle>, context: ItemContext<number, MaterialType, LocationType>) {
+    if (item.location.type === LocationType.JungleDeck) return pileTopHelp(item, context)
+    return super.displayHelp(item, context)
+  }
 
   /**
    * Everything a player may do to a Jungle card. Most of it is laid over the illustration at the top,
