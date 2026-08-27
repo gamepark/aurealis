@@ -1,11 +1,12 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { DelegateLocator, FlexLocator, isItemContext, ItemContext, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
-import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
+import { DelegateLocator, FlexLocator, isItemContext, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
+import { Location, MaterialItem } from '@gamepark/rules-api'
 import { StackLocator, zoomOnHover } from './HoverZoom'
 import {
   ANIMAL_PAWNS,
   DIG_SITE_PAWNS,
+  DIG_SITE_PAWNS_GAP,
   INSTANT_VICTORY_TILE,
   LEGENDARY_ANIMAL_TILES,
   LEGENDARY_ANIMAL_TILES_GAP,
@@ -18,8 +19,8 @@ import {
 /**
  * The general supply is a single location for every kind of component, so what the pieces look like
  * there comes from the type of the item being placed: a deck of Relic tiles, a grid of Legendary
- * Animal tiles, a heap of pawns. Each delegate counts only the type it places, which is what keeps
- * the 40-odd pieces of the supply from being counted as one heap.
+ * Animal tiles, a row of pawns, two heaps beside it. Each delegate places only the type it is given,
+ * which is what keeps the 40-odd pieces of the supply from being laid out as one stock.
  */
 class ReserveLocator extends DelegateLocator<number, MaterialType, LocationType> {
   getDelegate(context: MaterialContext<number, MaterialType, LocationType>) {
@@ -56,24 +57,28 @@ class LegendaryAnimalTilesLocator extends FlexLocator {
 }
 
 /**
- * Loose pieces, tight and barely tilted: a supply reads as a neat heap, not as pieces spilled — and
- * the tighter the heap, the less of the bay it takes, which is what lets the three of them share one.
+ * The Dig Sites, laid out from a first pawn rather than heaped: the pieces of a stock are all alike,
+ * so what an index has to tell apart here is the copies of one static item, which is exactly what
+ * `getItemIndex` falls back on when a location carries no coordinate of its own.
  *
- * The coins go here too: they are the stock declared by their description, not items of the game
- * state, and they are money anyway — nobody ever picks one out, the framework makes the change itself.
+ * The stock is never counted out of, so the row never changes length: the framework draws the
+ * quantity the description declares, and this row is that quantity, at rest.
  */
-class SupplyPileLocator extends PileLocator {
-  radius = 0.35
-  maxAngle = 10
+const digSitePawnsLocator = new ListLocator({ coordinates: DIG_SITE_PAWNS, gap: DIG_SITE_PAWNS_GAP })
 
-  constructor(private readonly spot: XYCoordinates) {
-    super()
-  }
+/**
+ * Loose pieces, tight and barely tilted: a supply reads as a neat heap, not as pieces spilled — and
+ * the tighter the heap, the less of the bay it takes, which is what lets both of them share the one
+ * strip the row of Dig Sites leaves.
+ *
+ * The gold is the tighter of the two: a coin is 2.4 cm tall for the 3 cm of that strip, where a
+ * disc of 1 cm has room to lie about. The coins go here at all because they are the stock declared
+ * by their description, not items of the game state, and they are money anyway — nobody ever picks
+ * one out, the framework makes the change itself.
+ */
+const reserveCoinsLocator = new PileLocator({ coordinates: RESERVE_COINS, radius: { x: 1.2, y: 0.8 } })
 
-  getCoordinates() {
-    return this.spot
-  }
-}
+const animalPawnsLocator = new PileLocator({ coordinates: ANIMAL_PAWNS, radius: { x: 1.5, y: 0.8 } })
 
 /**
  * Unique, so nothing to spread and no heap to suggest: it waits squarely on its own spot, next to
@@ -93,9 +98,9 @@ const reserveLocators: Partial<Record<MaterialType, Locator<number, MaterialType
   [MaterialType.RelicTile]: relicDeckLocator,
   [MaterialType.LegendaryAnimalTile]: new LegendaryAnimalTilesLocator(),
   [MaterialType.InstantVictoryTile]: instantVictoryLocator,
-  [MaterialType.DigSitePawn]: new SupplyPileLocator(DIG_SITE_PAWNS),
-  [MaterialType.AnimalPawn]: new SupplyPileLocator(ANIMAL_PAWNS),
-  [MaterialType.Coin]: new SupplyPileLocator(RESERVE_COINS)
+  [MaterialType.DigSitePawn]: digSitePawnsLocator,
+  [MaterialType.AnimalPawn]: animalPawnsLocator,
+  [MaterialType.Coin]: reserveCoinsLocator
 }
 
 export const reserveLocator = new ReserveLocator()

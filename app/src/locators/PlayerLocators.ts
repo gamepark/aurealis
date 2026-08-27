@@ -111,7 +111,7 @@ const COINS_INDEX_SPREAD = 100
  */
 class PlayerCoinsLocator extends PileLocator {
   radius = PLAYER_COINS_RADIUS
-  maxAngle = 15
+  maxAngle = 90
   minimumDistance = 0.5
 
   getCoordinates(location: Location, context: MaterialContext) {

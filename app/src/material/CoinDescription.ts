@@ -29,7 +29,7 @@ class CoinDescription extends MoneyDescription {
   stockLocation = { type: LocationType.Reserve }
 
   staticItems = [
-    { id: 1, quantity: 18, location: this.stockLocation },
+    { id: 1, quantity: 10, location: this.stockLocation },
     { id: 3, quantity: 6, location: this.stockLocation }
   ]
 }

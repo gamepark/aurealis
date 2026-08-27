@@ -79,25 +79,37 @@ export const RELIC_DECK: XYCoordinates = { x: 13.5, y: -TILE_STEP }
 export const INSTANT_VICTORY_TILE: XYCoordinates = { x: 16.8, y: -TILE_STEP }
 
 /**
- * The supply proper: gold, Dig Sites and Animals, the three heaps nothing is ever counted out of.
+ * The supply proper: gold, Dig Sites and Animals, the three stocks nothing is ever counted out of.
  *
- * They are tucked into the bay the tile grid leaves open, right of the Instant Victory tile. Piled
- * rather than lined up: laid side by side they would need 10 cm of table, and it is precisely those
- * 10 cm that this saves. Gold to the left, the two kinds of pawn stacked on its right.
+ * They are tucked into the bay the tile grid leaves open — right of the Instant Victory tile, above
+ * the Temple tiles, under the Jungle cards of the opponent — which is 8 cm wide and barely 5 cm high.
  *
- * Set low in the bay, close to the Temple tiles. The strip above them is not theirs to take: it is
- * where the opponent Jungle cards come down, and the height of the whole table is the distance
- * between those cards and the ones of the player facing them.
+ * The Dig Sites take the top of it, all six in a row: a meeple is a shape, and six of them heaped
+ * read as one lump where a row reads as six pieces. The other two stay heaps and share the strip
+ * left under them, gold on the left and Animals on its right: coins are money, told apart by
+ * nothing, and the Animals are discs — neither says anything more lined up than piled, and neither
+ * has the width for a row anyway now that the Dig Sites have taken it.
  */
-export const RESERVE_COINS: XYCoordinates = { x: 20.8, y: -3.9 }
-export const DIG_SITE_PAWNS: XYCoordinates = { x: 24.2, y: -4.8 }
-export const ANIMAL_PAWNS: XYCoordinates = { x: 24.2, y: -2.6 }
+
+/** Six in a row, a step shorter than a pawn is wide: their bases nearly touch, and none is hidden. */
+export const DIG_SITE_PAWNS: XYCoordinates = { x: 19.3, y: -5.3 }
+export const DIG_SITE_PAWNS_GAP: XYCoordinates = { x: 1.2, y: 0 }
+
+/**
+ * The two heaps, on the one line the row of Dig Sites leaves: 3 cm of height for a coin of 2.4 and a
+ * disc of 1, which is what sets how far each may spread (see the radiuses in ReserveLocator).
+ */
+export const RESERVE_COINS: XYCoordinates = { x: 20.8, y: -2.98 }
+export const ANIMAL_PAWNS: XYCoordinates = { x: 24.4, y: -2.98 }
 
 /**
  * The 9 Legendary Animal tiles are all different: laid out 3 by 3, each one can be looked at. They
  * close the common area, so where they end is where the table may stop.
+ *
+ * On the very lines of the tile grid on their left: the two blocks are the same three rows, and the
+ * supply lies between them without breaking them apart.
  */
-export const LEGENDARY_ANIMAL_TILES: XYCoordinates = { x: 27.8, y: -3.3 }
+export const LEGENDARY_ANIMAL_TILES: XYCoordinates = { x: 27.8, y: -TILE_STEP }
 export const LEGENDARY_ANIMAL_TILES_PER_LINE = 3
 export const LEGENDARY_ANIMAL_TILES_GAP: XYCoordinates = { x: 3.3, y: 0 }
 export const LEGENDARY_ANIMAL_TILES_LINE_GAP: XYCoordinates = { x: 0, y: 3.3 }
@@ -185,17 +197,18 @@ const longestJungle = (rules: MaterialRules<number, MaterialType, LocationType>)
  * the middle of that strip. High enough to clear the panel, which grows taller in centimetres as the
  * table gets shorter.
  */
-export const PLAYER_COINS: XYCoordinates = { x: -37, y: 10 }
+export const PLAYER_COINS: XYCoordinates = { x: -36.8, y: 10 }
 /**
  * How far a coin may fall from the middle of the strip. Far wider than tall, which is the shape of
- * what is free there: the panel is some 11 cm wide, so 4 cm either way plus half of the widest coin
- * fills it edge to edge, while downwards there is nothing to spare — the lowest coin a scatter this
- * tall can drop stops just short of the top of the panel, which would otherwise cover it.
+ * what is free there, and spread to the very edges of it: 4.2 cm either way plus half of the widest
+ * coin reaches from the left edge of the table to just short of the hand, and 0.7 cm up and down
+ * fills the height between the tiles won, whose line closes the strip above, and the top of the
+ * panel, which would cover any coin that fell below it.
  *
  * The 3s and the 1s share it: they are one player's gold, not two heaps to be read apart, and a
  * strip this wide is what lets a handful of coins lie in it without any one covering another.
  */
-export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 4, y: 0.5 }
+export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 4.2, y: 0.7 }
 
 /**
  * Won tiles, in a single line over the hand: the 7th one ends the game, and one line of 7 is 3.3 cm
