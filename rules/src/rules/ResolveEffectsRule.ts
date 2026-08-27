@@ -43,6 +43,7 @@ export class ResolveEffectsRule extends AurealisRule {
     if (!effect) return this.endOfAction()
     if (effect.type === EffectType.Choice) {
       // The one effect this rule resolves itself, since choosing takes no more than a click.
+      if (!this.canApplyEffect(effect)) return [this.startRule(RuleId.ResolveEffects)]
       this.memorize(Memory.CurrentEffect, effect)
       return []
     }
@@ -54,11 +55,17 @@ export class ResolveEffectsRule extends AurealisRule {
     return [...this.applyEffect(effect), this.startRule(RuleId.ResolveEffects)]
   }
 
-  /** Only ever asked when a slash on a card leaves the player one gain to pick out of two. */
+  /**
+   * Only ever asked when a slash on a card leaves the player one gain to pick out of two. A gain
+   * that would give nothing is not one of them: buying a Jungle card is not offered to a player who
+   * cannot pay for it, and the other side of the slash is then the only thing left to pick.
+   */
   getPlayerMoves(): AurealisMove[] {
     const effect = this.currentEffect()
     if (effect?.type !== EffectType.Choice) return []
-    return effect.options.map((_, option) => this.customMove(CustomMoveType.ChooseEffect, option))
+    return effect.options.flatMap((option, index) =>
+      this.canApplyEffect(option) ? [this.customMove(CustomMoveType.ChooseEffect, index)] : []
+    )
   }
 
   /** The gain picked jumps the queue: it is part of the effect that was being resolved. */

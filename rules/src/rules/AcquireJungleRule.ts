@@ -22,12 +22,7 @@ export class AcquireJungleRule extends AurealisRule {
   }
 
   get candidates(): number[] {
-    const effect = this.currentEffect<EffectOf<EffectType.BuyJungle>>()
-    if (!effect.fromDeckBottom) return this.jungleMarket.getIndexes()
-    return this.jungleDeck
-      .sort((card) => card.location.x ?? 0)
-      .limit(3)
-      .getIndexes()
+    return this.jungleBuyCandidates(this.currentEffect<EffectOf<EffectType.BuyJungle>>())
   }
 
   onRuleStart(): AurealisMove[] {

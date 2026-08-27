@@ -47,18 +47,19 @@ export class ChooseTempleTileRule extends AurealisRule {
     return this.material(MaterialType.TempleTile).getItem<Temple>(tile).id
   }
 
-  /** Whether the player could do anything at all with what the tile gives. */
+  /**
+   * Whether the player could do anything at all with what the tile gives. Buying a Jungle card is
+   * judged the same way here as anywhere else, so the two never part ways.
+   */
   private canApply(effects: Effect[]): boolean {
     return effects.some((effect) => {
       switch (effect.type) {
         case EffectType.PlaceAnimals:
           return this.jungleCardsWithFreeAnimalSpace.length > 0
-        case EffectType.BuyJungle:
-          return this.gold >= effect.cost && (effect.fromDeckBottom ? this.jungleDeck.length > 0 : this.jungleMarket.length > 0)
         case EffectType.SendArchaeologists:
           return this.canSendArchaeologist
         default:
-          return true
+          return this.canApplyEffect(effect)
       }
     })
   }

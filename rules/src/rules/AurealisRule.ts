@@ -8,7 +8,7 @@ import {
 } from '../material/Archaeologists'
 import { coins } from '../material/Coin'
 import { CardsInPlay, noCards, TypeCount } from '../material/Condition'
-import { Effect } from '../material/Effect'
+import { Effect, EffectOf, EffectType } from '../material/Effect'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, Jungle } from '../material/Jungle'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
@@ -208,6 +208,37 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   countTiles(player: number): number {
     const types = [MaterialType.RelicTile, MaterialType.TempleTile, MaterialType.LegendaryAnimalTile, MaterialType.FameTile]
     return types.reduce((total, type) => total + this.material(type).location(LocationType.PlayerTiles).player(player).length, 0)
+  }
+
+  /**
+   * The Jungle cards a purchase reaches: the 3 of the market, or the 3 cards nobody has seen at the
+   * bottom of the deck when the effect says so (rulebook p.5 and p.12).
+   */
+  jungleBuyCandidates(effect: EffectOf<EffectType.BuyJungle>): number[] {
+    if (!effect.fromDeckBottom) return this.jungleMarket.getIndexes()
+    return this.jungleDeck
+      .sort((card) => card.location.x ?? 0)
+      .limit(3)
+      .getIndexes()
+  }
+
+  /**
+   * Whether an effect can still give the player anything. Buying a Jungle card is the only gain
+   * that can be out of reach before it is even started — the gold has to be there, and a card to
+   * spend it on — and what cannot be applied is never offered: a card whose whole gain is a
+   * purchase the player cannot pay for is not playable at all (rulebook p.6).
+   *
+   * A slash is worth whichever of its two gains is still worth something.
+   */
+  canApplyEffect(effect: Effect): boolean {
+    switch (effect.type) {
+      case EffectType.BuyJungle:
+        return this.gold >= effect.cost && this.jungleBuyCandidates(effect).length > 0
+      case EffectType.Choice:
+        return effect.options.some((option) => this.canApplyEffect(option))
+      default:
+        return true
+    }
   }
 
   // ------------------------------------------------------------------ the queue of effects

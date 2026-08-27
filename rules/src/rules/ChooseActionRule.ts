@@ -1,8 +1,10 @@
 import { CustomMove, isCreateItemType, isCustomMoveType, isMoveItemType } from '@gamepark/rules-api'
 import { TILES_TO_WIN } from '../Constants'
 import { AdventurerId } from '../material/Adventurer'
-import { getLineEffects, getPlayableLine } from '../material/AdventurerLines'
+import { ConditionEffectLine, getLineEffects, getPlayableLine } from '../material/AdventurerLines'
 import { BASE_CAMP_COST, BaseCamp, BaseCampPower, getBaseCampPowerEffects, isImprovedPower } from '../material/BaseCamp'
+import { CardsInPlay } from '../material/Condition'
+import { Effect } from '../material/Effect'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { Memory } from '../Memory'
@@ -39,16 +41,31 @@ export class ChooseActionRule extends AurealisRule {
     return [...this.playCardMoves, ...this.buildDigSiteMoves, ...this.baseCampMoves]
   }
 
-  /** A card can only be played if at least one of its conditions is met (rulebook p.6). */
+  /**
+   * A card can only be played if at least one of its conditions is met (rulebook p.6) — and if the
+   * line it would apply is worth something: buying a Jungle card the player has not the gold for
+   * gives nothing, so a card that offers nothing else stays in hand.
+   */
   get playCardMoves(): AurealisMove[] {
     const cards = this.cardsInPlay
     return this.hand()
       .getIndexes()
       .filter((index) => {
         const card = this.adventurers.getItem<AdventurerId>(index).id.front
-        return card !== undefined && getPlayableLine(card, cards) !== undefined
+        if (card === undefined) return false
+        const line = getPlayableLine(card, cards)
+        return line !== undefined && this.canApplyLine(line, cards)
       })
       .map((index) => this.adventurers.index(index).moveItem({ type: LocationType.AdventurerDiscard }))
+  }
+
+  /**
+   * The gains of a line are applied one after the other, so the line is worth playing as soon as one
+   * of them is: a card that places an Animal pawn *and* buys a Jungle card is still played for the
+   * pawn when the purchase is out of reach.
+   */
+  private canApplyLine(line: ConditionEffectLine, cards: CardsInPlay): boolean {
+    return getLineEffects(line, cards).some((effect) => this.canApplyEffect(effect))
   }
 
   /**
@@ -69,9 +86,19 @@ export class ChooseActionRule extends AurealisRule {
    */
   get baseCampMoves(): AurealisMove[] {
     if (this.hand().length < BASE_CAMP_COST) return []
-    return [BaseCampPower.Gold, BaseCampPower.Animal, BaseCampPower.Moves, BaseCampPower.Jungle].map((power) =>
-      this.customMove(CustomMoveType.BaseCampPower, power)
-    )
+    return [BaseCampPower.Gold, BaseCampPower.Animal, BaseCampPower.Moves, BaseCampPower.Jungle]
+      .filter((power) => this.powerEffects(power).some((effect) => this.canApplyEffect(effect)))
+      .map((power) => this.customMove(CustomMoveType.BaseCampPower, power))
+  }
+
+  /**
+   * What that power would give if it were chosen now: the improved version while the card still
+   * shows its face A, the common one afterwards. The Jungle power is a purchase like any other, so
+   * it is only offered when the player can pay its price (rulebook p.9).
+   */
+  private powerEffects(power: BaseCampPower): Effect[] {
+    const camp = this.baseCamp.getItems<BaseCamp>()[0]
+    return getBaseCampPowerEffects(camp.id, power, !this.isCompleted(camp) && isImprovedPower(camp.id, power))
   }
 
   get baseCamp() {
