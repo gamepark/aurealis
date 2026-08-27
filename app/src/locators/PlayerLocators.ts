@@ -28,6 +28,7 @@ import { archaeologistsHexagon, playerRotation, playerSide } from './utils'
 /** The card stand: fronts for their owner, backs for the opponent, and no card hiding the next. */
 class PlayerHandLocator extends HandLocator {
   radius = PLAYER_HAND_RADIUS
+  gapMaxAngle = PLAYER_HAND_MAX_ANGLE / 4
   maxAngle = PLAYER_HAND_MAX_ANGLE
 
   getCoordinates(location: Location, context: MaterialContext) {
