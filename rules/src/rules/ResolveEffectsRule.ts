@@ -2,6 +2,7 @@ import { CustomMove, isCustomMoveType } from '@gamepark/rules-api'
 import { Effect, EffectOf, EffectType } from '../material/Effect'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
+import { TilePile } from '../material/Tile'
 import { Memory } from '../Memory'
 import { AurealisMove, AurealisRule } from './AurealisRule'
 import { CustomMoveType } from './CustomMoveType'
@@ -87,12 +88,13 @@ export class ResolveEffectsRule extends AurealisRule {
       case EffectType.Gold:
         return [this.takeGold(effect.gold)]
       case EffectType.RelicTile:
-        return this.material(MaterialType.RelicTile)
+        return this.material(MaterialType.Tile)
           .location(LocationType.Reserve)
-          .limit(1)
+          .locationId(TilePile.Relic)
+          .maxBy((item) => item.location.x ?? 0)
           .moveItems({ type: LocationType.PlayerTiles, player })
       case EffectType.LegendaryAnimalTile:
-        return this.material(MaterialType.LegendaryAnimalTile)
+        return this.material(MaterialType.Tile)
           .location(LocationType.Reserve)
           .id(effect.animal)
           .moveItems({ type: LocationType.PlayerTiles, player })

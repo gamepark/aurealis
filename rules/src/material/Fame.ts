@@ -1,21 +1,27 @@
-import { getEnumValues } from '@gamepark/rules-api'
+import { Tile } from './Tile'
 
 /**
  * The 4 Fame tiles. Each is held by whoever currently leads on its criterion, and moves from one
  * player to the other during the game.
+ *
+ * A named subset of {@link Tile}, like the other kinds of tile.
  */
-export enum Fame {
+export const Fame = {
   /** 3 Plant symbols */
-  Plant = 1,
+  Plant: Tile.FamePlant,
   /** 3 Jungle cards */
-  Jungle,
+  Jungle: Tile.FameJungle,
   /** 2 Legendary Animal tiles */
-  LegendaryAnimal,
+  LegendaryAnimal: Tile.FameLegendaryAnimal,
   /** 2 Relic tiles */
-  Relic
-}
+  Relic: Tile.FameRelic
+} as const
 
-export const fames = getEnumValues(Fame)
+export type Fame = (typeof Fame)[keyof typeof Fame]
+
+export const fames: Fame[] = Object.values(Fame)
+
+export const isFame = (tile: Tile): tile is Fame => fames.includes(tile as Fame)
 
 /**
  * What it takes to hold a Fame tile (rulebook p.10). A tile is never won for good: at the end of a

@@ -12,6 +12,7 @@ import { legendaryAnimals } from './material/LegendaryAnimal'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { temples } from './material/Temple'
+import { Tile, TilePile } from './material/Tile'
 import { RuleId } from './rules/RuleId'
 
 /** Archaeologist pawns each player starts with, waiting on their Camp de base (step 2). */
@@ -67,28 +68,31 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
 
   /** 4 Temple tiles out of 6 and the 4 Fame tiles are on display; the 2 unused Temples never exist. */
   setupTiles() {
-    this.material(MaterialType.TempleTile).createItems(
+    this.material(MaterialType.Tile).createItems(
       shuffle(temples)
         .slice(0, TEMPLE_TILES)
         .map((temple, x) => ({ id: temple, location: { type: LocationType.TempleTilesRow, x } }))
     )
-    this.material(MaterialType.FameTile).createItems(fames.map((fame, x) => ({ id: fame, location: { type: LocationType.FameTilesRow, x } })))
+    this.material(MaterialType.Tile).createItems(fames.map((fame, x) => ({ id: fame, location: { type: LocationType.FameTilesRow, x } })))
   }
 
   /**
-   * The general supply, tiles only: they are counted, and running out of them changes the game.
+   * The general supply, tiles only: they are counted, and running out of them changes the game. Each
+   * kind keeps a heap of its own, told apart by the `id` of the location, so that the Relic tiles
+   * pile up in the order they are stacked and the Legendary Animals stay laid out in their grid.
+   *
    * Coins and the two supply pawns are not created here — they are static items of their
    * descriptions, drawn on the table but outside the game state, and only become items of the game
    * once a player owns one. Which is another way of saying their supply cannot run out.
    */
   setupReserve() {
-    this.material(MaterialType.RelicTile).createItems(
-      Array.from({ length: RELIC_TILES }, () => ({ location: { type: LocationType.Reserve } }))
+    this.material(MaterialType.Tile).createItems(
+      Array.from({ length: RELIC_TILES }, () => ({ id: Tile.Relic, location: { type: LocationType.Reserve, id: TilePile.Relic } }))
     )
-    this.material(MaterialType.LegendaryAnimalTile).createItems(
-      shuffle(legendaryAnimals).map((id) => ({ id, location: { type: LocationType.Reserve } }))
+    this.material(MaterialType.Tile).createItems(
+      legendaryAnimals.map((id) => ({ id, location: { type: LocationType.Reserve, id: TilePile.LegendaryAnimal } }))
     )
-    this.material(MaterialType.InstantVictoryTile).createItem({ location: { type: LocationType.Reserve } })
+    this.material(MaterialType.Tile).createItem({ id: Tile.InstantVictory, location: { type: LocationType.Reserve, id: TilePile.InstantVictory } })
   }
 
   /**

@@ -2,11 +2,8 @@ export enum MaterialType {
   AdventurerCard = 1,
   JungleCard,
   BaseCampCard,
-  TempleTile,
-  FameTile,
-  RelicTile,
-  LegendaryAnimalTile,
-  InstantVictoryTile,
+  /** Every tile of the game: Temple, Fame, Relic, Legendary Animal and Instant Victory (see {@link Tile}). */
+  Tile,
   Coin,
   ArchaeologistPawn,
   DigSitePawn,

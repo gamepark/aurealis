@@ -1,8 +1,10 @@
 import { Fame, fames, fameThresholds } from '../material/Fame'
 import { getPlantIcons, Jungle } from '../material/Jungle'
+import { isLegendaryAnimal } from '../material/LegendaryAnimal'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
-import { getTemplePlantIcons, Temple } from '../material/Temple'
+import { getTemplePlantIcons, isTemple, Temple } from '../material/Temple'
+import { Tile } from '../material/Tile'
 import { AurealisMove, AurealisRule } from './AurealisRule'
 import { RuleId } from './RuleId'
 
@@ -30,7 +32,7 @@ export class CheckFameRule extends AurealisRule {
   get fameMoves(): AurealisMove[] {
     const moves: AurealisMove[] = []
     for (const fame of fames) {
-      const tile = this.material(MaterialType.FameTile).id(fame)
+      const tile = this.material(MaterialType.Tile).id(fame)
       const owner = tile.getItems()[0]?.location.player
       if (owner === this.player) continue
       const score = this.fameScore(fame, this.player)
@@ -48,18 +50,19 @@ export class CheckFameRule extends AurealisRule {
           this.jungleCards(player)
             .getItems<Jungle>()
             .reduce((total, card) => total + getPlantIcons(card.id), 0) +
-          this.material(MaterialType.TempleTile)
+          this.material(MaterialType.Tile)
             .location(LocationType.PlayerTiles)
             .player(player)
+            .id(isTemple)
             .getItems<Temple>()
             .reduce((total, tile) => total + getTemplePlantIcons(tile.id), 0)
         )
       case Fame.Jungle:
         return this.jungleCards(player).length
       case Fame.LegendaryAnimal:
-        return this.material(MaterialType.LegendaryAnimalTile).location(LocationType.PlayerTiles).player(player).length
+        return this.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(isLegendaryAnimal).length
       case Fame.Relic:
-        return this.material(MaterialType.RelicTile).location(LocationType.PlayerTiles).player(player).length
+        return this.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(Tile.Relic).length
     }
   }
 }

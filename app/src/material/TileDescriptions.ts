@@ -1,10 +1,8 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { Fame } from '@gamepark/aurealis/material/Fame'
-import { LegendaryAnimal } from '@gamepark/aurealis/material/LegendaryAnimal'
-import { Temple } from '@gamepark/aurealis/material/Temple'
+import { Tile } from '@gamepark/aurealis/material/Tile'
 import { TokenDescription } from '@gamepark/react-game'
-import { FameTileHelp, InstantVictoryTileHelp, LegendaryAnimalTileHelp, RelicTileHelp, TempleTileHelp } from './help/TileHelps'
+import { TileHelp } from './help/TileHelps'
 import fameJungle from '../images/tiles/FameJungle.jpg'
 import fameLegendaryAnimal from '../images/tiles/FameLegendaryAnimal.jpg'
 import famePlant from '../images/tiles/FamePlant.jpg'
@@ -27,66 +25,40 @@ import temple4 from '../images/tiles/Temple4.jpg'
 import temple5 from '../images/tiles/Temple5.jpg'
 import temple6 from '../images/tiles/Temple6.jpg'
 
-/** Every tile in the game is the same 30 x 30 mm square. */
-abstract class SquareTileDescription<Id = number> extends TokenDescription<number, MaterialType, LocationType, Id> {
+/**
+ * Every tile of the game is the same 30 x 30 mm square, so one description covers them all: what
+ * changes from one to the next is the picture on it, and the help it opens (see {@link TileHelp}).
+ * The 9 Relic tiles share a single image, being identical in the box as well.
+ */
+class TileDescription extends TokenDescription<number, MaterialType, LocationType, Tile> {
   width = 3
   height = 3
   borderRadius = 0.3
-}
-
-class TempleTileDescription extends SquareTileDescription<Temple> {
-  help = TempleTileHelp
+  help = TileHelp
 
   images = {
-    [Temple.Temple1]: temple1,
-    [Temple.Temple2]: temple2,
-    [Temple.Temple3]: temple3,
-    [Temple.Temple4]: temple4,
-    [Temple.Temple5]: temple5,
-    [Temple.Temple6]: temple6
+    [Tile.Temple1]: temple1,
+    [Tile.Temple2]: temple2,
+    [Tile.Temple3]: temple3,
+    [Tile.Temple4]: temple4,
+    [Tile.Temple5]: temple5,
+    [Tile.Temple6]: temple6,
+    [Tile.FamePlant]: famePlant,
+    [Tile.FameJungle]: fameJungle,
+    [Tile.FameLegendaryAnimal]: fameLegendaryAnimal,
+    [Tile.FameRelic]: fameRelic,
+    [Tile.Relic]: relic,
+    [Tile.LegendaryAnimal1]: legendaryAnimal1,
+    [Tile.LegendaryAnimal2]: legendaryAnimal2,
+    [Tile.LegendaryAnimal3]: legendaryAnimal3,
+    [Tile.LegendaryAnimal4]: legendaryAnimal4,
+    [Tile.LegendaryAnimal5]: legendaryAnimal5,
+    [Tile.LegendaryAnimal6]: legendaryAnimal6,
+    [Tile.LegendaryAnimal7]: legendaryAnimal7,
+    [Tile.LegendaryAnimal8]: legendaryAnimal8,
+    [Tile.LegendaryAnimal9]: legendaryAnimal9,
+    [Tile.InstantVictory]: instantVictory
   }
 }
 
-class FameTileDescription extends SquareTileDescription<Fame> {
-  help = FameTileHelp
-
-  images = {
-    [Fame.Plant]: famePlant,
-    [Fame.Jungle]: fameJungle,
-    [Fame.LegendaryAnimal]: fameLegendaryAnimal,
-    [Fame.Relic]: fameRelic
-  }
-}
-
-class LegendaryAnimalTileDescription extends SquareTileDescription<LegendaryAnimal> {
-  help = LegendaryAnimalTileHelp
-
-  images = {
-    [LegendaryAnimal.LegendaryAnimal1]: legendaryAnimal1,
-    [LegendaryAnimal.LegendaryAnimal2]: legendaryAnimal2,
-    [LegendaryAnimal.LegendaryAnimal3]: legendaryAnimal3,
-    [LegendaryAnimal.LegendaryAnimal4]: legendaryAnimal4,
-    [LegendaryAnimal.LegendaryAnimal5]: legendaryAnimal5,
-    [LegendaryAnimal.LegendaryAnimal6]: legendaryAnimal6,
-    [LegendaryAnimal.LegendaryAnimal7]: legendaryAnimal7,
-    [LegendaryAnimal.LegendaryAnimal8]: legendaryAnimal8,
-    [LegendaryAnimal.LegendaryAnimal9]: legendaryAnimal9
-  }
-}
-
-/** The 9 Relic tiles are identical, and the Instant Victory tile is unique: a single image each. */
-class RelicTileDescription extends SquareTileDescription {
-  help = RelicTileHelp
-  image = relic
-}
-
-class InstantVictoryTileDescription extends SquareTileDescription {
-  help = InstantVictoryTileHelp
-  image = instantVictory
-}
-
-export const templeTileDescription = new TempleTileDescription()
-export const fameTileDescription = new FameTileDescription()
-export const legendaryAnimalTileDescription = new LegendaryAnimalTileDescription()
-export const relicTileDescription = new RelicTileDescription()
-export const instantVictoryTileDescription = new InstantVictoryTileDescription()
+export const tileDescription = new TileDescription()

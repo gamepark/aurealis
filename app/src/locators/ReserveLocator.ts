@@ -1,6 +1,7 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { DelegateLocator, FlexLocator, isItemContext, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
+import { Tile, TilePile } from '@gamepark/aurealis/material/Tile'
+import { FlexLocator, isItemContext, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
 import { Location, MaterialItem } from '@gamepark/rules-api'
 import { StackLocator, zoomOnHover } from './HoverZoom'
 import {
@@ -18,26 +19,40 @@ import {
 
 /**
  * The general supply is a single location for every kind of component, so what the pieces look like
- * there comes from the type of the item being placed: a deck of Relic tiles, a grid of Legendary
- * Animal tiles, a row of pawns, two heaps beside it. Each delegate places only the type it is given,
- * which is what keeps the 40-odd pieces of the supply from being laid out as one stock.
+ * there comes from what is being placed: a pile of Relic tiles, a grid of Legendary Animal tiles, a
+ * row of pawns, two heaps beside it. Each delegate places only what it is given, which is what keeps
+ * the 40-odd pieces of the supply from being laid out as one stock.
+ *
+ * The tiles are told apart by the `id` of their location, not by their material type — they are all
+ * one material now (see {@link Tile}), and the three heaps they form here are three location ids
+ * (see {@link TilePile}). Everything else is told apart by its type, as before: the pawns and the
+ * gold have no location id, being static items of their descriptions rather than items of the game.
  */
-class ReserveLocator extends DelegateLocator<number, MaterialType, LocationType> {
-  getDelegate(context: MaterialContext<number, MaterialType, LocationType>) {
-    return (isItemContext(context) && reserveLocators[context.type]) || instantVictoryLocator
+class ReserveLocator extends Locator<number, MaterialType, LocationType> {
+  placeItem(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>) {
+    return this.getDelegate(item.location, context).placeItem(item, context)
+  }
+
+  placeLocation(location: Location, context: MaterialContext<number, MaterialType, LocationType>) {
+    return this.getDelegate(location, context).placeLocation(location, context)
   }
 
   getPositionDependencies(location: Location, context: MaterialContext<number, MaterialType, LocationType>) {
-    return this.getDelegate(context).getPositionDependencies(location, context)
+    return this.getDelegate(location, context).getPositionDependencies(location, context)
   }
 
   /** Tiles grow under the pointer, gold and pawns do not: what a delegate says goes here too. */
   getHoverTransform(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>) {
-    return this.getDelegate(context).getHoverTransform(item, context)
+    return this.getDelegate(item.location, context).getHoverTransform(item, context)
+  }
+
+  private getDelegate(location: Location, context: MaterialContext<number, MaterialType, LocationType>) {
+    if (location.id !== undefined) return tilePileLocators[location.id as TilePile] ?? instantVictoryLocator
+    return (isItemContext(context) && reserveLocators[context.type]) || instantVictoryLocator
   }
 }
 
-/** The 9 Relic tiles are identical, hence one item with a quantity of 9, drawn as a stack of 9. */
+/** The 9 Relic tiles are identical, and only the one on top of the pile is ever taken. */
 const relicDeckLocator = new StackLocator({ coordinates: RELIC_DECK })
 
 /** The 9 Legendary Animal tiles all differ, and none ever comes back: each keeps its own square. */
@@ -48,7 +63,7 @@ class LegendaryAnimalTilesLocator extends FlexLocator {
   lineGap = LEGENDARY_ANIMAL_TILES_LINE_GAP
 
   getItemIndex(item: MaterialItem) {
-    return item.id - 1
+    return item.id - Tile.LegendaryAnimal1
   }
 
   getHoverTransform(item: MaterialItem, context: ItemContext) {
@@ -94,10 +109,14 @@ class InstantVictoryLocator extends Locator<number, MaterialType, LocationType> 
 
 const instantVictoryLocator = new InstantVictoryLocator()
 
+/** The three heaps of tiles the supply keeps apart, each addressed by the `id` of its location. */
+const tilePileLocators: Record<TilePile, Locator<number, MaterialType, LocationType>> = {
+  [TilePile.Relic]: relicDeckLocator,
+  [TilePile.LegendaryAnimal]: new LegendaryAnimalTilesLocator(),
+  [TilePile.InstantVictory]: instantVictoryLocator
+}
+
 const reserveLocators: Partial<Record<MaterialType, Locator<number, MaterialType, LocationType>>> = {
-  [MaterialType.RelicTile]: relicDeckLocator,
-  [MaterialType.LegendaryAnimalTile]: new LegendaryAnimalTilesLocator(),
-  [MaterialType.InstantVictoryTile]: instantVictoryLocator,
   [MaterialType.DigSitePawn]: digSitePawnsLocator,
   [MaterialType.AnimalPawn]: animalPawnsLocator,
   [MaterialType.Coin]: reserveCoinsLocator

@@ -130,7 +130,24 @@ export class AurealisRules
     },
     [MaterialType.AnimalPawn]: {
       [LocationType.JungleAnimalSpace]: new PositiveSequenceStrategy()
+    },
+    [MaterialType.Tile]: {
+      [LocationType.Reserve]: new PositiveSequenceStrategy(),
+      [LocationType.PlayerTiles]: new PositiveSequenceStrategy()
     }
+  }
+
+  /**
+   * The 9 Relic tiles are identical to one another, and identical items landing on the same spot
+   * merge into a single item with a quantity — which is right for gold, and wrong for a tile: a row
+   * of tiles gives each of them a place of its own, and a quantity has only one.
+   *
+   * The two rows the tiles live in are ordered sequences, so what they need is one item per tile,
+   * each with its own `x`. The Relic pile of the supply reads just as well that way: nine items one
+   * behind the other rather than one item nine thick.
+   */
+  itemsCanMerge(type: MaterialType): boolean {
+    return type !== MaterialType.Tile
   }
 
   /**

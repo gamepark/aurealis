@@ -1,17 +1,26 @@
-import { getEnumValues } from '@gamepark/rules-api'
 import { buyJungle, Effect, movesOrGold, placeAnimals, sendArchaeologists } from './Effect'
+import { Tile } from './Tile'
 
-/** The 6 Temple tiles; 4 are drawn at random for a game, the other 2 go back in the box. */
-export enum Temple {
-  Temple1 = 1,
-  Temple2,
-  Temple3,
-  Temple4,
-  Temple5,
-  Temple6
-}
+/**
+ * The 6 Temple tiles; 4 are drawn at random for a game, the other 2 go back in the box.
+ *
+ * A named subset of {@link Tile}: the ids are the ids of every tile of the game, and this is the
+ * handful of them a Temple tile can carry.
+ */
+export const Temple = {
+  Temple1: Tile.Temple1,
+  Temple2: Tile.Temple2,
+  Temple3: Tile.Temple3,
+  Temple4: Tile.Temple4,
+  Temple5: Tile.Temple5,
+  Temple6: Tile.Temple6
+} as const
 
-export const temples = getEnumValues(Temple)
+export type Temple = (typeof Temple)[keyof typeof Temple]
+
+export const temples: Temple[] = Object.values(Temple)
+
+export const isTemple = (tile: Tile): tile is Temple => temples.includes(tile as Temple)
 
 /**
  * What a Temple tile gives the moment it is taken (rulebook p.12), read off the tile artwork: the

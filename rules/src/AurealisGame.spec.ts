@@ -5,6 +5,8 @@ import { AurealisSetup } from './AurealisSetup'
 import { HAND_SIZE, TILES_TO_WIN } from './Constants'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
+import { countPlayerTiles } from './material/PlayerTiles'
+import { Tile } from './material/Tile'
 import { Memory } from './Memory'
 import { RuleId } from './rules/RuleId'
 
@@ -72,11 +74,8 @@ describe('A whole game of Aurealis', () => {
     expect(rules.rankPlayers(winner, winner === 1 ? 2 : 1)).toBeLessThan(0)
 
     // Either 7 tiles at the start of a turn, or the Instant Victory tile taken instead of a 3rd Temple.
-    const tiles = [MaterialType.RelicTile, MaterialType.TempleTile, MaterialType.LegendaryAnimalTile, MaterialType.FameTile].reduce(
-      (total, type) => total + rules.material(type).location(LocationType.PlayerTiles).player(winner).length,
-      0
-    )
-    const instantVictory = rules.material(MaterialType.InstantVictoryTile).location(LocationType.PlayerTiles).player(winner).length
+    const tiles = countPlayerTiles(rules, winner)
+    const instantVictory = rules.material(MaterialType.Tile).id(Tile.InstantVictory).location(LocationType.PlayerTiles).player(winner).length
     expect(tiles >= TILES_TO_WIN || instantVictory === 1).toBe(true)
   })
 })

@@ -2,7 +2,8 @@ import { isMoveItemType } from '@gamepark/rules-api'
 import { Effect, EffectType } from '../material/Effect'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
-import { getTempleEffects, Temple } from '../material/Temple'
+import { getTempleEffects, isTemple, Temple } from '../material/Temple'
+import { Tile } from '../material/Tile'
 import { Memory } from '../Memory'
 import { AurealisItemMove, AurealisMove, AurealisRule } from './AurealisRule'
 import { RuleId } from './RuleId'
@@ -20,11 +21,12 @@ const TEMPLES_BEFORE_VICTORY = 2
  */
 export class ChooseTempleTileRule extends AurealisRule {
   onRuleStart(): AurealisMove[] {
-    if (this.material(MaterialType.TempleTile).location(LocationType.PlayerTiles).player(this.player).length >= TEMPLES_BEFORE_VICTORY) {
+    if (this.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(this.player).id(isTemple).length >= TEMPLES_BEFORE_VICTORY) {
       this.memorize(Memory.Winner, this.player)
       return [
-        ...this.material(MaterialType.InstantVictoryTile)
+        ...this.material(MaterialType.Tile)
           .location(LocationType.Reserve)
+          .id(Tile.InstantVictory)
           .moveItems({ type: LocationType.PlayerTiles, player: this.player }),
         this.endGame()
       ]
@@ -33,18 +35,18 @@ export class ChooseTempleTileRule extends AurealisRule {
   }
 
   get templesOnDisplay(): number[] {
-    return this.material(MaterialType.TempleTile).location(LocationType.TempleTilesRow).getIndexes()
+    return this.material(MaterialType.Tile).location(LocationType.TempleTilesRow).getIndexes()
   }
 
   getPlayerMoves(): AurealisMove[] {
     const usable = this.templesOnDisplay.filter((tile) => this.canApply(getTempleEffects(this.templeId(tile))))
     return (usable.length ? usable : this.templesOnDisplay).map((tile) =>
-      this.material(MaterialType.TempleTile).index(tile).moveItem({ type: LocationType.PlayerTiles, player: this.player })
+      this.material(MaterialType.Tile).index(tile).moveItem({ type: LocationType.PlayerTiles, player: this.player })
     )
   }
 
   private templeId(tile: number): Temple {
-    return this.material(MaterialType.TempleTile).getItem<Temple>(tile).id
+    return this.material(MaterialType.Tile).getItem<Temple>(tile).id
   }
 
   /**
@@ -73,8 +75,10 @@ export class ChooseTempleTileRule extends AurealisRule {
   }
 
   afterItemMove(move: AurealisItemMove): AurealisMove[] {
-    if (isMoveItemType(MaterialType.TempleTile)(move) && move.location.type === LocationType.PlayerTiles) {
-      this.pushEffects(getTempleEffects(this.material(MaterialType.TempleTile).getItem<Temple>(move.itemIndex).id))
+    if (isMoveItemType(MaterialType.Tile)(move) && move.location.type === LocationType.PlayerTiles && move.location.player === this.player) {
+      const tile = this.material(MaterialType.Tile).getItem<Tile>(move.itemIndex).id
+      if (!isTemple(tile)) return super.afterItemMove(move)
+      this.pushEffects(getTempleEffects(tile))
       return [this.startRule(RuleId.ResolveEffects)]
     }
     return super.afterItemMove(move)

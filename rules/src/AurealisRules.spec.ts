@@ -350,7 +350,7 @@ describe('A turn of Aurealis', () => {
     }
     chooseBaseCampPower(game, BaseCampPower.Gold)
     playUntilNextTurn(game)
-    const fame = new AurealisRules(game).material(MaterialType.FameTile).id(Fame.Jungle).location(LocationType.PlayerTiles).player(1)
+    const fame = new AurealisRules(game).material(MaterialType.Tile).id(Fame.Jungle).location(LocationType.PlayerTiles).player(1)
     expect(fame.length).toBe(1)
   })
 })

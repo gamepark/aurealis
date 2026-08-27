@@ -54,11 +54,19 @@ export enum LocationType {
   TempleTilesRow,
   /** The 4 Fame tiles, under the Temple tiles. Fame tiles move from one player to the other. */
   FameTilesRow,
-  /** Discovery and Fame tiles won by a player: 7 of them ends the game. */
+  /**
+   * Discovery and Fame tiles won by a player: 7 of them ends the game. An ordered row, `x` being the
+   * order they were won in — one sequence for every kind of tile, since they are one material.
+   */
   PlayerTiles,
   /** A player's gold. One Coin item per denomination, each carrying a quantity. */
   PlayerCoins,
 
-  /** The general supply everyone draws from: coins, Dig Site and Animal pawns, Relic and Legendary Animal tiles. */
+  /**
+   * The general supply everyone draws from: coins, Dig Site and Animal pawns, Relic and Legendary
+   * Animal tiles, and the Instant Victory tile. The tiles keep one heap per kind, told apart by the
+   * `id` of the location (see {@link TilePile}); the coins and the pawns have none, being static
+   * items of their descriptions rather than items of the game.
+   */
   Reserve
 }

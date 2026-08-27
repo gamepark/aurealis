@@ -1,9 +1,12 @@
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { TILES_TO_WIN } from '@gamepark/aurealis/Constants'
 import { Fame, fameThresholds } from '@gamepark/aurealis/material/Fame'
+import { isFame } from '@gamepark/aurealis/material/Fame'
+import { isLegendaryAnimal } from '@gamepark/aurealis/material/LegendaryAnimal'
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { countPlayerTiles } from '@gamepark/aurealis/material/PlayerTiles'
-import { getTempleEffects, getTemplePlantIcons, Temple } from '@gamepark/aurealis/material/Temple'
+import { getTempleEffects, getTemplePlantIcons, isTemple, Temple } from '@gamepark/aurealis/material/Temple'
+import { Tile } from '@gamepark/aurealis/material/Tile'
 import { MaterialHelpProps, usePlayerId, usePlayerName, useRules } from '@gamepark/react-game'
 import { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -45,7 +48,7 @@ const TilesToWin: FC<Pick<MaterialHelpProps, 'item'>> = ({ item }) => {
  * A player never holds a third one — the third is the Instant Victory tile instead — so the tile is
  * both a gain and a countdown, which is the one thing the artwork does not say.
  */
-export const TempleTileHelp: FC<MaterialHelpProps> = ({ item }) => {
+const TempleTileHelp: FC<MaterialHelpProps> = ({ item }) => {
   const { t } = useTranslation()
   const temple = item.id as Temple | undefined
   if (temple === undefined) return null
@@ -77,7 +80,7 @@ export const TempleTileHelp: FC<MaterialHelpProps> = ({ item }) => {
  * it, and equalling its holder is enough to take it (rulebook p.10) — so it is never safe, and that
  * is what has to be said before its threshold.
  */
-export const FameTileHelp: FC<MaterialHelpProps> = ({ item }) => {
+const FameTileHelp: FC<MaterialHelpProps> = ({ item }) => {
   const { t } = useTranslation()
   const fame = item.id as Fame | undefined
   if (fame === undefined) return null
@@ -118,7 +121,7 @@ const FameHolder: FC<Pick<MaterialHelpProps, 'item'>> = ({ item }) => {
 }
 
 /** The Relic tiles are 9 identical tiles: what one of them is worth is all there is to say. */
-export const RelicTileHelp: FC<MaterialHelpProps> = ({ item }) => {
+const RelicTileHelp: FC<MaterialHelpProps> = ({ item }) => {
   const { t } = useTranslation()
   return (
     <>
@@ -138,7 +141,7 @@ export const RelicTileHelp: FC<MaterialHelpProps> = ({ item }) => {
  * A Legendary Animal tile, and there are 9 different ones: which one a Jungle card gives is printed
  * on the card, so the tile is not chosen — it is met.
  */
-export const LegendaryAnimalTileHelp: FC<MaterialHelpProps> = ({ item }) => {
+const LegendaryAnimalTileHelp: FC<MaterialHelpProps> = ({ item }) => {
   const { t } = useTranslation()
   return (
     <>
@@ -158,7 +161,7 @@ export const LegendaryAnimalTileHelp: FC<MaterialHelpProps> = ({ item }) => {
  * The Instant Victory tile: not a tile a player collects, but the game being over. It is what a
  * player takes instead of a third Temple tile (rulebook p.11).
  */
-export const InstantVictoryTileHelp: FC<MaterialHelpProps> = () => {
+const InstantVictoryTileHelp: FC<MaterialHelpProps> = () => {
   const { t } = useTranslation()
   return (
     <>
@@ -173,4 +176,17 @@ export const InstantVictoryTileHelp: FC<MaterialHelpProps> = () => {
       </div>
     </>
   )
+}
+
+/**
+ * All the tiles are one material, so they are one help too: which of the five it opens is read off
+ * the tile's own id, the way the player reads it off the picture.
+ */
+export const TileHelp: FC<MaterialHelpProps> = (props) => {
+  const tile = props.item.id as Tile | undefined
+  if (tile === undefined) return null
+  if (isTemple(tile)) return <TempleTileHelp {...props} />
+  if (isFame(tile)) return <FameTileHelp {...props} />
+  if (isLegendaryAnimal(tile)) return <LegendaryAnimalTileHelp {...props} />
+  return tile === Tile.InstantVictory ? <InstantVictoryTileHelp {...props} /> : <RelicTileHelp {...props} />
 }

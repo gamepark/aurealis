@@ -170,7 +170,7 @@ class PlayerCoinsLocator extends PileLocator {
   }
 }
 
-/** Discovery and Fame tiles won, 4 per line: the 7th ends the game. */
+/** Discovery and Fame tiles won, one line of 7: the 7th of them ends the game. */
 class PlayerTilesLocator extends FlexLocator {
   lineSize = PLAYER_TILES_PER_LINE
   gap = PLAYER_TILES_GAP
