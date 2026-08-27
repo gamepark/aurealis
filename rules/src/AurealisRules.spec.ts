@@ -80,13 +80,15 @@ describe('A turn of Aurealis', () => {
   })
 
   /**
-   * The 4 powers of the Camp de base are always on the table, whatever the hand holds. No Dig Site
-   * can be built on the first turn: not one Archaeologist has left the camp yet.
+   * The powers of the Camp de base are always on the table, whatever the hand holds — all but the
+   * one that buys a Jungle card, which 3 gold does not pay for on the first turn (see
+   * ChooseActionRule.spec). No Dig Site can be built on the first turn either: not one Archaeologist
+   * has left the camp yet.
    */
-  it('always offers the 4 powers of the Camp de base, on top of the cards that can be played', () => {
+  it('always offers the powers of the Camp de base, on top of the cards that can be played', () => {
     const moves = new AurealisRules(game).getLegalMoves(1)
     const powers = moves.filter((move) => isCustomMoveType(CustomMoveType.BaseCampPower)(move))
-    expect(powers).toHaveLength(4)
+    expect(powers.map((move) => move.data)).toEqual([BaseCampPower.Gold, BaseCampPower.Animal, BaseCampPower.Moves])
     expect(moves.every((move) => isCustomMoveType(CustomMoveType.BaseCampPower)(move) || 'location' in move)).toBe(true)
     expect(moves.some((move) => 'itemType' in move && move.itemType === MaterialType.DigSitePawn)).toBe(false)
   })
