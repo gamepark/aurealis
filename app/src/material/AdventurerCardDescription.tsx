@@ -5,10 +5,11 @@ import { AdventurerBack, Adventurer, AdventurerId } from '@gamepark/aurealis/mat
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
 import { RuleId } from '@gamepark/aurealis/rules/RuleId'
-import { CardDescription, ItemContext } from '@gamepark/react-game'
+import { CardDescription, ItemContext, MaterialContentProps } from '@gamepark/react-game'
 import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { AdventurerCardHelp } from './help/AdventurerCardHelp'
+import { PlayableLineFrame } from './PlayableLineFrame'
 import naturalist1 from '../images/cards/adventurers/Naturalist1.jpg'
 import naturalist2 from '../images/cards/adventurers/Naturalist2.jpg'
 import naturalist3 from '../images/cards/adventurers/Naturalist3.jpg'
@@ -137,6 +138,22 @@ class AdventurerCardDescription extends CardDescription<number, MaterialType, Lo
 
   /** Its two types, its lines, and which of them the table makes worth playing (see {@link AdventurerCardHelp}). */
   help = AdventurerCardHelp
+
+  /**
+   * On the player's own stand, the line that would apply if the card were played is framed on the
+   * card itself (see {@link PlayableLineFrame}). It rides with the front face, so a card turned onto
+   * its back takes the frame out of the page along with everything else printed on its front.
+   */
+  content = (props: MaterialContentProps<AdventurerId, MaterialType>) =>
+    this.contentWithBackChildren({
+      ...props,
+      children: (
+        <>
+          {props.children}
+          <PlayableLineFrame itemId={props.itemId} itemIndex={props.itemIndex} />
+        </>
+      )
+    })
 
   images = {
     [Adventurer.Naturalist1]: naturalist1,

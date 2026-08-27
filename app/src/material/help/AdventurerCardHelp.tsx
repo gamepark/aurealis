@@ -4,12 +4,15 @@ import { adventurerLines, getLineEffects, getPlayableLine } from '@gamepark/aure
 import { getCardsInPlay } from '@gamepark/aurealis/material/CardsInPlay'
 import { CardsInPlay, meetsCondition, noCards } from '@gamepark/aurealis/material/Condition'
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
+import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { MaterialHelpProps, usePlayerId, usePlayerName, useRules } from '@gamepark/react-game'
 import { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Effects } from './EffectDescription'
 import { ConditionText } from './ConditionDescription'
-import { helpBlock, helpBlockActive, helpBlockUnmet, helpCondition, helpIntro, helpLocation, helpSection, helpTitle } from './helpStyles'
+import { helpBlock, helpBlockActive, helpBlockUnmet, helpCondition, helpConditionMark, helpIntro, helpLocation, helpSection, helpTitle } from './helpStyles'
 
 /**
  * An Adventurer card: its two types, and the 1 to 3 lines printed on it.
@@ -73,6 +76,7 @@ const AdventurerLines: FC<{ card: Adventurer } & Pick<MaterialHelpProps, 'item'>
         return (
           <div key={index} css={[helpBlock, line === playable && helpBlockActive, met === false && helpBlockUnmet]}>
             <span css={helpCondition}>
+              {met !== undefined && <FontAwesomeIcon icon={met ? faCheck : faXmark} css={helpConditionMark(met)} />}
               <ConditionText condition={line.condition} />
             </span>
             {/* The lines that scale with the game are given their real value whenever it is known,

@@ -105,6 +105,24 @@ export const helpCondition = css`
   margin-bottom: 0.15em;
 `
 
+/**
+ * The verdict on a condition, right before the words that state it: met, or not met, as the table
+ * stands. The block behind it already says as much — the line that applies is picked out in gold and
+ * the others are dimmed — but that is a difference between blocks, and it is only read by comparing
+ * them. A mark is read on the line itself.
+ *
+ * Only ever shown for a card whose conditions can be counted at all, which is a card on the reader's
+ * own stand (see {@link AdventurerCardHelp}). Elsewhere the lines are given plain.
+ *
+ * The green of the jungle in full sun for what holds, the terracotta of the pots — the game's one
+ * alert colour — for what does not. The lighter terracotta on purpose: a line whose condition fails
+ * is dimmed as a whole, and the mark has to survive that.
+ */
+export const helpConditionMark = (met: boolean) => css`
+  margin-right: 0.45em;
+  color: ${met ? colors.jungleLight : colors.clayLight};
+`
+
 /** Where the item stands at the moment, at the foot of the dialog. */
 export const helpLocation = css`
   font-size: 0.82em;
