@@ -6,7 +6,7 @@ import { faPersonDigging } from '@fortawesome/free-solid-svg-icons/faPersonDiggi
 import { faPersonHiking } from '@fortawesome/free-solid-svg-icons/faPersonHiking'
 import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
-import { lastArchaeologistOn } from '@gamepark/aurealis/material/Archaeologists'
+import { lastArchaeologistAtCamp, lastArchaeologistOn } from '@gamepark/aurealis/material/Archaeologists'
 import { EffectOf, EffectType } from '@gamepark/aurealis/material/Effect'
 import { Jungle } from '@gamepark/aurealis/material/Jungle'
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
@@ -15,7 +15,7 @@ import { Memory } from '@gamepark/aurealis/Memory'
 import { CustomMoveType } from '@gamepark/aurealis/rules/CustomMoveType'
 import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
-import { isCreateItemType, isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { isCreateItemType, isMoveItemType, isMoveItemTypeAtOnce, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { JUNGLE_DIG_SITE_BONUS, PLAYER_JUNGLE_GAP } from '../locators/TableLayout'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { JungleCardHelp } from './help/JungleCardHelp'
@@ -93,19 +93,26 @@ const DIG_SITE_BUTTON = { x: ((JUNGLE_DIG_SITE_BONUS.x - 50) / 100) * WIDTH, y: 
 
 /**
  * One Archaeologist move is one card along the row, in either direction (see MoveArchaeologistsRule),
- * and each arrow stands on the border it crosses: half a step from the middle of the card is exactly
- * the seam between it and its neighbour.
+ * and each arrow stands on the border it crosses: half a step left of the middle of the card is
+ * exactly the seam between it and the card before it.
  *
- * Which puts the right arrow of a card and the left arrow of the next one on the very same seam, so
- * the two are parted by height instead: rightwards above, leftwards below. A pair of arrows read
- * that way is a two-way road between the two cards — the lane going right on top, the one coming
- * back underneath — and the 2.5 cm between them clears the 2.2 cm of a button.
+ * Every seam is carried by the card on its right, never by the one on its left. The Camp de base is
+ * a card of the row like any other — it stands exactly one step left of the first Jungle card — so
+ * the team setting out of the camp is walked from that first card, and the camp carries no arrow at
+ * all.
+ *
+ * The three of them share the seam and are parted by height, 2.5 cm apart to clear the 2.2 cm of a
+ * button. They read from the top down as one road between the two cards: the lane a whole team takes
+ * at once, the same lane taken by one pawn alone, and the lane coming back underneath.
+ *
+ * The team goes on top because it is the only one of the three carrying a label, and a label stands
+ * beside its button: anywhere lower it would lie over the card and hide what is printed there.
  */
-const ARROW_X = PLAYER_JUNGLE_GAP.x / 2
-const STEPS = [
-  { step: -1, icon: faArrowLeft, title: 'button.move-left', x: -ARROW_X, y: 0 },
-  { step: 1, icon: faArrowRight, title: 'button.move-right', x: ARROW_X, y: -2.5 }
-]
+const ARROW_X = -PLAYER_JUNGLE_GAP.x / 2
+const ARROW_STEP = 2.5
+const MOVE_RIGHT_TOGETHER = { x: ARROW_X, y: -ARROW_STEP }
+const MOVE_RIGHT = { x: ARROW_X, y: 0 }
+const MOVE_LEFT = { x: ARROW_X, y: ARROW_STEP }
 
 /**
  * The id of a Jungle card is a simple Jungle: both `images` and `backImages` are keyed by it, since
@@ -201,13 +208,20 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
   }
 
   /**
-   * Moving the Archaeologists, which is never asked pawn by pawn: the button belongs to the card and
-   * takes the last pawn to have reached it (see {@link lastArchaeologistOn}). Two pawns of a same
-   * card are the same piece, and a row of 7 buttons would be 7 ways of doing one thing.
+   * Moving the Archaeologists, which is never asked pawn by pawn: a button takes the last pawn to
+   * have reached the card it walks off (see {@link lastArchaeologistOn}). Two pawns of a same card
+   * are the same piece, and a row of 7 buttons would be 7 ways of doing one thing.
    *
-   * One step at a time is one button per direction. Sending one anywhere is two clicks instead — the
-   * card it leaves, then the card it lands on — the first of which never leaves this player's screen
-   * (see {@link CustomMoveType.SelectArchaeologist}).
+   * One step at a time is one button per direction, plus the one that walks a whole team a step to
+   * the right at once and says how many that is (see MoveArchaeologistsRule): a player pushing into
+   * the jungle moves the same pawns the same way several times over, and the ×3 is those three
+   * presses.
+   *
+   * All three stand on the seam this card shares with the one before it, and all three are this
+   * card's: the two rightwards ones walk a pawn *onto* it, from the card behind or from the Camp de
+   * base. Sending one anywhere is two clicks instead — the card it leaves, then the card it lands on
+   * — the first of which never leaves this player's screen (see
+   * {@link CustomMoveType.SelectArchaeologist}).
    */
   private archaeologistMenu(
     item: MaterialItem<number, LocationType, Jungle>,
@@ -216,18 +230,44 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
   ): ItemMenuAction[] {
     const rules = context.rules as AurealisRules
     const card = context.index
+    // The Archaeologists only ever walk a player's own row: a card of the market is nobody's road yet.
+    if (item.location.type !== LocationType.PlayerJungle) return []
     const pawn = lastArchaeologistOn(rules, card)
     switch (rules.game.rule?.id as RuleId | undefined) {
-      case RuleId.MoveArchaeologists:
-        if (pawn === undefined) return []
-        return STEPS.flatMap(({ step, icon, title, x, y }) => {
-          const neighbour = this.neighbour(rules, item, step)
-          if (neighbour === undefined) return []
+      case RuleId.MoveArchaeologists: {
+        const actions: ItemMenuAction[] = []
+        const behind = this.neighbour(rules, item, -1)
+        // A whole team only ever walks right, so the one group arriving anywhere on the row is the
+        // one coming from behind: the card it lands on is enough to tell it apart.
+        const together = legalMoves.filter(isMoveItemTypeAtOnce(MaterialType.ArchaeologistPawn)).find((move) => move.location.parent === card)
+        if (together) {
+          actions.push({
+            move: together,
+            icon: faArrowRight,
+            title: 'button.move-right-together',
+            titleValues: { count: together.indexes.length },
+            label: `×${together.indexes.length}`,
+            ...MOVE_RIGHT_TOGETHER
+          })
+        }
+        // The pawn walking onto this card: the last to have reached the card behind it, or the one
+        // waiting at the Camp de base when this is the first card of the row.
+        const arriving = behind !== undefined ? lastArchaeologistOn(rules, behind) : lastArchaeologistAtCamp(rules, item.location.player!)
+        if (arriving !== undefined) {
           const move = legalMoves.find(
-            (move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === pawn && move.location.parent === neighbour
+            (move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === arriving && move.location.parent === card
           )
-          return move ? [{ move, icon, title, x, y }] : []
-        })
+          if (move) actions.push({ move, icon: faArrowRight, title: 'button.move-right', ...MOVE_RIGHT })
+        }
+        // Backwards, which stops at the first Jungle card: a pawn never walks back to the camp.
+        if (pawn !== undefined && behind !== undefined) {
+          const move = legalMoves.find(
+            (move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === pawn && move.location.parent === behind
+          )
+          if (move) actions.push({ move, icon: faArrowLeft, title: 'button.move-left', ...MOVE_LEFT })
+        }
+        return actions
+      }
       case RuleId.SendArchaeologists: {
         const actions: ItemMenuAction[] = []
         const selected = rules.remind<number | undefined>(Memory.SelectedArchaeologist)

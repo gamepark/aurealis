@@ -1,4 +1,15 @@
-import { CustomMove, isCreateItem, isCustomMoveType, isMoveItem, ItemMove, Location, Material, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
+import {
+  CustomMove,
+  isCreateItem,
+  isCustomMoveType,
+  isMoveItem,
+  isMoveItemsAtOnce,
+  ItemMove,
+  Location,
+  Material,
+  MaterialMove,
+  PlayerTurnRule
+} from '@gamepark/rules-api'
 import {
   archaeologistsAtCamp,
   archaeologistsOn,
@@ -28,7 +39,7 @@ export const isOnJungleCard = (type?: LocationType): boolean =>
 /** Where an item move puts the item, whether it creates it there or brings it from somewhere else. */
 const destination = (move: AurealisItemMove): Partial<Location<number, LocationType>> | undefined => {
   if (isCreateItem(move)) return move.item.location
-  if (isMoveItem(move)) return move.location
+  if (isMoveItem(move) || isMoveItemsAtOnce(move)) return move.location
   return undefined
 }
 
@@ -137,20 +148,37 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
 
   /**
    * Where an Archaeologist sent onto that card lands: on the first free printed slot, or in the
-   * middle of the card once they are all taken. A card turned onto its completed face has no slot
-   * left, so everyone gathers in the middle there.
+   * middle of the card once there is no slot worth taking.
    */
   archaeologistDestination(card: number): Location<number, LocationType> {
+    return { type: this.freeArchaeologistSlots(card) > 0 ? LocationType.JungleArchaeologistSpace : LocationType.JungleExtraArchaeologists, parent: card }
+  }
+
+  /**
+   * How many printed slots of the card are still worth standing on. Filling them is the one thing
+   * they are for — a Dig Site is built by taking them all (rulebook p.7) — so a card that can no
+   * longer be dug counts none of them, whether or not it still has one drawn on it.
+   *
+   * Which is the case of a card whose Dig Site has already been built, as much as of one turned onto
+   * its completed face: the pawn on its Bonus Fouilles stays there for good, and it is what closes
+   * the card to a second Dig Site. The team gathers in the middle instead, where it stays out of the
+   * way of nothing and reads as what it is — Archaeologists passing through.
+   */
+  freeArchaeologistSlots(card: number): number {
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    const slotsTaken = this.isCompleted(item) || this.archaeologistsOnSlots(card).length >= getArchaeologistSpaces(item.id)
-    return { type: slotsTaken ? LocationType.JungleExtraArchaeologists : LocationType.JungleArchaeologistSpace, parent: card }
+    if (this.isCompleted(item) || this.hasDigSite(card)) return 0
+    return getArchaeologistSpaces(item.id) - this.archaeologistsOnSlots(card).length
+  }
+
+  /** The Bonus Fouilles of the card taken: its Dig Site has been built, and never will be again. */
+  hasDigSite(card: number): boolean {
+    return this.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card).length > 0
   }
 
   /** All the Archaeologist slots of the card taken: what the Dig Site action asks for (rulebook p.7). */
   isDigSiteReady(card: number): boolean {
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (this.isCompleted(item)) return false
-    if (this.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card).length > 0) return false
+    if (this.isCompleted(item) || this.hasDigSite(card)) return false
     return this.archaeologistsOnSlots(card).length >= getArchaeologistSpaces(item.id)
   }
 
@@ -258,7 +286,12 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
    * card to walk onto — and that is what `canContinue` says.
    */
   spendOne(canContinue: boolean): AurealisMove[] {
-    const remaining = canContinue ? this.remaining - 1 : 0
+    return this.spend(1, canContinue)
+  }
+
+  /** The same, for the one move that is worth several units at once: a whole group walking together. */
+  spend(count: number, canContinue: boolean): AurealisMove[] {
+    const remaining = canContinue ? this.remaining - count : 0
     this.memorize(Memory.Remaining, remaining)
     return remaining > 0 ? [] : [this.startRule(RuleId.ResolveEffects)]
   }

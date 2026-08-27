@@ -59,7 +59,7 @@ class DigSitePawnDescription extends TokenDescription<number, MaterialType, Loca
 class AnimalPawnDescription extends RoundTokenDescription<number, MaterialType, LocationType> {
   help = AnimalPawnHelp
   transparency = true
-  diameter = 1
+  diameter = 1.2
   image = animal
   stockLocation = { type: LocationType.Reserve }
   staticItems = [{ quantity: 16, location: this.stockLocation }]

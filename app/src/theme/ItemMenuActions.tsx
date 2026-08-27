@@ -25,6 +25,8 @@ export type ItemMenuAction = {
   y?: number
   /** Translation key of the tooltip: the icon says what the button does, this says it in words. */
   title: string
+  /** What the tooltip is about, for the keys that carry a figure — how many pawns a button walks. */
+  titleValues?: Record<string, unknown>
   /** Shown beside the disc, for the one figure a button cannot draw — an amount of gold. */
   label?: ReactNode
   highlight?: boolean
@@ -62,7 +64,7 @@ export const ItemMenuActions = ({ actions, y = 0, step = 2.4 }: Props) => {
           options={action.options}
           label={action.label}
           highlight={action.highlight}
-          title={t(action.title)!}
+          title={t(action.title, action.titleValues)!}
         >
           <FontAwesomeIcon icon={action.icon} css={action.rotation !== undefined && rotated(action.rotation)} />
         </AurealisMenuButton>

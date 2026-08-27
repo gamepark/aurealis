@@ -1,4 +1,3 @@
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp'
 import { faCoins } from '@fortawesome/free-solid-svg-icons/faCoins'
 import { faPersonHiking } from '@fortawesome/free-solid-svg-icons/faPersonHiking'
@@ -11,7 +10,7 @@ import { Memory } from '@gamepark/aurealis/Memory'
 import { CustomMoveType } from '@gamepark/aurealis/rules/CustomMoveType'
 import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
-import { isCustomMoveType, isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { isCustomMoveType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { BaseCampCardHelp } from './help/BaseCampCardHelp'
 import baseCamp1A from '../images/cards/basecamps/BaseCamp1A.jpg'
@@ -120,9 +119,13 @@ class BaseCampCardDescription extends CardDescription<number, MaterialType, Loca
 
   /**
    * What an effect being resolved offers from the camp itself: the team still waiting there, and the
-   * gold that Archaeologist moves can be taken as instead (see MoveArchaeologistsRule). Both end up
-   * here because both are the camp's — the pawns stand on it, and the gold is what the expedition
-   * takes home rather than walking any further.
+   * gold that Archaeologist moves can be taken as instead (see MoveArchaeologistsRule).
+   *
+   * Walking that team out into the jungle is *not* offered here. The arrows of a move all stand on
+   * the seam they cross and belong to the card on the right of it, the first Jungle card of the row
+   * being the one that carries the seam with the camp (see JungleCardDescription): a player follows
+   * one row of arrows from the camp to the end of their jungle rather than a first pair of buttons
+   * shaped unlike all the others.
    */
   private campMenu(
     context: ItemContext<number, MaterialType, LocationType>,
@@ -133,27 +136,16 @@ class BaseCampCardDescription extends CardDescription<number, MaterialType, Loca
     const actions: ItemMenuAction[] = []
     const gold = legalMoves.find(isCustomMoveType(CustomMoveType.GainGold))
     if (gold) actions.push({ move: gold, icon: faCoins, title: 'button.take-gold', label: String(gold.data) })
-    if (pawn !== undefined) {
-      switch (rules.game.rule?.id as RuleId | undefined) {
-        // One move takes a pawn onto the first Jungle card of the row, the camp being the card before it.
-        case RuleId.MoveArchaeologists: {
-          const move = legalMoves.find((move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === pawn)
-          if (move) actions.push({ move, icon: faArrowRight, title: 'button.move-right' })
-          break
-        }
-        // Picked here, sent from the Jungle card the player then presses (see JungleCardDescription).
-        case RuleId.SendArchaeologists: {
-          const selected = rules.remind<number | undefined>(Memory.SelectedArchaeologist)
-          actions.push({
-            move: rules.customMove(CustomMoveType.SelectArchaeologist, pawn),
-            options: { local: true },
-            icon: faPersonHiking,
-            title: selected === pawn ? 'button.unselect-archaeologist' : 'button.select-archaeologist',
-            highlight: selected === pawn
-          })
-          break
-        }
-      }
+    // Picked here, sent from the Jungle card the player then presses (see JungleCardDescription).
+    if (pawn !== undefined && (rules.game.rule?.id as RuleId | undefined) === RuleId.SendArchaeologists) {
+      const selected = rules.remind<number | undefined>(Memory.SelectedArchaeologist)
+      actions.push({
+        move: rules.customMove(CustomMoveType.SelectArchaeologist, pawn),
+        options: { local: true },
+        icon: faPersonHiking,
+        title: selected === pawn ? 'button.unselect-archaeologist' : 'button.select-archaeologist',
+        highlight: selected === pawn
+      })
     }
     return actions
   }

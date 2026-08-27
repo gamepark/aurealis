@@ -1,4 +1,5 @@
-import { CustomMove, isCustomMoveType, isMoveItemType } from '@gamepark/rules-api'
+import { CustomMove, isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce } from '@gamepark/rules-api'
+import { archaeologistsLeavingOrder } from '../material/Archaeologists'
 import { EffectType } from '../material/Effect'
 import { MaterialType } from '../material/MaterialType'
 import { Memory } from '../Memory'
@@ -7,9 +8,12 @@ import { CustomMoveType } from './CustomMoveType'
 import { RuleId } from './RuleId'
 
 /**
- * Archaeologist moves, spent one at a time. One move takes a pawn onto an adjacent card, and the
- * Camp de base is the card before the first Jungle one: reaching the second Jungle card from the
- * camp costs 2 (rulebook p.7).
+ * Archaeologist moves. One move takes a pawn onto an adjacent card, and the Camp de base is the card
+ * before the first Jungle one: reaching the second Jungle card from the camp costs 2 (rulebook p.7).
+ *
+ * They are spent one at a time, save for the one shortcut the display asks for: a whole team stepping
+ * right together, worth one move per pawn of it and offered wherever more than one pawn can take it
+ * (see {@link moveTogetherMoves}). It plays no move the single one could not, several times over.
  *
  * Moves are the one gain a player may use only in part: walking a pawn away from a card whose
  * spaces they were filling can cost them the Dig Site they were building, so the rules never force
@@ -41,7 +45,7 @@ export class MoveArchaeologistsRule extends AurealisRule {
   }
 
   getPlayerMoves(): AurealisMove[] {
-    const moves = this.moveMoves
+    const moves = [...this.moveMoves, ...this.moveTogetherMoves]
     if (this.goldAllowed) moves.push(this.takeGold(this.remaining))
     else moves.push(this.customMove(CustomMoveType.Pass))
     return moves
@@ -76,6 +80,45 @@ export class MoveArchaeologistsRule extends AurealisRule {
     return this.material(MaterialType.ArchaeologistPawn).index(pawn).moveItem(this.archaeologistDestination(card))
   }
 
+  /**
+   * The whole team of one place walking right together, worth as many moves as there are pawns in it.
+   *
+   * Rightwards only, and one card at a time all the same: going deeper into the jungle is what a
+   * player spends moves on, and a group is nothing but the same step taken by several pawns, so a
+   * button playing it says exactly what the single one says and how many times over.
+   *
+   * Only offered where it is worth a button — two pawns or more — since a group of one is the single
+   * move already on the table.
+   */
+  get moveTogetherMoves(): AurealisMove[] {
+    const row = this.jungleRow
+    if (!row.length) return []
+    // Every place a pawn stands, and the card one step to the right of it. The Camp de base is the
+    // card before the first Jungle one, and the last card of the row leads nowhere.
+    const departures = [
+      { pawns: this.campArchaeologists.getIndexes(), to: row[0] },
+      ...row.slice(0, -1).map((card, x) => ({ pawns: archaeologistsLeavingOrder(this, card), to: row[x + 1] }))
+    ]
+    return departures.flatMap(({ pawns, to }) => {
+      const group = this.groupSize(pawns.length, to)
+      return group > 1 ? [this.material(MaterialType.ArchaeologistPawn).index(pawns.slice(0, group)).moveItemsAtOnce(this.archaeologistDestination(to))] : []
+    })
+  }
+
+  /**
+   * How many pawns of one place walk right together: never more than the moves left to spend, and
+   * never more than land in the same spot of the card they reach.
+   *
+   * That second limit is what makes the group one move rather than two: the printed slots of a card
+   * are filled before its middle, so a group overrunning the last free slot would be two moves to
+   * two different places. It stops at the slots instead, and what is left of the team follows on
+   * another press of the button.
+   */
+  private groupSize(pawns: number, card: number): number {
+    const freeSlots = this.freeArchaeologistSlots(card)
+    return Math.min(pawns, this.remaining, freeSlots > 0 ? freeSlots : Infinity)
+  }
+
   /** Gold or nothing, both close the gain: what is left of it is spent either way. */
   onCustomMove(move: CustomMove): AurealisMove[] {
     if (isCustomMoveType(CustomMoveType.Pass)(move)) return this.spendOne(false)
@@ -86,6 +129,10 @@ export class MoveArchaeologistsRule extends AurealisRule {
     const consequences = super.afterItemMove(move)
     if (isMoveItemType(MaterialType.ArchaeologistPawn)(move) && isOnJungleCard(move.location.type)) {
       return [...consequences, ...this.spendOne(this.canMove)]
+    }
+    // A group walking together costs one move per pawn of it.
+    if (isMoveItemTypeAtOnce(MaterialType.ArchaeologistPawn)(move) && isOnJungleCard(move.location.type)) {
+      return [...consequences, ...this.spend(move.indexes.length, this.canMove)]
     }
     return consequences
   }

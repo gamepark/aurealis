@@ -66,6 +66,7 @@
     "buy-jungle": "Prendre cette carte Jungle",
     "move-left": "Déplacer un Archéologue vers la gauche",
     "move-right": "Déplacer un Archéologue vers la droite",
+    "move-right-together": "Déplacer {count} Archéologues vers la droite d'un seul coup",
     "select-archaeologist": "Choisir un Archéologue sur cette carte",
     "unselect-archaeologist": "Ne plus déplacer cet Archéologue",
     "send-archaeologist": "Envoyer l'Archéologue sur cette carte"
