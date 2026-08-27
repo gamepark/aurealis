@@ -132,6 +132,9 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
   ) {
     // No legal move at all means it is not this player's turn: nothing on the table is theirs to press.
     if (!legalMoves.length) return null
+    // A card of the deck is buried under the pile, where a button has nowhere to stand: the 3 cards
+    // at its bottom are picked in a dialog of their own (see {@link DeckBottomJungleDialog}).
+    if (item.location.type === LocationType.JungleDeck) return null
     const actions = [...this.actionMenu(context, legalMoves), ...this.archaeologistMenu(item, context, legalMoves)]
     if (!actions.length) return null
     return <ItemMenuActions actions={actions} y={BUTTON_Y} />

@@ -41,6 +41,15 @@
       "player": "{player} complète sa main de cartes"
     }
   },
+  "choose-effect": {
+    "choose": "Choisissez l'un des gains de la carte",
+    "or": "ou"
+  },
+  "deck-bottom": {
+    "choose": "Choisissez une carte",
+    "intro": "Les 3 cartes du dessous de la pioche Jungle.",
+    "pick": "Prendre cette carte"
+  },
   "button": {
     "play-card": "Jouer cette carte",
     "discard-card": "Défausser cette carte",
