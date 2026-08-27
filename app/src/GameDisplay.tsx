@@ -4,6 +4,7 @@ import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { DevToolsHub, GameTable, GameTableNavigation, useRules } from '@gamepark/react-game'
 import { COMMON_AREA_RIGHT, TABLE_HEIGHT, TABLE_LEFT, tableRight } from './locators/TableLayout'
 import { PlayerPanels } from './panels/PlayerPanels'
+import { colors } from './theme/colors'
 
 /**
  * The table is as small as the material allows, so that on a phone every card is as big as it can
@@ -32,7 +33,7 @@ export function GameDisplay() {
         collisionAlgorithm={pointerWithin}
         css={process.env.NODE_ENV === 'development' && tableBorder}
       >
-        <GameTableNavigation />
+        <GameTableNavigation css={navigationCss} />
         <PlayerPanels />
         {process.env.NODE_ENV === 'development' && <DevToolsHub fabBottom="calc(5em)" />}
       </GameTable>
@@ -48,4 +49,68 @@ function useTableRight(): number {
 
 const tableBorder = css`
   border: 1px solid white;
+`
+
+/**
+ * The two zoom buttons, taken off the left edge of the screen and hung under the menu instead.
+ *
+ * The top right corner is where everything that is not the game itself already lives: the menu
+ * button, and the buttons that slide out from under it towards the left — undo, full screen. Zooming
+ * belongs with them, and it is given their shape rather than one of its own: the same 2.5 em column
+ * against the right edge, the same parchment on jungle green, and the bottom corner rounded off the
+ * way the menu button's is. One block of chrome in one corner, and the table left clear everywhere
+ * else.
+ *
+ * The font size is the menu's own, so that "2.5 em" here is the very 2.5 em the menu button is wide.
+ */
+const navigationCss = css`
+  font-size: calc(3.2em * var(--gp-scale));
+  flex-direction: column;
+  top: 2.5em;
+  left: auto;
+  right: 0;
+  z-index: 990;
+  gap: 0;
+  transform: none;
+  overflow: hidden;
+  border-bottom-left-radius: 0.5em;
+  box-shadow: 0 0 0.2em black;
+
+  /* The shape of a pop button — 2.5 by 2.25 — at four fifths of its size: zooming is the smallest
+     thing this corner does, and it should not hang under the menu weighing more than the menu. */
+  > button {
+    font-size: 0.8em;
+    width: 2.5em;
+    height: 2.25em;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: ${colors.parchment};
+    color: ${colors.jungle};
+    filter: none;
+    transition: background 150ms ease;
+
+    &:not(:disabled) {
+      &:focus,
+      &:hover {
+        background: ${colors.canvasLight};
+        transform: none;
+      }
+
+      &:active {
+        background: ${colors.canvas};
+        transform: none;
+      }
+    }
+
+    /* Greyed rather than faded: an opacity here would let the table show through the button. */
+    &:disabled {
+      background: ${colors.parchment};
+      color: rgba(36, 59, 33, 0.3);
+    }
+  }
+
+  > button + button {
+    border-top: 0.05em solid rgba(36, 59, 33, 0.25);
+  }
 `

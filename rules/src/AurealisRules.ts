@@ -4,6 +4,7 @@ import {
   hideFront,
   hideFrontToOthers,
   HidingSecretsStrategy,
+  Material,
   MaterialGame,
   MaterialItem,
   MaterialMove,
@@ -38,6 +39,29 @@ import { SendArchaeologistsRule } from './rules/SendArchaeologistsRule'
  */
 const hideHandCard: HidingSecretsStrategy<number, LocationType> = (item: MaterialItem<number, LocationType>, player?: number) =>
   item.location.rotation ? hideFront(item) : hideFrontToOthers(item, player)
+
+/**
+ * The stand, ordered as any sequence is, but where a card that moves without being given a place
+ * keeps the one it had.
+ *
+ * The only such move is the cards drawn face down turning over at the end of the turn (see
+ * {@link RefillHandRule.endOfTurn}): they are one move carrying no `x`, and a plain sequence reads
+ * that as "send it to the end of the row" — three cards each sent to the end in turn come back in
+ * the order the items array happens to hold them, not the order they are standing in. The hand of
+ * the player whose turn it is would then reshuffle itself under their eyes for no reason at all.
+ *
+ * A place asked for is still honoured, and a card leaving still closes the gap behind it: only the
+ * "no place given" case changes, from "go to the end" to "stay where you are".
+ */
+class HandSequenceStrategy extends PositiveSequenceStrategy<number, MaterialType, LocationType> {
+  moveItem(material: Material<number, MaterialType, LocationType>, item: MaterialItem<number, LocationType>, index: number) {
+    if (item.location[this.axis] === undefined) {
+      item.location[this.axis] = material.getItem(index).location[this.axis]
+      return
+    }
+    super.moveItem(material, item, index)
+  }
+}
 
 /**
  * This class implements the rules of the board game.
@@ -91,7 +115,7 @@ export class AurealisRules
     [MaterialType.AdventurerCard]: {
       [LocationType.AdventurerDeck]: new PositiveSequenceStrategy(),
       [LocationType.AdventurerDiscard]: new PositiveSequenceStrategy(),
-      [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
+      [LocationType.PlayerHand]: new HandSequenceStrategy(),
       [LocationType.AdventurerRiver]: new FillGapStrategy()
     },
     [MaterialType.JungleCard]: {

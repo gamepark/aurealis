@@ -165,6 +165,12 @@ export const ARCHAEOLOGISTS_HEX_RADIUS = 1.6
  */
 export const PLAYER_JUNGLE: XYCoordinates = { x: 0.75, y: 10.8 }
 export const PLAYER_JUNGLE_GAP: XYCoordinates = { x: JUNGLE_ROW_STEP, y: 0 }
+/**
+ * The six cards the table is drawn for, and what the drop zone of a row covers whatever it already
+ * holds: a card is bought into the row, not onto the cards in it, and the whole strip the row is
+ * given has to answer — an empty row would otherwise be one card wide and a row of two, two.
+ */
+export const PLAYER_JUNGLE_SLOTS = 6
 
 /**
  * How far right the table has to reach for a player holding this many Jungle cards.

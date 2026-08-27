@@ -16,7 +16,7 @@ import { CustomMoveType } from '@gamepark/aurealis/rules/CustomMoveType'
 import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
 import { isCreateItemType, isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
-import { JUNGLE_DIG_SITE_BONUS } from '../locators/TableLayout'
+import { JUNGLE_DIG_SITE_BONUS, PLAYER_JUNGLE_GAP } from '../locators/TableLayout'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { JungleCardHelp } from './help/JungleCardHelp'
 import { pileTopHelp } from './PileTopHelp'
@@ -91,10 +91,20 @@ const BUY_BUTTON = { x: WIDTH / 2 - 1.35, y: -HEIGHT / 2 + 1.35 }
  */
 const DIG_SITE_BUTTON = { x: ((JUNGLE_DIG_SITE_BONUS.x - 50) / 100) * WIDTH, y: 4.8 }
 
-/** One Archaeologist move is one card along the row, in either direction (see MoveArchaeologistsRule). */
+/**
+ * One Archaeologist move is one card along the row, in either direction (see MoveArchaeologistsRule),
+ * and each arrow stands on the border it crosses: half a step from the middle of the card is exactly
+ * the seam between it and its neighbour.
+ *
+ * Which puts the right arrow of a card and the left arrow of the next one on the very same seam, so
+ * the two are parted by height instead: rightwards above, leftwards below. A pair of arrows read
+ * that way is a two-way road between the two cards — the lane going right on top, the one coming
+ * back underneath — and the 2.5 cm between them clears the 2.2 cm of a button.
+ */
+const ARROW_X = PLAYER_JUNGLE_GAP.x / 2
 const STEPS = [
-  { step: -1, icon: faArrowLeft, title: 'button.move-left' },
-  { step: 1, icon: faArrowRight, title: 'button.move-right' }
+  { step: -1, icon: faArrowLeft, title: 'button.move-left', x: -ARROW_X, y: 0 },
+  { step: 1, icon: faArrowRight, title: 'button.move-right', x: ARROW_X, y: -2.5 }
 ]
 
 /**
@@ -210,13 +220,13 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
     switch (rules.game.rule?.id as RuleId | undefined) {
       case RuleId.MoveArchaeologists:
         if (pawn === undefined) return []
-        return STEPS.flatMap(({ step, icon, title }) => {
+        return STEPS.flatMap(({ step, icon, title, x, y }) => {
           const neighbour = this.neighbour(rules, item, step)
           if (neighbour === undefined) return []
           const move = legalMoves.find(
             (move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === pawn && move.location.parent === neighbour
           )
-          return move ? [{ move, icon, title }] : []
+          return move ? [{ move, icon, title, x, y }] : []
         })
       case RuleId.SendArchaeologists: {
         const actions: ItemMenuAction[] = []

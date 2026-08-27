@@ -1,4 +1,14 @@
-import { FlexLocator, HandLocator, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
+import {
+  DropAreaDescription,
+  FlexLocator,
+  getItemFromContext,
+  HandLocator,
+  ItemContext,
+  ListLocator,
+  Locator,
+  MaterialContext,
+  PileLocator
+} from '@gamepark/react-game'
 import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
 import { zoomOnHover } from './HoverZoom'
 import {
@@ -11,6 +21,7 @@ import {
   PLAYER_HAND_RADIUS,
   PLAYER_JUNGLE,
   PLAYER_JUNGLE_GAP,
+  PLAYER_JUNGLE_SLOTS,
   PLAYER_TILES,
   PLAYER_TILES_GAP,
   PLAYER_TILES_LINE_GAP,
@@ -91,6 +102,35 @@ class BaseCampArchaeologistsLocator extends Locator {
 class PlayerJungleLocator extends PlayerAreaLocator {
   areaCoordinates = PLAYER_JUNGLE
   areaGap = PLAYER_JUNGLE_GAP
+
+  /**
+   * The whole strip the row is given, rather than the box the cards already laid happen to fill.
+   *
+   * A Jungle card is bought into a player's row, and the row is one place: the card goes at its end
+   * whichever spot of it was aimed at. So the target is the strip, {@link PLAYER_JUNGLE_SLOTS} cards
+   * wide — and one card wider than the row itself once it has grown past that, since the strip must
+   * always have room for the card being dropped.
+   */
+  private dropSlots(location: Location, context: MaterialContext) {
+    return Math.max(PLAYER_JUNGLE_SLOTS, this.countItems(location, context) + 1)
+  }
+
+  /** The middle of that strip: the drop zone is drawn centred on wherever the location stands. */
+  getAreaCoordinates(location: Location, context: MaterialContext) {
+    const { x, y } = playerSide(PLAYER_JUNGLE, location, context)
+    return { x: x + (PLAYER_JUNGLE_GAP.x * (this.dropSlots(location, context) - 1)) / 2, y }
+  }
+
+  generateLocationDescriptionFromDraggedItem(location: Location, context: ItemContext) {
+    const { id } = getItemFromContext(context)
+    const description = context.material[context.type]
+    const { width = 0, height = 0 } = description?.getSize(id) ?? {}
+    return new DropAreaDescription({
+      width: width + PLAYER_JUNGLE_GAP.x * (this.dropSlots(location, context) - 1),
+      height,
+      borderRadius: description?.getBorderRadius(id) ?? 0
+    })
+  }
 }
 
 /** Far beyond any quantity a player can hold: see {@link PlayerCoinsLocator.getItemCoordinates}. */
