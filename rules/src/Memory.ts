@@ -11,5 +11,11 @@ export enum Memory {
   /** What is left of the current effect: moves to spend, pawns to place, cards to discard. */
   Remaining,
   /** Set when the game ends, since the rule that ended it is gone by the time players are ranked. */
-  Winner
+  Winner,
+  /**
+   * The Archaeologist the player has picked but not yet sent (see
+   * {@link CustomMoveType.SelectArchaeologist}). Local to whoever is playing: the server never hears
+   * of it, and it is forgotten the moment the pawn lands.
+   */
+  SelectedArchaeologist
 }

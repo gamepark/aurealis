@@ -37,7 +37,12 @@ const TILE_STEP = TILE_WIDTH + 0.3
  * The right edge is not a constant: see {@link COMMON_AREA_RIGHT} and {@link jungleRowEnd}.
  */
 export const TABLE_LEFT = -42.5
-export const TABLE_HEIGHT = 32.4
+/**
+ * The hand and the Camp de base end 15.2 cm below the middle; what reaches furthest down is the lower
+ * pair of power buttons, whose discs hang to 16.7 (see BaseCampCardDescription). Half a table height
+ * has to cover that, or they fall outside the table and off the bottom of a phone screen.
+ */
+export const TABLE_HEIGHT = 33.6
 
 // ---------------------------------------------------------------- common area, the middle band
 
@@ -168,7 +173,17 @@ export const jungleRowEnd = (cards: number): number => PLAYER_JUNGLE.x + JUNGLE_
 
 /** High enough to clear the panel, which grows taller in centimetres as the table gets shorter. */
 export const PLAYER_COINS: XYCoordinates = { x: -39.5, y: 10.7 }
-export const PLAYER_COINS_GAP: XYCoordinates = { x: 3.2, y: 0 }
+/**
+ * From the middle of the heap of 3s to the middle of the heap of 1s. Wide enough for the two of them
+ * to stay apart once spread: a 3 is 2.9 cm across and a 1 is 2 cm, so half of each plus the spread of
+ * both comes to a little over 4 cm.
+ */
+export const PLAYER_COINS_GAP: XYCoordinates = { x: 4.4, y: 0 }
+/**
+ * How far a coin may fall from the middle of its heap. Wider than tall: the gold lies in the strip
+ * left over above the panel, which has room sideways and none to spare downwards.
+ */
+export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 0.8, y: 0.45 }
 
 /**
  * Won tiles, in a single line over the hand: the 7th one ends the game, and one line of 7 is 3.3 cm

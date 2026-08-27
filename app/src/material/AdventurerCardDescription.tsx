@@ -1,7 +1,13 @@
+import { faHand } from '@fortawesome/free-solid-svg-icons/faHand'
+import { faHandPointer } from '@fortawesome/free-solid-svg-icons/faHandPointer'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons/faTrashCan'
 import { AdventurerBack, Adventurer, AdventurerId } from '@gamepark/aurealis/material/Adventurer'
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { CardDescription } from '@gamepark/react-game'
+import { RuleId } from '@gamepark/aurealis/rules/RuleId'
+import { CardDescription, ItemContext } from '@gamepark/react-game'
+import { isMoveItemType, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import naturalist1 from '../images/cards/adventurers/Naturalist1.jpg'
 import naturalist2 from '../images/cards/adventurers/Naturalist2.jpg'
 import naturalist3 from '../images/cards/adventurers/Naturalist3.jpg'
@@ -72,6 +78,46 @@ import expeditionLeaderExplorerBack from '../images/cards/adventurers/backs/Expe
 import expeditionLeaderExpeditionLeaderBack from '../images/cards/adventurers/backs/ExpeditionLeaderExpeditionLeaderBack.jpg'
 
 /**
+ * Above the top edge of a card 7 cm tall, biting about 6 mm into it: enough of an overlap to belong
+ * to the card, little enough to leave its illustration and its numbers to be read.
+ */
+const BUTTON_Y = -4
+
+/**
+ * Drawing is the other way round: the button sits at the foot of the card, three quarters of the disc
+ * over it. The cards of the river stand in the middle of the table with the two players facing each
+ * other across them, and a button hanging off the top of one would be reaching towards the opponent.
+ *
+ * Three quarters of a 2.2 cm disc is 1.65 cm of overlap, off a bottom edge 3.5 cm below the middle.
+ */
+const DRAW_BUTTON_Y = 3.5 - 2.2 * 0.75 + 1.1
+
+/**
+ * What letting go of an Adventurer card, or taking one, means at each step of a turn.
+ *
+ * The three icons are the ones the org's other adaptations already use for these three gestures (see
+ * ../chateau-combo, ../architects-of-amytis, ../bloody-grove): the pointing hand picks the card out —
+ * it is the "this one" of every card game — the open palm takes a card into hand, and the bin gives
+ * one up. Nothing here is a play button: a card is not started, it is put down.
+ *
+ * The pointing hand is turned over so that the finger comes down onto the card underneath, rather
+ * than up at the empty table: standing above the card, it has to point back at what it designates.
+ * The open palm is the one that stands at the foot of its card instead (see {@link DRAW_BUTTON_Y}).
+ */
+const cardAction = (rule?: RuleId): Pick<ItemMenuAction, 'icon' | 'title' | 'rotation' | 'y'> => {
+  switch (rule) {
+    // The 3 cards a Camp de base action costs, given up one at a time (see BaseCampDiscardRule).
+    case RuleId.BaseCampDiscard:
+      return { icon: faTrashCan, title: 'button.discard-card' }
+    // Step IV: the backs of the river, taken face down into the hand (see RefillHandRule).
+    case RuleId.RefillHand:
+      return { icon: faHand, title: 'button.draw-card', y: DRAW_BUTTON_Y }
+    default:
+      return { icon: faHandPointer, title: 'button.play-card', rotation: 180 }
+  }
+}
+
+/**
  * Adventurer cards are 44 x 70 mm. Their id is composite: `images` is keyed by `id.front` and
  * `backImages` by `id.back`, which the framework reads through getFrontId / getBackId. The default
  * `isFlipped` — front undefined — is what we want here: a card whose front is hidden shows its back,
@@ -80,6 +126,13 @@ import expeditionLeaderExpeditionLeaderBack from '../images/cards/adventurers/ba
 class AdventurerCardDescription extends CardDescription<number, MaterialType, LocationType, AdventurerId> {
   width = 4.4
   height = 7
+
+  /**
+   * The button stands on the card from the moment the card can be played, rather than appearing once
+   * it has been clicked: a hand of 5 is read as a whole — which cards may be played at all is half
+   * the decision — and a click is left free to open the card's help.
+   */
+  menuAlwaysVisible = true
 
   images = {
     [Adventurer.Naturalist1]: naturalist1,
@@ -153,6 +206,22 @@ class AdventurerCardDescription extends CardDescription<number, MaterialType, Lo
     [AdventurerBack.ExpeditionLeaderArchaeologist]: expeditionLeaderArchaeologistBack,
     [AdventurerBack.ExpeditionLeaderExplorer]: expeditionLeaderExplorerBack,
     [AdventurerBack.ExpeditionLeaderExpeditionLeader]: expeditionLeaderExpeditionLeaderBack
+  }
+
+  /**
+   * One button per card the player may let go of. A card only ever has one thing to do at a time —
+   * played, discarded or drawn are three steps of a turn, never two at once — so there is never more
+   * than one button here, and what it means is read off the step being played.
+   */
+  getItemMenu(
+    _item: MaterialItem<number, LocationType, AdventurerId>,
+    context: ItemContext<number, MaterialType, LocationType>,
+    legalMoves: MaterialMove<number, MaterialType, LocationType>[]
+  ) {
+    const move = legalMoves.find((move) => isMoveItemType(MaterialType.AdventurerCard)(move) && move.itemIndex === context.index)
+    if (!move) return null
+    const actions: ItemMenuAction[] = [{ move, ...cardAction(context.rules.game.rule?.id as RuleId | undefined) }]
+    return <ItemMenuActions actions={actions} y={BUTTON_Y} />
   }
 }
 

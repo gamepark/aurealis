@@ -17,11 +17,11 @@
       "player": "{player} déplace ses Archéologues"
     },
     "move-archaeologists-or-gold": {
-      "you": "{count, plural, one {# déplacement d'Archéologue} other {# déplacements d'Archéologue}} : déplacez vos pions, ou <gold>prenez le reste en Pièces d'or</gold>",
+      "you": "{count, plural, one {# déplacement d'Archéologue} other {# déplacements d'Archéologue}} : déplacez vos pions, ou prenez le reste en Pièces d'or sur votre Camp de base",
       "player": "{player} répartit ses déplacements d'Archéologue et ses Pièces d'or"
     },
     "send-archaeologists": {
-      "you": "Envoyez {count, plural, one {# Archéologue} other {# Archéologues}} sur les cartes Jungle de votre choix",
+      "you": "Envoyez {count, plural, one {# Archéologue} other {# Archéologues}} sur les cartes Jungle de votre choix : choisissez une carte de départ, puis une carte d'arrivée",
       "player": "{player} envoie ses Archéologues dans la jungle"
     },
     "place-animals": {
@@ -40,5 +40,25 @@
       "you": "Complétez votre main : choisissez {count, plural, one {# carte} other {# cartes}} dans la rivière, sans en regarder le recto",
       "player": "{player} complète sa main de cartes"
     }
+  },
+  "button": {
+    "play-card": "Jouer cette carte",
+    "discard-card": "Défausser cette carte",
+    "draw-card": "Prendre cette carte",
+    "base-camp": {
+      "gold": "Action Camp de base : Pièces d'or",
+      "animal": "Action Camp de base : pions Animal",
+      "moves": "Action Camp de base : déplacements d'Archéologue",
+      "jungle": "Action Camp de base : acheter une carte Jungle"
+    },
+    "take-gold": "Prendre le reste en Pièces d'or",
+    "build-dig-site": "Construire un Site de fouilles",
+    "place-animal": "Placer un pion Animal",
+    "buy-jungle": "Prendre cette carte Jungle",
+    "move-left": "Déplacer un Archéologue vers la gauche",
+    "move-right": "Déplacer un Archéologue vers la droite",
+    "select-archaeologist": "Choisir un Archéologue sur cette carte",
+    "unselect-archaeologist": "Ne plus déplacer cet Archéologue",
+    "send-archaeologist": "Envoyer l'Archéologue sur cette carte"
   }
 }

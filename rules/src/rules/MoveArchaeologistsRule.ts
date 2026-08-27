@@ -1,6 +1,5 @@
 import { CustomMove, isCustomMoveType, isMoveItemType } from '@gamepark/rules-api'
 import { EffectType } from '../material/Effect'
-import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { Memory } from '../Memory'
 import { AurealisItemMove, AurealisMove, AurealisRule, isOnJungleCard } from './AurealisRule'
@@ -59,7 +58,7 @@ export class MoveArchaeologistsRule extends AurealisRule {
     const row = this.jungleRow
     if (!row.length) return []
     const moves: AurealisMove[] = []
-    for (const pawn of this.material(MaterialType.ArchaeologistPawn).location(LocationType.BaseCampArchaeologists).player(this.player).getIndexes()) {
+    for (const pawn of this.campArchaeologists.getIndexes()) {
       moves.push(this.movePawn(pawn, row[0]))
     }
     row.forEach((card, x) => {

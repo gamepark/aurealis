@@ -1,5 +1,11 @@
 import { CustomMove, isCreateItem, isCustomMoveType, isMoveItem, ItemMove, Location, Material, MaterialMove, PlayerTurnRule } from '@gamepark/rules-api'
 import { AdventurerId, getBackMainType } from '../material/Adventurer'
+import {
+  archaeologistsAtCamp,
+  archaeologistsOn,
+  archaeologistsOnSlots,
+  extraArchaeologistsOn
+} from '../material/Archaeologists'
 import { coins } from '../material/Coin'
 import { CardsInPlay, noCards, TypeCount } from '../material/Condition'
 import { Effect } from '../material/Effect'
@@ -124,19 +130,27 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     return this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalSpace).parent(card)
   }
 
+  /**
+   * Where the Archaeologists stand. Asked through {@link Archaeologists} rather than answered here,
+   * because the display puts the very same questions to decide which pawn each of its buttons moves.
+   */
+  get campArchaeologists(): AurealisMaterial {
+    return archaeologistsAtCamp(this, this.player)
+  }
+
   /** The Archaeologists standing on the printed slots of the card: only they build a Dig Site. */
   archaeologistsOnSlots(card: number): AurealisMaterial {
-    return this.material(MaterialType.ArchaeologistPawn).location(LocationType.JungleArchaeologistSpace).parent(card)
+    return archaeologistsOnSlots(this, card)
   }
 
   /** The ones standing on the card outside its slots, gathered in the middle of it. */
   extraArchaeologistsOn(card: number): AurealisMaterial {
-    return this.material(MaterialType.ArchaeologistPawn).location(LocationType.JungleExtraArchaeologists).parent(card)
+    return extraArchaeologistsOn(this, card)
   }
 
   /** Every Archaeologist on the card, slots or not: they can all leave it again. */
   archaeologistsOn(card: number): number[] {
-    return [...this.archaeologistsOnSlots(card).getIndexes(), ...this.extraArchaeologistsOn(card).getIndexes()]
+    return archaeologistsOn(this, card)
   }
 
   /**

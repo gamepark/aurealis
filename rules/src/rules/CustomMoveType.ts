@@ -13,5 +13,15 @@ export enum CustomMoveType {
    * are made of say nothing anyone wants to read: what a player gains is one amount, once, whether
    * it comes from a card, a tile or a handful of Archaeologist moves left unused.
    */
-  GainGold
+  GainGold,
+  /**
+   * Picking the Archaeologist to send next. Data: the index of the pawn.
+   *
+   * The only move of the game that never leaves the player's own screen (see
+   * {@link AurealisRules.previewMove}): sending an Archaeologist onto any Jungle card takes two
+   * clicks — the pawn, then where it goes — and the first of them decides nothing. The rules accept
+   * every pawn wherever the selection stands, so the opponent has nothing to be told and the history
+   * has nothing to write.
+   */
+  SelectArchaeologist
 }

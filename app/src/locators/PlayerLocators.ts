@@ -1,10 +1,11 @@
-import { FlexLocator, HandLocator, ItemContext, ListLocator, Locator, MaterialContext } from '@gamepark/react-game'
+import { FlexLocator, HandLocator, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
 import { Location, MaterialItem, XYCoordinates } from '@gamepark/rules-api'
 import {
   BASE_CAMP_ARCHAEOLOGISTS_OFFSET,
   PLAYER_BASE_CAMP,
   PLAYER_COINS,
   PLAYER_COINS_GAP,
+  PLAYER_COINS_RADIUS,
   PLAYER_HAND,
   PLAYER_HAND_MAX_ANGLE,
   PLAYER_HAND_RADIUS,
@@ -88,13 +89,34 @@ class PlayerJungleLocator extends PlayerAreaLocator {
   areaGap = PLAYER_JUNGLE_GAP
 }
 
-/** One item per denomination, the 3s before the 1s, whatever order they were gained in. */
-class PlayerCoinsLocator extends PlayerAreaLocator {
-  areaCoordinates = PLAYER_COINS
-  areaGap = PLAYER_COINS_GAP
+/**
+ * A player's gold, as two heaps side by side: the 3s and the 1s.
+ *
+ * Money is one item per denomination carrying a quantity, and the framework draws one coin per unit
+ * of that quantity. So the copies have to be spread out: laid on one spot, four 3s look exactly like
+ * a single 3, and the table then states a number that is not the player's — 10 gold read as 4.
+ *
+ * Hence a heap rather than a spot, and a minimum distance so that no coin can ever hide another
+ * whole. A heap is not a count, and it is not meant to be one: it says "some gold, more than a
+ * couple of pieces", and the exact amount is one hover away (see {@link MoneyDescription}).
+ */
+class PlayerCoinsLocator extends PileLocator {
+  radius = PLAYER_COINS_RADIUS
+  maxAngle = 15
+  minimumDistance = 0.3
 
-  getItemIndex(item: MaterialItem) {
-    return item.id === 3 ? 0 : 1
+  getCoordinates(location: Location, context: MaterialContext) {
+    return playerSide(PLAYER_COINS, location, context)
+  }
+
+  /** One heap per denomination, so a 1 is never spread against the 3s it is kept apart from. */
+  getPileId(item: MaterialItem) {
+    return `${item.location.player}_${item.id}`
+  }
+
+  getItemCoordinates(item: MaterialItem, context: ItemContext) {
+    const { x = 0, y = 0, z = 0 } = super.getItemCoordinates(item, context)
+    return { x: x + (item.id === 3 ? 0 : PLAYER_COINS_GAP.x), y, z }
   }
 }
 
