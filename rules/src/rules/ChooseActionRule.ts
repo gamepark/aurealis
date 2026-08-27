@@ -1,6 +1,6 @@
-import { CustomMove, isCreateItemType, isCustomMoveType, isMoveItemType } from '@gamepark/rules-api'
+import { CustomMove, isCreateItemType, isCustomMoveType, isMoveItemType, MoveItem } from '@gamepark/rules-api'
 import { TILES_TO_WIN } from '../Constants'
-import { AdventurerId } from '../material/Adventurer'
+import { Adventurer, AdventurerId } from '../material/Adventurer'
 import { ConditionEffectLine, getLineEffects, getPlayableLine } from '../material/AdventurerLines'
 import { BASE_CAMP_COST, BaseCamp, BaseCampPower, getBaseCampPowerEffects, isImprovedPower } from '../material/BaseCamp'
 import { CardsInPlay } from '../material/Condition'
@@ -131,12 +131,24 @@ export class ChooseActionRule extends AurealisRule {
    */
   beforeItemMove(move: AurealisItemMove): AurealisMove[] {
     if (isMoveItemType(MaterialType.AdventurerCard)(move) && move.location.type === LocationType.AdventurerDiscard) {
-      const card = this.adventurers.getItem<AdventurerId>(move.itemIndex).id.front
+      const card = this.playedCard(move)
       const cards = this.cardsInPlay
       const line = card !== undefined ? getPlayableLine(card, cards) : undefined
       if (line) this.pushEffects(getLineEffects(line, cards))
     }
     return []
+  }
+
+  /**
+   * The card being played, read where it can be read from. On the stand its front is a secret, so
+   * the opponent's screen only ever learns it from the move itself, which carries it in `reveal` —
+   * and it is applied to the item afterwards, too late for the line to be read here. Read from the
+   * stand alone, the card would be nothing on that screen: no line, no effects queued, and a queue
+   * that has parted ways with the server's for the rest of the action.
+   */
+  private playedCard(move: MoveItem<number, MaterialType, LocationType>): Adventurer | undefined {
+    const revealed = move.reveal?.id as AdventurerId | undefined
+    return revealed?.front ?? this.adventurers.getItem<AdventurerId>(move.itemIndex).id.front
   }
 
   afterItemMove(move: AurealisItemMove): AurealisMove[] {
