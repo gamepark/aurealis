@@ -3,6 +3,7 @@ import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
 import { Tile, TilePile } from '@gamepark/aurealis/material/Tile'
 import { FlexLocator, isItemContext, ItemContext, ListLocator, Locator, MaterialContext, PileLocator } from '@gamepark/react-game'
 import { Location, MaterialItem } from '@gamepark/rules-api'
+import { GOLD_BUTTON_ANCHOR } from '../material/CoinDescription'
 import { StackLocator, zoomOnHover } from './HoverZoom'
 import {
   ANIMAL_PAWNS,
@@ -91,7 +92,22 @@ const digSitePawnsLocator = new ListLocator({ coordinates: DIG_SITE_PAWNS, gap: 
  * by their description, not items of the game state, and they are money anyway — nobody ever picks
  * one out, the framework makes the change itself.
  */
-const reserveCoinsLocator = new PileLocator({ coordinates: RESERVE_COINS, radius: { x: 1.2, y: 0.8 } })
+class ReserveCoinsLocator extends PileLocator<number, MaterialType, LocationType> {
+  coordinates = RESERVE_COINS
+  radius = { x: 1.2, y: 0.7 }
+
+  /**
+   * One coin of the heap does not get drawn a spot: the unit the "take gold" button hangs from
+   * (see {@link GOLD_BUTTON_ANCHOR}) sits exactly on the middle of the heap, so the button stands
+   * over the gold rather than a centimetre off it. The other 15 coins bury it all the same.
+   */
+  generateItemPosition(item: MaterialItem<number, LocationType>, context: ItemContext<number, MaterialType, LocationType>) {
+    if (context.index === GOLD_BUTTON_ANCHOR.index && context.displayIndex === GOLD_BUTTON_ANCHOR.displayIndex) return { x: 0, y: 0 }
+    return super.generateItemPosition(item, context)
+  }
+}
+
+const reserveCoinsLocator = new ReserveCoinsLocator()
 
 const animalPawnsLocator = new PileLocator({ coordinates: ANIMAL_PAWNS, radius: { x: 1.5, y: 0.8 } })
 

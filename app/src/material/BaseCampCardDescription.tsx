@@ -1,5 +1,4 @@
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp'
-import { faCoins } from '@fortawesome/free-solid-svg-icons/faCoins'
 import { faPersonHiking } from '@fortawesome/free-solid-svg-icons/faPersonHiking'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { lastArchaeologistAtCamp } from '@gamepark/aurealis/material/Archaeologists'
@@ -88,7 +87,7 @@ class BaseCampCardDescription extends CardDescription<number, MaterialType, Loca
     // No legal move at all means it is not this player's turn, and the opponent's camp is never theirs.
     if (!legalMoves.length || item.location.player !== context.player) return null
     const powers = this.powerMenu(item, legalMoves)
-    const actions = this.campMenu(context, legalMoves)
+    const actions = this.campMenu(context)
     return (
       <>
         {!!powers.length && <ItemMenuActions actions={powers} />}
@@ -118,24 +117,21 @@ class BaseCampCardDescription extends CardDescription<number, MaterialType, Loca
   }
 
   /**
-   * What an effect being resolved offers from the camp itself: the team still waiting there, and the
-   * gold that Archaeologist moves can be taken as instead (see MoveArchaeologistsRule).
+   * What an effect being resolved offers from the camp itself: the team still waiting there.
    *
    * Walking that team out into the jungle is *not* offered here. The arrows of a move all stand on
    * the seam they cross and belong to the card on the right of it, the first Jungle card of the row
    * being the one that carries the seam with the camp (see JungleCardDescription): a player follows
    * one row of arrows from the camp to the end of their jungle rather than a first pair of buttons
    * shaped unlike all the others.
+   *
+   * Neither is the gold those moves can be taken as instead: it is offered on the supply heap the
+   * coins come from (see {@link CoinDescription}).
    */
-  private campMenu(
-    context: ItemContext<number, MaterialType, LocationType>,
-    legalMoves: MaterialMove<number, MaterialType, LocationType>[]
-  ): ItemMenuAction[] {
+  private campMenu(context: ItemContext<number, MaterialType, LocationType>): ItemMenuAction[] {
     const rules = context.rules as AurealisRules
     const pawn = lastArchaeologistAtCamp(rules, context.player!)
     const actions: ItemMenuAction[] = []
-    const gold = legalMoves.find(isCustomMoveType(CustomMoveType.GainGold))
-    if (gold) actions.push({ move: gold, icon: faCoins, title: 'button.take-gold', label: String(gold.data) })
     // Picked here, sent from the Jungle card the player then presses (see JungleCardDescription).
     if (pawn !== undefined && (rules.game.rule?.id as RuleId | undefined) === RuleId.SendArchaeologists) {
       const selected = rules.remind<number | undefined>(Memory.SelectedArchaeologist)
