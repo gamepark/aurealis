@@ -333,7 +333,9 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
     const player = item.location.player!
     this.pushEffects(getJungleBonuses(item.id).digSite)
-    return this.archaeologistsOnSlots(card).moveItems({ type: LocationType.BaseCampArchaeologists, player })
+    const archaeologists = this.archaeologistsOnSlots(card)
+    // The whole team walks home as one: a single move, and a single animation for it.
+    return archaeologists.length ? [archaeologists.moveItemsAtOnce({ type: LocationType.BaseCampArchaeologists, player })] : []
   }
 
   /**
