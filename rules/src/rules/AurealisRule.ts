@@ -326,8 +326,12 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     switch (location.type) {
       case LocationType.JungleAnimalSpace:
         return this.checkAnimalBonus(location.parent)
-      case LocationType.JungleDigSiteBonus:
-        return [...this.onDigSiteBuilt(location.parent), ...this.checkExplorationBonus(location.parent)]
+      case LocationType.JungleDigSiteBonus: {
+        // Both bonuses of the card can fall due on the same move, and then the team that built the
+        // Site is already walking home: the Bonus Exploration must not gather it back onto the card.
+        const goingHome = this.archaeologistsOnSlots(location.parent).getIndexes()
+        return [...this.onDigSiteBuilt(location.parent), ...this.checkExplorationBonus(location.parent, goingHome)]
+      }
       case LocationType.JungleAnimalBonus:
         return this.checkExplorationBonus(location.parent)
       default:
@@ -372,7 +376,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
    * the supply and the card is turned onto its completed face. The Archaeologists still standing on
    * it stay on it — there is simply nothing left for them to do there (rulebook p.5 and p.8).
    */
-  private checkExplorationBonus(card: number): AurealisMove[] {
+  private checkExplorationBonus(card: number, goingHome: number[] = []): AurealisMove[] {
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
     if (item.location.type !== LocationType.PlayerJungle || this.isCompleted(item)) return []
     const digSite = this.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card)
@@ -383,7 +387,9 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
       ...digSite.deleteItems(),
       ...animal.deleteItems(),
       // The completed face has no slot: whoever is still standing on one gathers in the middle.
-      ...this.archaeologistsOnSlots(card).moveItems({ type: LocationType.JungleExtraArchaeologists, parent: card }),
+      ...this.archaeologistsOnSlots(card)
+        .index((index) => !goingHome.includes(index))
+        .moveItems({ type: LocationType.JungleExtraArchaeologists, parent: card }),
       this.material(MaterialType.JungleCard).index(card).rotateItem(true)
     ]
   }
