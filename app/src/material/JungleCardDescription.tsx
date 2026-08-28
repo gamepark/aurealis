@@ -15,7 +15,7 @@ import { Memory } from '@gamepark/aurealis/Memory'
 import { CustomMoveType } from '@gamepark/aurealis/rules/CustomMoveType'
 import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { CardDescription, ItemContext } from '@gamepark/react-game'
-import { isCreateItemType, isMoveItemType, isMoveItemTypeAtOnce, MaterialItem, MaterialMove } from '@gamepark/rules-api'
+import { isCreateItemType, isCreateItemTypeAtOnce, isMoveItemType, isMoveItemTypeAtOnce, MaterialItem, MaterialMove } from '@gamepark/rules-api'
 import { JUNGLE_DIG_SITE_BONUS, PLAYER_JUNGLE_GAP } from '../locators/TableLayout'
 import { ItemMenuAction, ItemMenuActions } from '../theme/ItemMenuActions'
 import { JungleCardHelp } from './help/JungleCardHelp'
@@ -115,6 +115,18 @@ const MOVE_RIGHT = { x: ARROW_X, y: 0 }
 const MOVE_LEFT = { x: ARROW_X, y: ARROW_STEP }
 
 /**
+ * The two ways of putting Animal pawns on a card, one under the other in the middle of it, parted by
+ * the same {@link ARROW_STEP} that clears a button.
+ *
+ * The one filling several spaces at once stands on top, where the single button stands when it is
+ * alone: it is the one carrying a label, and a label needs the room over the illustration. Alone,
+ * the single button keeps that place — a lone button in the middle of a card reads as "this card",
+ * and nothing is gained by lowering it.
+ */
+const PLACE_ANIMALS_TOGETHER = { x: 0, y: BUTTON_Y }
+const PLACE_ANIMAL_BELOW = { x: 0, y: BUTTON_Y + ARROW_STEP }
+
+/**
  * The id of a Jungle card is a simple Jungle: both `images` and `backImages` are keyed by it, since
  * getFrontId and getBackId both return a non-object id as is.
  *
@@ -151,8 +163,9 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
    * clear of everything printed on the card; building a Dig Site is the exception and stands under the
    * space it fills (see {@link DIG_SITE_BUTTON}).
    *
-   * Never more than two at a time, and when there are two they are a pair: an Archaeologist walking
-   * left or right, or the card a pawn was picked from beside the card it may be sent to.
+   * Never more than two or three at a time, and they always belong together: an Archaeologist walking
+   * left or right, the card a pawn was picked from beside the card it may be sent to, or the same
+   * pawns placed one at a time or several at once.
    */
   getItemMenu(
     item: MaterialItem<number, LocationType, Jungle>,
@@ -199,12 +212,36 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
     if (buy) return [{ move: buy, icon: faSackDollar, title: 'button.buy-jungle', ...BUY_BUTTON }]
     const digSite = legalMoves.find((move) => isCreateItemType(MaterialType.DigSitePawn)(move) && move.item.location.parent === card)
     if (digSite) return [{ move: digSite, icon: faPersonDigging, title: 'button.build-dig-site', ...DIG_SITE_BUTTON }]
+    return this.animalActions(card, legalMoves)
+  }
+
+  /**
+   * The Animal pawns landing on this card: one, or as many as its free spaces can take in one go
+   * (see PlaceAnimalsRule). The ×N is those N presses of the single button, so the two stand one
+   * over the other rather than side by side — they are one action at two speeds, not a choice
+   * between two things.
+   */
+  private animalActions(card: number, legalMoves: MaterialMove<number, MaterialType, LocationType>[]): ItemMenuAction[] {
     const animal = legalMoves.find(
       (move) =>
         isCreateItemType(MaterialType.AnimalPawn)(move) && move.item.location.type === LocationType.JungleAnimalSpace && move.item.location.parent === card
     )
-    if (animal) return [{ move: animal, icon: faPaw, title: 'button.place-animal' }]
-    return []
+    if (!animal) return []
+    const together = legalMoves
+      .filter(isCreateItemTypeAtOnce(MaterialType.AnimalPawn))
+      .find((move) => move.items[0]?.location.type === LocationType.JungleAnimalSpace && move.items[0]?.location.parent === card)
+    if (!together) return [{ move: animal, icon: faPaw, title: 'button.place-animal' }]
+    return [
+      {
+        move: together,
+        icon: faPaw,
+        title: 'button.place-animals-together',
+        titleValues: { count: together.items.length },
+        label: `×${together.items.length}`,
+        ...PLACE_ANIMALS_TOGETHER
+      },
+      { move: animal, icon: faPaw, title: 'button.place-animal', ...PLACE_ANIMAL_BELOW }
+    ]
   }
 
   /**

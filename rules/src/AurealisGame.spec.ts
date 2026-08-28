@@ -58,7 +58,10 @@ const check = (game: Game) => {
   // A player never holds more than one Dig Site pawn per card, nor an Animal pawn on a completed card.
   for (const card of rules.material(MaterialType.JungleCard).getIndexes()) {
     expect(rules.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card).length).toBeLessThanOrEqual(1)
-    expect(rules.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card).length).toBeLessThanOrEqual(1)
+    const animalBonus = rules.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card).length
+    expect(animalBonus).toBeLessThanOrEqual(1)
+    // Once the Bonus Animal is obtained, the spaces of the card are closed for good.
+    if (animalBonus) expect(rules.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalSpace).parent(card).length).toBe(0)
   }
 }
 

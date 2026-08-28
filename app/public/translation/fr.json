@@ -63,6 +63,7 @@
     "take-gold": "Prendre le reste en Pièces d'or",
     "build-dig-site": "Construire un Site de fouilles",
     "place-animal": "Placer un pion Animal",
+    "place-animals-together": "Placer {count} pions Animal sur cette carte d'un seul coup",
     "buy-jungle": "Prendre cette carte Jungle",
     "move-left": "Déplacer un Archéologue vers la gauche",
     "move-right": "Déplacer un Archéologue vers la droite",

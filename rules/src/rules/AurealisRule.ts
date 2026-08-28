@@ -1,6 +1,7 @@
 import {
   CustomMove,
   isCreateItem,
+  isCreateItemsAtOnce,
   isCustomMoveType,
   isMoveItem,
   isMoveItemsAtOnce,
@@ -39,6 +40,8 @@ export const isOnJungleCard = (type?: LocationType): boolean =>
 /** Where an item move puts the item, whether it creates it there or brings it from somewhere else. */
 const destination = (move: AurealisItemMove): Partial<Location<number, LocationType>> | undefined => {
   if (isCreateItem(move)) return move.item.location
+  // Items are only ever created at once to fill one place: the Animal spaces of a single card.
+  if (isCreateItemsAtOnce(move)) return move.items[0]?.location
   if (isMoveItem(move) || isMoveItemsAtOnce(move)) return move.location
   return undefined
 }
@@ -106,9 +109,17 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     return !!card.location.rotation
   }
 
+  /**
+   * The pawn sitting on the Bonus Animal space is the record that the bonus was obtained
+   * (rulebook p.5): the spaces of the card are then emptied for good, and nothing goes back on them.
+   */
+  hasAnimalBonus(card: number): boolean {
+    return this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card).length > 0
+  }
+
   freeAnimalSpaces(card: number): number {
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (this.isCompleted(item)) return 0
+    if (this.isCompleted(item) || this.hasAnimalBonus(card)) return 0
     return getAnimalSpaces(item.id) - this.animalPawnsOn(card).length
   }
 
@@ -347,7 +358,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     if (item.location.type !== LocationType.PlayerJungle) return []
     const pawns = this.animalPawnsOn(card)
     if (pawns.length < getAnimalSpaces(item.id)) return []
-    if (this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card).length > 0) return []
+    if (this.hasAnimalBonus(card)) return []
     const indexes = pawns.getIndexes()
     this.pushEffects(getJungleBonuses(item.id).animal)
     return [
