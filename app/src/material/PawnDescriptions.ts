@@ -1,6 +1,7 @@
 import { LocationType } from '@gamepark/aurealis/material/LocationType'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { RoundTokenDescription, TokenDescription } from '@gamepark/react-game'
+import { ItemContext, RoundTokenDescription, TokenDescription } from '@gamepark/react-game'
+import { isMoveItemsAtOnce, MaterialMove } from '@gamepark/rules-api'
 import { AnimalPawnHelp, ArchaeologistPawnHelp, DigSitePawnHelp } from './help/PawnHelps'
 import animal from '../images/pawns/Animal.png'
 import archaeologist from '../images/pawns/Archaeologist.png'
@@ -37,6 +38,20 @@ class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType
   width = 1.3
   height = 1.3
   image = archaeologist
+
+  /**
+   * One pawn at a time under the pointer. A whole team stepping right together is a move of its own
+   * (see MoveArchaeologistsRule), and it is a button on the card it walks onto — the `×3` of
+   * {@link JungleCardDescription.archaeologistMenu} — because what it plays is the single move
+   * several times over, and a group of pawns has no one piece to take hold of.
+   *
+   * Dragging it would say the opposite of what dropping it does: the framework offers to drag every
+   * pawn the group move names, then plays the single move of the one actually held (see
+   * DropAreaDescription.getBestDropMove). Three pawns travel, one lands.
+   */
+  canDrag(move: MaterialMove<number, MaterialType, LocationType>, context: ItemContext<number, MaterialType, LocationType>): boolean {
+    return !isMoveItemsAtOnce(move) && super.canDrag(move, context)
+  }
 }
 
 /**
