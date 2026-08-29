@@ -61,6 +61,7 @@
       "jungle": "Action Camp de base : acheter une carte Jungle"
     },
     "take-gold": "Prendre le reste en Pièces d'or",
+    "take-temple": "Prendre cette tuile Temple",
     "build-dig-site": "Construire un Site de fouilles",
     "place-animal": "Placer un pion Animal",
     "place-animals-together": "Placer {count} pions Animal sur cette carte d'un seul coup",
