@@ -132,9 +132,6 @@ class PlayerJungleLocator extends PlayerAreaLocator {
   }
 }
 
-/** Far beyond any quantity a player can hold: see {@link PlayerCoinsLocator.getItemCoordinates}. */
-const COINS_INDEX_SPREAD = 100
-
 /**
  * A player's gold, scattered over the strip above their panel: one purse, the 3s and the 1s mixed.
  *
@@ -155,17 +152,6 @@ class PlayerCoinsLocator extends PileLocator {
 
   getCoordinates(location: Location, context: MaterialContext) {
     return playerSide(PLAYER_COINS, location, context)
-  }
-
-  /**
-   * The 3s and the 1s are one scatter, and a scatter tells its coins apart by `index + displayIndex`
-   * — the item and which copy of its quantity. Two items of the same purse, whose indexes are next
-   * to each other, would collide on that: the second 1 would be given the very spot of the first 3,
-   * exactly under it. Hence the denomination pushing the indexes apart, far beyond any quantity a
-   * player can hold — the box has 18 coins worth 1.
-   */
-  getItemCoordinates(item: MaterialItem, context: ItemContext) {
-    return super.getItemCoordinates(item, { ...context, index: context.index + item.id * COINS_INDEX_SPREAD })
   }
 }
 
