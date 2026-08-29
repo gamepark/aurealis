@@ -217,16 +217,29 @@ export const PLAYER_COINS: XYCoordinates = { x: -36.8, y: 10 }
 export const PLAYER_COINS_RADIUS: XYCoordinates = { x: 4.2, y: 0.7 }
 
 /**
- * Won tiles, in a single line over the hand: the 7th one ends the game, and one line of 7 is 3.3 cm
- * shorter than two lines of 4 — height the table would otherwise waste over its whole width.
+ * Won tiles, in a single line laid out from the left edge of the table, over the panel and the hand.
  *
- * The line ends where the Camp de base begins, which is what sets its left end: it is laid out from
- * the left, and the room it needs was taken from the empty stretch above the panel.
+ * One line and never two: the drop zone of a row is the box the row may fill, so a line that wraps
+ * is a target as tall as the block it would become — several centimetres of table answering for a
+ * tile of three. A single line is a strip exactly one tile high, whatever it already holds.
+ *
+ * It hangs from the left edge because that is where the strip is free: the row grows rightwards as
+ * tiles are won, and the {@link PLAYER_TILES_MAX_COUNT} tiles it is given end exactly where the Camp
+ * de base begins. Above the hand and clear of it, under the Adventurer cards of the common area.
  */
-export const PLAYER_TILES: XYCoordinates = { x: -31, y: 6.4 }
-export const PLAYER_TILES_PER_LINE = 7
+export const PLAYER_TILES_Y = 6.4
+/** The room kept between the edge of the table and the first tile. */
+export const PLAYER_TILES_MARGIN = 0.5
 export const PLAYER_TILES_GAP: XYCoordinates = { x: TILE_STEP, y: 0 }
-export const PLAYER_TILES_LINE_GAP: XYCoordinates = { x: 0, y: -TILE_STEP }
+/**
+ * The length the strip is given, in tiles: 10 of them reach from the left edge to the Camp de base,
+ * and the game ends on the 7th anyway. Past it the line does not grow any further — the tiles close
+ * ranks inside the room it already takes rather than running into the Camp.
+ */
+export const PLAYER_TILES_MAX_COUNT = 10
+
+/** Where the line begins: the middle of its leftmost tile, {@link PLAYER_TILES_MARGIN} off the edge. */
+export const PLAYER_TILES_ROW_START = TABLE_LEFT + PLAYER_TILES_MARGIN + TILE_WIDTH / 2
 
 // ----------------------------------------------------------- spaces printed on a Jungle card, in %
 

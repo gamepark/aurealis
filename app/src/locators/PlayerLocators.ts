@@ -1,6 +1,5 @@
 import {
   DropAreaDescription,
-  FlexLocator,
   getItemFromContext,
   HandLocator,
   ItemContext,
@@ -22,10 +21,10 @@ import {
   PLAYER_JUNGLE,
   PLAYER_JUNGLE_GAP,
   PLAYER_JUNGLE_SLOTS,
-  PLAYER_TILES,
   PLAYER_TILES_GAP,
-  PLAYER_TILES_LINE_GAP,
-  PLAYER_TILES_PER_LINE
+  PLAYER_TILES_MAX_COUNT,
+  PLAYER_TILES_ROW_START,
+  PLAYER_TILES_Y
 } from './TableLayout'
 import { archaeologistsHexagon, playerRotation, playerSide } from './utils'
 
@@ -170,17 +169,20 @@ class PlayerCoinsLocator extends PileLocator {
   }
 }
 
-/** Discovery and Fame tiles won, one line of 7: the 7th of them ends the game. */
-class PlayerTilesLocator extends FlexLocator {
-  lineSize = PLAYER_TILES_PER_LINE
+/**
+ * Discovery and Fame tiles won, one line laid out from the left edge of the table: the 7th of them
+ * ends the game, and up to {@link PLAYER_TILES_MAX_COUNT} of them the line simply grows rightwards.
+ *
+ * A list rather than a grid, so that the strip a tile may be dropped on is exactly one tile high:
+ * a line that wraps is a drop zone as tall as the block it may become, which is several centimetres
+ * of table answering for a target of three.
+ */
+class PlayerTilesLocator extends ListLocator {
   gap = PLAYER_TILES_GAP
+  maxCount = PLAYER_TILES_MAX_COUNT
 
   getCoordinates(location: Location, context: MaterialContext) {
-    return playerSide(PLAYER_TILES, location, context)
-  }
-
-  getLineGap(location: Location, context: MaterialContext) {
-    return playerSide(PLAYER_TILES_LINE_GAP, location, context)
+    return playerSide({ x: PLAYER_TILES_ROW_START, y: PLAYER_TILES_Y }, location, context)
   }
 
   getHoverTransform(item: MaterialItem, context: ItemContext) {
