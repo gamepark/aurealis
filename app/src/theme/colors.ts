@@ -1,3 +1,5 @@
+import { BaseCamp } from '@gamepark/aurealis/material/BaseCamp'
+
 /**
  * Sampled from the game's own art (pixel-picked from app/src/images). Two families and no more: the
  * dark green of the jungle the whole board is drawn on, and the gold the game is named after — the
@@ -30,4 +32,21 @@ export const colors = {
   clay: '#C4653A',
   clayDeep: '#7E3A1F',
   clayLight: '#E0945A'
+}
+
+/**
+ * The four Camp de base cards. They are cosmetic variants — nothing in the rules tells the players
+ * apart — but each is drawn in its own colour, and that colour is the only thing in the box that
+ * belongs to one player and to no one else. So it is what the player panels are painted with.
+ *
+ * Read off the artwork rather than chosen: comparing the four cards pixel by pixel gives exactly the
+ * pixels that differ from one camp to the next, and the dominant hue of that set is the camp's own —
+ * amber, leaf, sky and terracotta, four hues far enough apart to be told at a glance. `main` is the
+ * average of that hue, `deep` and `light` the darkest and lightest sixth of it.
+ */
+export const campColors: Record<BaseCamp, { main: string; deep: string; light: string }> = {
+  [BaseCamp.BaseCamp1]: { main: '#D8B558', deep: '#A7812D', light: '#F9E295' },
+  [BaseCamp.BaseCamp2]: { main: '#8EAE6D', deep: '#5B793C', light: '#B7D59B' },
+  [BaseCamp.BaseCamp3]: { main: '#6DA5B6', deep: '#1A5565', light: '#AEDAEB' },
+  [BaseCamp.BaseCamp4]: { main: '#C4694B', deep: '#88341C', light: '#F0A183' }
 }

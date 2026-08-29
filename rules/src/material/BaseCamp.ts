@@ -1,5 +1,8 @@
 import { getEnumValues } from '@gamepark/rules-api'
 import { buyJungle, Effect, gold, moves, placeAnimals } from './Effect'
+import { LocationType } from './LocationType'
+import { MaterialSource } from './MaterialSource'
+import { MaterialType } from './MaterialType'
 
 /**
  * The 4 Camp de base cards. One is drawn at random per player; they are purely cosmetic variants,
@@ -16,6 +19,14 @@ export enum BaseCamp {
 }
 
 export const baseCamps = getEnumValues(BaseCamp)
+
+/**
+ * The Camp de base a player was dealt. It changes nothing to how they play, which is why the rules
+ * never ask: the display does, because that card is the one thing on the table that is this player's
+ * and no one else's, and its colour is what their panel is painted with (see PlayerPanels).
+ */
+export const playerBaseCamp = (source: MaterialSource, player: number): BaseCamp | undefined =>
+  source.material(MaterialType.BaseCampCard).location(LocationType.BaseCamp).player(player).getItem<BaseCamp>()?.id
 
 /**
  * The four powers of a Camp de base card (rulebook p.9). Each of them costs the whole turn and 3

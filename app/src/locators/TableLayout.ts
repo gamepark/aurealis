@@ -126,16 +126,40 @@ export const COMMON_AREA_RIGHT =
 
 /**
  * Along the very edge of the table, 1 cm of margin apart: the panel, the hand next to it, then the
- * Camp de base and the jungle it opens onto. The panel is laid over the first 12 cm; it is 28em wide,
- * and an em is a hundredth of the shorter side of the window, which comes to some 12 cm of table
- * whatever the shape of the screen.
+ * Camp de base and the jungle it opens onto.
  */
 
 /**
+ * The panel belongs to the table, not to the screen: it is part of the player's own area, so it pans
+ * and zooms with the material it counts rather than floating above it. Which means it is given room
+ * in centimetres like everything else, in the one corner the rest of the area leaves empty — the
+ * left end of the band, under the strip the gold is spread on and left of where the hand begins.
+ *
+ * It is anchored by its bottom left corner, the one corner of it that is the same for both players:
+ * the far player's area is this one reflected across the middle of the table.
+ */
+export const PLAYER_PANEL_X = TABLE_LEFT + 0.4
+export const PLAYER_PANEL_BOTTOM = TABLE_HEIGHT / 2 - 0.2
+/**
+ * StyledPlayerPanel draws itself in a box of 28 by 12.92 em, whatever an em is worth: one line of
+ * name, one of timer, one of counters, all of them sized in em. So giving it a width in centimetres
+ * is giving it a height too — and here it is the height that is scarce.
+ */
+export const PLAYER_PANEL_EM_WIDTH = 28
+export const PLAYER_PANEL_EM_HEIGHT = 12.92
+/**
+ * 9.5 cm, which makes the panel 4.38 cm tall. Its top edge then falls at 12.22, just under the 12.0
+ * the lowest coin of the strip above can reach, and its right edge at -32.6, clear of the -31.1 where
+ * the first card of the hand begins. Wider would cover the gold, and there is nothing to widen into.
+ */
+export const PLAYER_PANEL_WIDTH = 9.5
+/** Off the table, over every piece of material: none of them is lifted as much as 1.5 cm. */
+export const PLAYER_PANEL_Z = 2
+
+/**
  * Tight: the cards touch without hiding one another, so the hand takes as little room as it can, and
- * set as close to the panel as it can safely go. The panel is 29 em from the left edge of the table,
- * and an em is worth about 0.38 cm of table whichever way the window is shaped — so its right edge
- * sits at about -31.4 whatever the screen, and the hand starts 1.2 cm further right.
+ * set as close to the panel as it can safely go — the panel ends at -32.6, and the leftmost card of
+ * the hand starts 1.5 cm further right.
  */
 export const PLAYER_HAND: XYCoordinates = { x: -20.1, y: 11.7 }
 export const PLAYER_HAND_RADIUS = 400
