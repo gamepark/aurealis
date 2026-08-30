@@ -17,5 +17,11 @@ export enum Memory {
    * {@link CustomMoveType.SelectArchaeologist}). Local to whoever is playing: the server never hears
    * of it, and it is forgotten the moment the pawn lands.
    */
-  SelectedArchaeologist
+  SelectedArchaeologist,
+  /**
+   * How far the player was along each of the four Fame objectives when their turn started. Step III
+   * compares the objectives against it: a Fame tile is only taken by a player who has gained
+   * something towards it during their own turn (see {@link CheckFameRule}).
+   */
+  FameAtTurnStart
 }

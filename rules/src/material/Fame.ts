@@ -1,3 +1,10 @@
+import { getPlantIcons, Jungle } from './Jungle'
+import { playerJungleCards } from './JungleState'
+import { isLegendaryAnimal } from './LegendaryAnimal'
+import { LocationType } from './LocationType'
+import { MaterialSource } from './MaterialSource'
+import { MaterialType } from './MaterialType'
+import { getTemplePlantIcons, isTemple, Temple } from './Temple'
 import { Tile } from './Tile'
 
 /**
@@ -33,3 +40,36 @@ export const fameThresholds: Record<Fame, number> = {
   [Fame.LegendaryAnimal]: 2,
   [Fame.Relic]: 2
 }
+
+/**
+ * How far a player is along one of the four objectives. Read here rather than in the rule that
+ * checks it, because it is asked twice: at the end of a turn to hand the tiles out, and at the
+ * start of it to record where the player stood (see {@link CheckFameRule}).
+ */
+export const fameScore = (source: MaterialSource, fame: Fame, player: number): number => {
+  switch (fame) {
+    case Fame.Plant:
+      return (
+        playerJungleCards(source, player)
+          .getItems<Jungle>()
+          .reduce((total, card) => total + getPlantIcons(card.id), 0) +
+        source
+          .material(MaterialType.Tile)
+          .location(LocationType.PlayerTiles)
+          .player(player)
+          .id(isTemple)
+          .getItems<Temple>()
+          .reduce((total, tile) => total + getTemplePlantIcons(tile.id), 0)
+      )
+    case Fame.Jungle:
+      return playerJungleCards(source, player).length
+    case Fame.LegendaryAnimal:
+      return source.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(isLegendaryAnimal).length
+    case Fame.Relic:
+      return source.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(Tile.Relic).length
+  }
+}
+
+/** The four objectives at once, as they are recorded at the start of a turn. */
+export const fameScores = (source: MaterialSource, player: number): Record<Fame, number> =>
+  Object.fromEntries(fames.map((fame) => [fame, fameScore(source, fame, player)])) as Record<Fame, number>

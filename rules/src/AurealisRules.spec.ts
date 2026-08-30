@@ -100,6 +100,34 @@ const giveGold = (game: Game, player: number, amount: number) => {
   for (const move of purse.addMoney(amount, { type: LocationType.PlayerCoins, player })) play(game, move)
 }
 
+/**
+ * Jungle cards straight from the deck into a player's row: getting to 3 of them through the game
+ * would take a handful of turns, and it is never what the test is about.
+ */
+const giveJungleCards = (game: Game, player: number, count: number) => {
+  const rules = new AurealisRules(game)
+  const row = rules.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).getItems()
+  const last = Math.max(...row.map((item) => item.location.x ?? 0))
+  rules
+    .material(MaterialType.JungleCard)
+    .location(LocationType.JungleDeck)
+    .getIndexes()
+    .slice(0, count)
+    .forEach((card, index) => {
+      game.items[MaterialType.JungleCard]![card].location = { type: LocationType.PlayerJungle, player, x: last + 1 + index }
+    })
+}
+
+/**
+ * A whole turn spent on the gold power of the Camp de base: the one action that is sure to gain
+ * nothing towards any Fame objective, whatever the hand holds.
+ */
+const playGoldTurn = (game: Game) => {
+  chooseBaseCampPower(game, BaseCampPower.Gold)
+  discardWholeCost(game)
+  refillHand(game)
+}
+
 describe('A turn of Aurealis', () => {
   let game: Game
 
@@ -352,5 +380,39 @@ describe('A turn of Aurealis', () => {
     playUntilNextTurn(game)
     const fame = new AurealisRules(game).material(MaterialType.Tile).id(Fame.Jungle).location(LocationType.PlayerTiles).player(1)
     expect(fame.length).toBe(1)
+  })
+
+  /**
+   * A Fame tile is won by *acquiring* something towards its objective during one's own turn, never
+   * by owning what one already owned. Two players tied on an objective would otherwise pass the
+   * tile back and forth turn after turn: whoever just lost it equals the other again on their next
+   * turn, without having done a thing for it.
+   */
+  it('only gives a Fame tile to a player who gained something towards it during their turn', () => {
+    const fameOwner = () => new AurealisRules(game).material(MaterialType.Tile).id(Fame.Jungle).getItems()[0]?.location.player
+
+    // Player 1 gets to 3 Jungle cards during their turn, and takes the tile from the reserve.
+    giveJungleCards(game, 1, 2)
+    playGoldTurn(game)
+    expect(fameOwner()).toBe(1)
+
+    // Player 2 does as much on their own turn: equalling player 1 is enough to take it from them.
+    giveJungleCards(game, 2, 2)
+    playGoldTurn(game)
+    expect(fameOwner()).toBe(2)
+
+    // Player 1 plays again with 3 Jungle cards and acquires none: the tile stays where it is.
+    playGoldTurn(game)
+    expect(fameOwner()).toBe(2)
+
+    // Player 2 pulls ahead with a fourth card, on a turn where the tile is already theirs.
+    giveJungleCards(game, 2, 1)
+    playGoldTurn(game)
+    expect(fameOwner()).toBe(2)
+
+    // And it comes back to player 1 the moment they acquire a card that equals that fourth one.
+    giveJungleCards(game, 1, 1)
+    playGoldTurn(game)
+    expect(fameOwner()).toBe(1)
   })
 })

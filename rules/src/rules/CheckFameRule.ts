@@ -1,10 +1,7 @@
-import { Fame, fames, fameThresholds } from '../material/Fame'
-import { getPlantIcons, Jungle } from '../material/Jungle'
-import { isLegendaryAnimal } from '../material/LegendaryAnimal'
+import { Fame, fames, fameScore, fameThresholds } from '../material/Fame'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
-import { getTemplePlantIcons, isTemple, Temple } from '../material/Temple'
-import { Tile } from '../material/Tile'
+import { Memory } from '../Memory'
 import { AurealisMove, AurealisRule } from './AurealisRule'
 import { RuleId } from './RuleId'
 
@@ -28,41 +25,25 @@ export class CheckFameRule extends AurealisRule {
    * Only the player whose turn it is can take a Fame tile, and they take it from the opponent as
    * soon as they *equal* them on the objective — the tile goes to whoever last proved they deserve
    * it (rulebook p.10).
+   *
+   * Proved it during this very turn: a tile is won by *acquiring* something towards its objective,
+   * never by owning what one already owned. Without that, two players tied on an objective would
+   * pass the tile back and forth turn after turn without either of them doing anything for it — the
+   * one who just lost it would equal the other again on their own turn, and take it straight back.
    */
   get fameMoves(): AurealisMove[] {
+    const before = this.remind<Record<Fame, number>>(Memory.FameAtTurnStart)
     const moves: AurealisMove[] = []
     for (const fame of fames) {
       const tile = this.material(MaterialType.Tile).id(fame)
       const owner = tile.getItems()[0]?.location.player
       if (owner === this.player) continue
-      const score = this.fameScore(fame, this.player)
+      const score = fameScore(this, fame, this.player)
       if (score < fameThresholds[fame]) continue
-      if (owner !== undefined && score < this.fameScore(fame, owner)) continue
+      if (score <= (before?.[fame] ?? 0)) continue
+      if (owner !== undefined && score < fameScore(this, fame, owner)) continue
       moves.push(tile.moveItem({ type: LocationType.PlayerTiles, player: this.player }))
     }
     return moves
-  }
-
-  fameScore(fame: Fame, player: number): number {
-    switch (fame) {
-      case Fame.Plant:
-        return (
-          this.jungleCards(player)
-            .getItems<Jungle>()
-            .reduce((total, card) => total + getPlantIcons(card.id), 0) +
-          this.material(MaterialType.Tile)
-            .location(LocationType.PlayerTiles)
-            .player(player)
-            .id(isTemple)
-            .getItems<Temple>()
-            .reduce((total, tile) => total + getTemplePlantIcons(tile.id), 0)
-        )
-      case Fame.Jungle:
-        return this.jungleCards(player).length
-      case Fame.LegendaryAnimal:
-        return this.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(isLegendaryAnimal).length
-      case Fame.Relic:
-        return this.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(Tile.Relic).length
-    }
   }
 }

@@ -5,6 +5,7 @@ import { ConditionEffectLine, getLineEffects, getPlayableLine } from '../materia
 import { BASE_CAMP_COST, BaseCamp, BaseCampPower, getBaseCampPowerEffects, isImprovedPower } from '../material/BaseCamp'
 import { CardsInPlay } from '../material/Condition'
 import { Effect } from '../material/Effect'
+import { fameScores } from '../material/Fame'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { Memory } from '../Memory'
@@ -34,6 +35,9 @@ export class ChooseActionRule extends AurealisRule {
       this.memorize(Memory.Winner, this.player)
       return [this.endGame()]
     }
+    // Where the player stands on the Fame objectives before they act: step III hands out a tile
+    // only to a player who has moved past it during the turn (see {@link CheckFameRule}).
+    this.memorize(Memory.FameAtTurnStart, fameScores(this, this.player))
     return []
   }
 
