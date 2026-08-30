@@ -370,8 +370,10 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     if (this.hasAnimalBonus(card)) return []
     const indexes = pawns.getIndexes()
     this.pushEffects(getJungleBonuses(item.id).animal)
+    const extraPawns = this.material(MaterialType.AnimalPawn).index(indexes.slice(1))
     return [
-      ...this.material(MaterialType.AnimalPawn).index(indexes.slice(1)).deleteItems(),
+      // The pawns going back to the supply leave as one, so the card empties in a single animation.
+      ...(extraPawns.length ? [extraPawns.deleteItemsAtOnce()] : []),
       this.material(MaterialType.AnimalPawn).index(indexes[0]).moveItem({ type: LocationType.JungleAnimalBonus, parent: card })
     ]
   }
