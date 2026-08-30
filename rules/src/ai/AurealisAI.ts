@@ -6,6 +6,7 @@ import { CustomMoveType } from '../rules/CustomMoveType'
 import { RuleId } from '../rules/RuleId'
 import { draftValue } from './Draft'
 import { evaluate } from './Evaluation'
+import { sendArchaeologist, walkArchaeologist } from './Pawns'
 
 /**
  * An automatic player for Aurealis.
@@ -19,10 +20,13 @@ import { evaluate } from './Evaluation'
  * nearer, a Jungle card bought is worth the Temple tile it promises. None of that has to be spelled
  * out per rule — the rules themselves work it out, and the evaluation reads the outcome.
  *
- * Two cases sit outside that:
+ * Three cases sit outside that:
  *
  * - the draw, where the card picked is not knowable and playing it out would be reading a card the
  *   player is not allowed to read. It is weighed off the backs instead (see {@link draftValue});
+ * - the Archaeologists, walked and sent by the orders of {@link Pawns} rather than by measure: what
+ *   one step of one pawn is worth is next to nothing until the card it works on is filled, and a
+ *   measure that reads every step as next to nothing spreads the team over the whole row;
  * - a Camp de base action, which the position it leads to flatters: the 3 cards it costs are still
  *   in hand at the moment it is chosen. It carries the price of those cards as a penalty, which is
  *   also what makes it what it should be — a last resort, taken when nothing else is worth doing,
@@ -62,10 +66,20 @@ export const chooseMove = (game: AurealisGame, player: number): AurealisAiMove |
   const rules = new AurealisRules(game)
   const moves = rules.getLegalMoves(player)
   if (moves.length <= 1) return moves[0]
-  const score =
-    game.rule?.id === RuleId.RefillHand
-      ? (move: AurealisAiMove) => (isMoveItemType(MaterialType.AdventurerCard)(move) ? draftValue(rules, player, move.itemIndex) : 0)
-      : (move: AurealisAiMove) => scoreMove(game, player, move)
+  switch (game.rule?.id) {
+    case RuleId.RefillHand:
+      return bestMove(moves, (move) => (isMoveItemType(MaterialType.AdventurerCard)(move) ? draftValue(rules, player, move.itemIndex) : 0))
+    case RuleId.MoveArchaeologists:
+      return walkArchaeologist(rules, player, moves) ?? bestMove(moves, (move) => scoreMove(game, player, move))
+    case RuleId.SendArchaeologists:
+      return sendArchaeologist(rules, player, moves) ?? bestMove(moves, (move) => scoreMove(game, player, move))
+    default:
+      return bestMove(moves, (move) => scoreMove(game, player, move))
+  }
+}
+
+/** The first of the moves to reach the highest score. */
+const bestMove = (moves: AurealisAiMove[], score: (move: AurealisAiMove) => number): AurealisAiMove => {
   let best = moves[0]
   let bestScore = -Infinity
   for (const move of moves) {
