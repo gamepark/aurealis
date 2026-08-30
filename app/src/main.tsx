@@ -1,3 +1,4 @@
+import { AurealisAI } from '@gamepark/aurealis/ai/AurealisAI'
 import { AurealisOptionsSpecV2 } from '@gamepark/aurealis/AurealisOptions'
 import { AurealisRules } from '@gamepark/aurealis/AurealisRules'
 import { AurealisSetup } from '@gamepark/aurealis/AurealisSetup'
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
       Rules={AurealisRules}
       optionsSpec={AurealisOptionsSpecV2}
       GameSetup={AurealisSetup}
+      ai={AurealisAI}
       material={Material}
       locators={Locators}
       animations={gameAnimations}

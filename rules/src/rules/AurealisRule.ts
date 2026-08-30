@@ -22,6 +22,15 @@ import { adventurerDeckTop, adventurerRiver, getCardsInPlay } from '../material/
 import { CardsInPlay } from '../material/Condition'
 import { Effect, EffectOf, EffectType } from '../material/Effect'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, Jungle } from '../material/Jungle'
+import {
+  animalPawnsOn,
+  freeAnimalSpaces,
+  freeArchaeologistSlots,
+  hasAnimalBonus,
+  hasDigSite,
+  isCompletedJungle,
+  playerJungleCards
+} from '../material/JungleState'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
 import { countPlayerTiles } from '../material/PlayerTiles'
@@ -87,7 +96,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   // ------------------------------------------------------------------ Jungle cards
 
   jungleCards(player: number = this.player): AurealisMaterial {
-    return this.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player)
+    return playerJungleCards(this, player)
   }
 
   get jungleDeck(): AurealisMaterial {
@@ -106,7 +115,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
 
   /** A card turned onto its completed face has no space left on it: nothing can be put there again. */
   isCompleted(card: { location: Location<number, LocationType> }): boolean {
-    return !!card.location.rotation
+    return isCompletedJungle(card)
   }
 
   /**
@@ -114,13 +123,11 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
    * (rulebook p.5): the spaces of the card are then emptied for good, and nothing goes back on them.
    */
   hasAnimalBonus(card: number): boolean {
-    return this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card).length > 0
+    return hasAnimalBonus(this, card)
   }
 
   freeAnimalSpaces(card: number): number {
-    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (this.isCompleted(item) || this.hasAnimalBonus(card)) return 0
-    return getAnimalSpaces(item.id) - this.animalPawnsOn(card).length
+    return freeAnimalSpaces(this, card)
   }
 
   /** The player's Jungle cards that can still take an Animal pawn. */
@@ -131,7 +138,7 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   }
 
   animalPawnsOn(card: number): AurealisMaterial {
-    return this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalSpace).parent(card)
+    return animalPawnsOn(this, card)
   }
 
   /**
@@ -176,14 +183,12 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
    * way of nothing and reads as what it is — Archaeologists passing through.
    */
   freeArchaeologistSlots(card: number): number {
-    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (this.isCompleted(item) || this.hasDigSite(card)) return 0
-    return getArchaeologistSpaces(item.id) - this.archaeologistsOnSlots(card).length
+    return freeArchaeologistSlots(this, card)
   }
 
   /** The Bonus Fouilles of the card taken: its Dig Site has been built, and never will be again. */
   hasDigSite(card: number): boolean {
-    return this.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card).length > 0
+    return hasDigSite(this, card)
   }
 
   /** All the Archaeologist slots of the card taken: what the Dig Site action asks for (rulebook p.7). */
