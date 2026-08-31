@@ -2,6 +2,7 @@ import { RuleId } from '@gamepark/aurealis/rules/RuleId'
 import { ComponentType } from 'react'
 import { AcquireJungleHeader } from './AcquireJungleHeader'
 import { BaseCampDiscardHeader } from './BaseCampDiscardHeader'
+import { CheckFameHeader } from './CheckFameHeader'
 import { ChooseActionHeader } from './ChooseActionHeader'
 import { ChooseEffectHeader } from './ChooseEffectHeader'
 import { ChooseTempleTileHeader } from './ChooseTempleTileHeader'
@@ -25,5 +26,6 @@ export const Headers: Partial<Record<RuleId, ComponentType>> = {
   [RuleId.PlaceAnimals]: PlaceAnimalsHeader,
   [RuleId.AcquireJungle]: AcquireJungleHeader,
   [RuleId.ChooseTempleTile]: ChooseTempleTileHeader,
+  [RuleId.CheckFame]: CheckFameHeader,
   [RuleId.RefillHand]: RefillHandHeader
 }

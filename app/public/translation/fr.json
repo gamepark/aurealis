@@ -36,6 +36,10 @@
       "you": "Choisissez une tuile Temple",
       "player": "{player} choisit une tuile Temple"
     },
+    "check-fame": {
+      "you": "Vos objectifs de Renommée sont vérifiés",
+      "player": "Les objectifs de Renommée de {player} sont vérifiés"
+    },
     "refill-hand": {
       "you": "Complétez votre main : {count, plural, one {# carte} other {# cartes}} de la rivière",
       "player": "{player} complète sa main"
