@@ -361,6 +361,10 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   /**
    * As many Animal pawns on the card as it has spaces: the Bonus Animal is obtained, one pawn slides
    * onto its space to record it, and the others go back to the supply (rulebook p.5).
+   *
+   * The one that slides is the last of the column, the closest to the bonus space it moves onto:
+   * the pawn takes the short step the player's own hand would take, rather than crossing the whole
+   * card from the top of a column that is emptying at the same moment.
    */
   private checkAnimalBonus(card: number): AurealisMove[] {
     const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
@@ -368,13 +372,13 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     const pawns = this.animalPawnsOn(card)
     if (pawns.length < getAnimalSpaces(item.id)) return []
     if (this.hasAnimalBonus(card)) return []
-    const indexes = pawns.getIndexes()
     this.pushEffects(getJungleBonuses(item.id).animal)
-    const extraPawns = this.material(MaterialType.AnimalPawn).index(indexes.slice(1))
+    const last = pawns.maxBy((pawn) => pawn.location.x ?? 0).getIndex()
+    const extraPawns = this.material(MaterialType.AnimalPawn).index(pawns.getIndexes().filter((index) => index !== last))
     return [
       // The pawns going back to the supply leave as one, so the card empties in a single animation.
       ...(extraPawns.length ? [extraPawns.deleteItemsAtOnce()] : []),
-      this.material(MaterialType.AnimalPawn).index(indexes[0]).moveItem({ type: LocationType.JungleAnimalBonus, parent: card })
+      this.material(MaterialType.AnimalPawn).index(last).moveItem({ type: LocationType.JungleAnimalBonus, parent: card })
     ]
   }
 
