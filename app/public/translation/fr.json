@@ -1,31 +1,31 @@
 {
   "header": {
     "choose-action": {
-      "you": "Jouez une carte Aventurier, construisez un Site de fouilles ou réalisez une action de votre Camp de base",
+      "you": "Jouez un Aventurier, construisez un Site de fouilles ou utilisez votre Camp de base",
       "player": "{player} réalise son action"
     },
     "base-camp-discard": {
-      "you": "Défaussez {count, plural, one {# carte Aventurier} other {# cartes Aventurier}} pour l'action de votre Camp de base",
-      "player": "{player} défausse {count, plural, one {# carte Aventurier} other {# cartes Aventurier}}"
+      "you": "Défaussez {count, plural, one {# Aventurier} other {# Aventuriers}} pour votre Camp de base",
+      "player": "{player} défausse {count, plural, one {# Aventurier} other {# Aventuriers}}"
     },
     "choose-effect": {
-      "you": "Choisissez l'un des deux gains de la carte",
-      "player": "{player} choisit l'un des deux gains de sa carte"
+      "you": "Choisissez un gain de la carte",
+      "player": "{player} choisit un gain de sa carte"
     },
     "move-archaeologists": {
-      "you": "Déplacez vos Archéologues sur une carte voisine : {count, plural, one {# déplacement} other {# déplacements}} <pass>Passer</pass>",
+      "you": "Déplacez vos Archéologues : {count, plural, one {# déplacement} other {# déplacements}} <pass>Passer</pass>",
       "player": "{player} déplace ses Archéologues"
     },
     "move-archaeologists-or-gold": {
-      "you": "{count, plural, one {# déplacement d'Archéologue} other {# déplacements d'Archéologue}} : déplacez vos pions, ou prenez le reste en Pièces d'or sur votre Camp de base",
-      "player": "{player} répartit ses déplacements d'Archéologue et ses Pièces d'or"
+      "you": "{count, plural, one {# déplacement} other {# déplacements}} : déplacez vos Archéologues ou prenez des Pièces d'or",
+      "player": "{player} déplace ses Archéologues ou prend des Pièces d'or"
     },
     "send-archaeologists": {
-      "you": "Envoyez {count, plural, one {# Archéologue} other {# Archéologues}} sur les cartes Jungle de votre choix : choisissez une carte de départ, puis une carte d'arrivée",
-      "player": "{player} envoie ses Archéologues dans la jungle"
+      "you": "Envoyez {count, plural, one {# Archéologue} other {# Archéologues}} dans votre jungle",
+      "player": "{player} envoie ses Archéologues"
     },
     "place-animals": {
-      "you": "Placez {count, plural, one {# pion Animal} other {# pions Animal}} sur vos cartes Jungle",
+      "you": "Placez {count, plural, one {# pion Animal} other {# pions Animal}}",
       "player": "{player} place ses pions Animal"
     },
     "acquire-jungle": {
@@ -33,12 +33,12 @@
       "player": "{player} choisit une carte Jungle"
     },
     "choose-temple-tile": {
-      "you": "Choisissez une tuile Temple et appliquez son effet",
+      "you": "Choisissez une tuile Temple",
       "player": "{player} choisit une tuile Temple"
     },
     "refill-hand": {
-      "you": "Complétez votre main : choisissez {count, plural, one {# carte} other {# cartes}} dans la rivière, sans en regarder le recto",
-      "player": "{player} complète sa main de cartes"
+      "you": "Complétez votre main : {count, plural, one {# carte} other {# cartes}} de la rivière",
+      "player": "{player} complète sa main"
     }
   },
   "choose-effect": {
