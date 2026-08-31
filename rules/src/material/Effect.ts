@@ -27,7 +27,25 @@ export enum EffectType {
   TempleTile,
   LegendaryAnimalTile,
   /** The slash printed between two gains on a card: one of them, the player picks which. */
-  Choice
+  Choice,
+  /**
+   * Not printed anywhere: a bonus of a Jungle card that has fallen due and is waiting its turn in
+   * the queue. See {@link JungleDue} and {@link AurealisRule.afterItemMove}.
+   */
+  JungleDue
+}
+
+/**
+ * The three bonuses a Jungle card gives up, each of them the whole of what falls due at once: the
+ * pawns that move on the card, and the gains printed beside them (see {@link JungleBonuses}).
+ */
+export enum JungleDue {
+  /** The Bonus Fouilles: the team that built the Site walks home. */
+  DigSite = 1,
+  /** The Bonus Animal: one pawn slides onto its space, the others go back to the supply. */
+  Animal,
+  /** The Bonus Exploration: the two bonus pawns leave the card, which turns onto its completed face. */
+  Exploration
 }
 
 export type Effect =
@@ -42,6 +60,7 @@ export type Effect =
   | { type: EffectType.TempleTile }
   | { type: EffectType.LegendaryAnimalTile, animal: LegendaryAnimal }
   | { type: EffectType.Choice, options: Effect[] }
+  | { type: EffectType.JungleDue, card: number, bonus: JungleDue }
 
 /** One member of the {@link Effect} union, to type a rule against the effect it resolves. */
 export type EffectOf<T extends EffectType> = Extract<Effect, { type: T }>
@@ -62,3 +81,5 @@ export const templeTile: Effect = { type: EffectType.TempleTile }
 export const legendaryAnimalTile = (animal: LegendaryAnimal): Effect => ({ type: EffectType.LegendaryAnimalTile, animal })
 /** Two gains parted by a slash on the card: the player takes one or the other, never both. */
 export const choice = (...options: Effect[]): Effect => ({ type: EffectType.Choice, options })
+/** A bonus of a Jungle card taking its place in the queue, the only effect no card is printed with. */
+export const jungleDue = (card: number, bonus: JungleDue): Effect => ({ type: EffectType.JungleDue, card, bonus })

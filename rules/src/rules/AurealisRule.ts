@@ -20,7 +20,7 @@ import {
 import { coins, playerGold } from '../material/Coin'
 import { adventurerDeckTop, adventurerRiver, getCardsInPlay } from '../material/CardsInPlay'
 import { CardsInPlay } from '../material/Condition'
-import { Effect, EffectOf, EffectType } from '../material/Effect'
+import { Effect, EffectOf, EffectType, jungleDue, JungleDue } from '../material/Effect'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, Jungle } from '../material/Jungle'
 import {
   animalPawnsOn,
@@ -130,9 +130,17 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     return freeAnimalSpaces(this, card)
   }
 
-  /** The player's Jungle cards that can still take an Animal pawn. */
+  /**
+   * The player's Jungle cards that can still take an Animal pawn, read left to right.
+   *
+   * Sorted on `x`, which is where the row is laid out and has nothing to do with the order of the
+   * indexes: those are the order the cards were printed in, and a card bought late in the game lands
+   * at the end of the row with whatever index it was born with. An effect that serves every card at
+   * once serves them the way a hand would, from the Camp de base outwards.
+   */
   get jungleCardsWithFreeAnimalSpace(): number[] {
     return this.jungleCards()
+      .sort((card) => card.location.x ?? 0)
       .getIndexes()
       .filter((card) => this.freeAnimalSpaces(card) > 0)
   }
@@ -280,6 +288,15 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     if (effects.length) this.memorize(Memory.PendingEffects, [...this.pendingEffects, ...effects])
   }
 
+  /**
+   * The gains of a bonus do not fall in behind it, they jump the queue: they *are* the bonus. A card
+   * that gives up what it held hands it over there and then, before the cards beside it take their
+   * turn.
+   */
+  private unshiftEffects(effects: Effect[]): void {
+    if (effects.length) this.memorize(Memory.PendingEffects, [...effects, ...this.pendingEffects])
+  }
+
   /** The effect being resolved, and how much of it the player was given to spend. */
   currentEffect<T extends Effect>(): T {
     return this.remind<T>(Memory.CurrentEffect)
@@ -322,57 +339,103 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   /**
    * The bonuses of a Jungle card belong to no step of the rules: they fall due the very moment a
    * pawn lands on the space that unlocks them, whichever rule put it there and whatever that rule
-   * still has to do. So they are watched on every item move, and what they give queues up behind
-   * what the player is currently spending.
+   * still has to do. So they are watched on every item move — and nothing more than watched: a bonus
+   * that has fallen due takes its place in the queue, behind what the player is currently spending,
+   * and is resolved whole when its turn comes (see {@link resolveJungleDue}).
+   *
+   * Queueing the whole of it, rather than moving the pawns at once and queueing only the gains, is
+   * what keeps a card readable when a single effect fills several of them at a time: each card gives
+   * up what it holds and is paid for it before the next one is touched, instead of the whole row
+   * emptying first and the gains raining down afterwards.
    */
   afterItemMove(move: AurealisItemMove): AurealisMove[] {
     const location = destination(move)
     if (location?.parent === undefined) return []
     switch (location.type) {
       case LocationType.JungleAnimalSpace:
-        return this.checkAnimalBonus(location.parent)
-      case LocationType.JungleDigSiteBonus: {
-        // Both bonuses of the card can fall due on the same move, and then the team that built the
-        // Site is already walking home: the Bonus Exploration must not gather it back onto the card.
-        const goingHome = this.archaeologistsOnSlots(location.parent).getIndexes()
-        return [...this.onDigSiteBuilt(location.parent), ...this.checkExplorationBonus(location.parent, goingHome)]
-      }
+        this.checkAnimalBonus(location.parent)
+        break
+      case LocationType.JungleDigSiteBonus:
+        // The pawn on the Bonus Fouilles is the bonus, there is nothing to check. Both bonuses of the
+        // card can fall due on that very move, and they are then resolved in that order.
+        this.queueBonus(location.parent, JungleDue.DigSite)
+        this.checkExplorationBonus(location.parent)
+        break
       case LocationType.JungleAnimalBonus:
-        return this.checkExplorationBonus(location.parent)
-      default:
-        return []
+        this.checkExplorationBonus(location.parent)
+        break
+    }
+    return []
+  }
+
+  private queueBonus(card: number, bonus: JungleDue): void {
+    this.pushEffects([jungleDue(card, bonus)])
+  }
+
+  /**
+   * As many Animal pawns on the card as it has spaces: the Bonus Animal has fallen due. The pawns
+   * stay where they are until its turn comes — the card is full, so nothing more can be put on it in
+   * the meantime.
+   */
+  private checkAnimalBonus(card: number): void {
+    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
+    if (item.location.type !== LocationType.PlayerJungle || this.hasAnimalBonus(card)) return
+    if (this.animalPawnsOn(card).length < getAnimalSpaces(item.id)) return
+    this.queueBonus(card, JungleDue.Animal)
+  }
+
+  /** Both bonus spaces of the card taken: the Bonus Exploration has fallen due. */
+  private checkExplorationBonus(card: number): void {
+    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
+    if (item.location.type !== LocationType.PlayerJungle || this.isCompleted(item)) return
+    if (!this.hasDigSite(card) || !this.hasAnimalBonus(card)) return
+    this.queueBonus(card, JungleDue.Exploration)
+  }
+
+  /**
+   * A bonus whose turn has come: the pawns it moves on the card, and the gains printed beside it,
+   * which jump to the head of the queue so that they are handed over before anything else happens.
+   */
+  resolveJungleDue(effect: EffectOf<EffectType.JungleDue>): AurealisMove[] {
+    const { card, bonus } = effect
+    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
+    const bonuses = getJungleBonuses(item.id)
+    switch (bonus) {
+      case JungleDue.DigSite:
+        this.unshiftEffects(bonuses.digSite)
+        return this.sendTeamHome(card, item.location.player!)
+      case JungleDue.Animal:
+        if (this.hasAnimalBonus(card)) return []
+        this.unshiftEffects(bonuses.animal)
+        return this.takeAnimalBonus(card)
+      case JungleDue.Exploration:
+        if (this.isCompleted(item)) return []
+        this.unshiftEffects(bonuses.exploration)
+        return this.completeJungle(card)
     }
   }
 
   /**
-   * A Dig Site has just been built on the card: the Archaeologists standing on its slots have done
-   * their job and go back to the Camp de base, and the Bonus Fouilles is obtained. Those waiting in
-   * the middle of the card stay where they are (rulebook p.7).
+   * The Bonus Fouilles: the Archaeologists standing on the slots of the card have done their job and
+   * go back to the Camp de base. Those waiting in the middle of the card stay where they are
+   * (rulebook p.7).
    */
-  private onDigSiteBuilt(card: number): AurealisMove[] {
-    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    const player = item.location.player!
-    this.pushEffects(getJungleBonuses(item.id).digSite)
+  private sendTeamHome(card: number, player: number): AurealisMove[] {
     const archaeologists = this.archaeologistsOnSlots(card)
     // The whole team walks home as one: a single move, and a single animation for it.
     return archaeologists.length ? [archaeologists.moveItemsAtOnce({ type: LocationType.BaseCampArchaeologists, player })] : []
   }
 
   /**
-   * As many Animal pawns on the card as it has spaces: the Bonus Animal is obtained, one pawn slides
-   * onto its space to record it, and the others go back to the supply (rulebook p.5).
+   * The Bonus Animal: one pawn slides onto the bonus space, where it records that the bonus was
+   * obtained, and the others go back to the supply (rulebook p.5).
    *
    * The one that slides is the last of the column, the closest to the bonus space it moves onto:
    * the pawn takes the short step the player's own hand would take, rather than crossing the whole
    * card from the top of a column that is emptying at the same moment.
    */
-  private checkAnimalBonus(card: number): AurealisMove[] {
-    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (item.location.type !== LocationType.PlayerJungle) return []
+  private takeAnimalBonus(card: number): AurealisMove[] {
     const pawns = this.animalPawnsOn(card)
-    if (pawns.length < getAnimalSpaces(item.id)) return []
-    if (this.hasAnimalBonus(card)) return []
-    this.pushEffects(getJungleBonuses(item.id).animal)
     const last = pawns.maxBy((pawn) => pawn.location.x ?? 0).getIndex()
     const extraPawns = this.material(MaterialType.AnimalPawn).index(pawns.getIndexes().filter((index) => index !== last))
     return [
@@ -383,24 +446,23 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
   }
 
   /**
-   * Both bonus spaces of the card taken: the Bonus Exploration is obtained, the two pawns go back to
-   * the supply and the card is turned onto its completed face. The Archaeologists still standing on
-   * it stay on it — there is simply nothing left for them to do there (rulebook p.5 and p.8).
+   * The Bonus Exploration: the two bonus pawns go back to the supply and the card is turned onto its
+   * completed face. The Archaeologists still standing on it stay on it — there is simply nothing left
+   * for them to do there (rulebook p.5 and p.8).
+   *
+   * The card turns over in the same breath as it is emptied, before its gains are handed over. A card
+   * stripped of its two bonus pawns but still face up would read as one with every space free again,
+   * and an Archaeologist sent by that very Bonus Exploration would walk onto a slot about to be
+   * turned face down.
    */
-  private checkExplorationBonus(card: number, goingHome: number[] = []): AurealisMove[] {
-    const item = this.material(MaterialType.JungleCard).getItem<Jungle>(card)
-    if (item.location.type !== LocationType.PlayerJungle || this.isCompleted(item)) return []
+  private completeJungle(card: number): AurealisMove[] {
     const digSite = this.material(MaterialType.DigSitePawn).location(LocationType.JungleDigSiteBonus).parent(card)
     const animal = this.material(MaterialType.AnimalPawn).location(LocationType.JungleAnimalBonus).parent(card)
-    if (!digSite.length || !animal.length) return []
-    this.pushEffects(getJungleBonuses(item.id).exploration)
     return [
       ...digSite.deleteItems(),
       ...animal.deleteItems(),
       // The completed face has no slot: whoever is still standing on one gathers in the middle.
-      ...this.archaeologistsOnSlots(card)
-        .index((index) => !goingHome.includes(index))
-        .moveItems({ type: LocationType.JungleExtraArchaeologists, parent: card }),
+      ...this.archaeologistsOnSlots(card).moveItems({ type: LocationType.JungleExtraArchaeologists, parent: card }),
       this.material(MaterialType.JungleCard).index(card).rotateItem(true)
     ]
   }

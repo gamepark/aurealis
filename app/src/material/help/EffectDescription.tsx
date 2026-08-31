@@ -30,6 +30,10 @@ export const EffectText: FC<{ effect: Effect }> = ({ effect }) => {
       return <Trans i18nKey="effect.temple-tile" />
     case EffectType.LegendaryAnimalTile:
       return <Trans i18nKey="effect.legendary-animal-tile" values={{ animal: effect.animal }} />
+    // Nothing to read: a bonus waiting its turn in the queue is printed on no card, and what it will
+    // give is already written at the foot of the one it belongs to.
+    case EffectType.JungleDue:
+      return null
     // A slash on the card: one of the two, never both. Read as one sentence rather than a list,
     // because that is what it is — a single gain the player has yet to settle.
     case EffectType.Choice:

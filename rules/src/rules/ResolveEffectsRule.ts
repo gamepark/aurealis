@@ -98,6 +98,9 @@ export class ResolveEffectsRule extends AurealisRule {
           .location(LocationType.Reserve)
           .id(effect.animal)
           .moveItems({ type: LocationType.PlayerTiles, player })
+      // A bonus of a Jungle card, waiting its turn since the pawn that unlocked it landed.
+      case EffectType.JungleDue:
+        return this.resolveJungleDue(effect)
       case EffectType.AnimalOnEachJungle:
         return this.jungleCardsWithFreeAnimalSpace.map((card) =>
           this.material(MaterialType.AnimalPawn).createItem({ location: { type: LocationType.JungleAnimalSpace, parent: card } })

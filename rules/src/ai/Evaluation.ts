@@ -4,7 +4,7 @@ import { archaeologistsAtCamp, archaeologistsOn, extraArchaeologistsOn } from '.
 import { adventurerHand, getCardsInPlay } from '../material/CardsInPlay'
 import { playerGold } from '../material/Coin'
 import { CardsInPlay } from '../material/Condition'
-import { Effect, EffectOf, EffectType } from '../material/Effect'
+import { Effect, EffectOf, EffectType, JungleDue } from '../material/Effect'
 import { Fame, fames, fameScore, fameThresholds } from '../material/Fame'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, getPlantIcons, Jungle } from '../material/Jungle'
 import { freeArchaeologistSlots, givesTempleTile, hasAnimalBonus, hasDigSite, isCompletedJungle, playerJungleCards } from '../material/JungleState'
@@ -625,7 +625,18 @@ export const effectValue = (effect: Effect, ctx: AiContext, depth = 0): number =
       return templeTileGain(ctx)
     case EffectType.Choice:
       return Math.max(...effect.options.map((option) => effectValue(option, ctx, depth)))
+    // A bonus of a Jungle card already unlocked, waiting its turn: it is worth what the card gives.
+    case EffectType.JungleDue:
+      return jungleDueValue(effect, ctx, depth)
   }
+}
+
+const jungleDueValue = (effect: EffectOf<EffectType.JungleDue>, ctx: AiContext, depth: number): number => {
+  const item = ctx.rules.material(MaterialType.JungleCard).getItem<Jungle>(effect.card)
+  const bonuses = getJungleBonuses(item.id)
+  const gains =
+    effect.bonus === JungleDue.DigSite ? bonuses.digSite : effect.bonus === JungleDue.Animal ? bonuses.animal : bonuses.exploration
+  return gains.reduce((total, gain) => total + effectValue(gain, ctx, depth), 0)
 }
 
 const freeAnimalSpaces = (ctx: AiContext): number =>
