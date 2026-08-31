@@ -1,6 +1,7 @@
 import { isCustomMoveType, isMoveItemType } from '@gamepark/rules-api'
 import { archaeologistsAtCamp, archaeologistsOnSlots, extraArchaeologistsOn } from '../material/Archaeologists'
-import { freeArchaeologistSlots, hasDigSite, playerJungleCards } from '../material/JungleState'
+import { Jungle } from '../material/Jungle'
+import { freeArchaeologistSlots, givesTempleTile, hasDigSite, playerJungleCards } from '../material/JungleState'
 import { MaterialType } from '../material/MaterialType'
 import { AurealisRules } from '../AurealisRules'
 import { AurealisMove } from '../rules/AurealisRule'
@@ -31,8 +32,13 @@ import { CustomMoveType } from '../rules/CustomMoveType'
  *   next one is bought.
  *
  * Sending Archaeologists is the exception (rulebook p.12): distance costs nothing there, so the free
- * ride goes to the card the walk would never reach — the last one that still has a slot to fill —
- * and it is the pawn furthest back that takes it, since it is the one giving up the least.
+ * ride goes to the card the walk would never reach, and it is the pawn furthest back that takes it,
+ * since it is the one giving up the least. Which card that is, is the one choice the pawns make on
+ * what a card is worth rather than on where it lies: a card whose Bonus Exploration is a Temple tile
+ * first, since three of those win the game outright (rulebook p.11), and the last card of the row
+ * with a slot to fill otherwise. The walk cannot pick and choose that way — a pawn stepping onto a
+ * card with a free slot lands on that slot — but a send can, and it is the only gain of the game
+ * that reaches the far end of the row for nothing.
  */
 
 /** The Camp de base: the place before the first Jungle card of the row. */
@@ -55,6 +61,8 @@ type Pawn = {
 type Row = {
   /** The player's Jungle cards, left to right. */
   cards: number[]
+  /** Which of them give a Temple tile: the three cards a game is won with. */
+  temples: boolean[]
   /** The card the team is walking to, past the end of the row when every card is done. */
   goal: number
   pawns: Pawn[]
@@ -64,6 +72,7 @@ const readRow = (rules: AurealisRules, player: number): Row => {
   const cards = playerJungleCards(rules, player)
     .sort((card) => card.location.x ?? 0)
     .getIndexes()
+  const temples = cards.map((card) => givesTempleTile(rules.material(MaterialType.JungleCard).getItem<Jungle>(card).id))
   const toFill = cards.map((card) => freeArchaeologistSlots(rules, card) > 0)
   const pawns: Pawn[] = archaeologistsAtCamp(rules, player)
     .getIndexes()
@@ -74,11 +83,20 @@ const readRow = (rules: AurealisRules, player: number): Row => {
     for (const index of archaeologistsOnSlots(rules, card).getIndexes()) pawns.push({ index, at: position, free: digSite })
   })
   const goal = toFill.indexOf(true)
-  return { cards, goal: goal < 0 ? cards.length : goal, pawns }
+  return { cards, temples, goal: goal < 0 ? cards.length : goal, pawns }
 }
 
-/** The card a pawn is sent to: the last one of the row with a slot to fill, or simply the last one. */
+/**
+ * The card a pawn is sent to: a Temple card with a slot to fill above all, then the last card of the
+ * row with a slot to fill, and the last card of the row when none has one.
+ *
+ * Temple cards are taken from the left, so that the team finishes one before starting the next: the
+ * three that win the game are worth nothing until they are completed, and a pawn on each of three
+ * half-filled cards has completed none of them.
+ */
 const sendTarget = (rules: AurealisRules, row: Row): number => {
+  const temple = row.cards.findIndex((card, position) => row.temples[position] && freeArchaeologistSlots(rules, card) > 0)
+  if (temple >= 0) return temple
   for (let position = row.cards.length - 1; position >= 0; position--) {
     if (freeArchaeologistSlots(rules, row.cards[position]) > 0) return position
   }

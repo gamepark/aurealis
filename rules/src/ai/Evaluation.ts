@@ -5,6 +5,7 @@ import { adventurerHand, getCardsInPlay } from '../material/CardsInPlay'
 import { playerGold } from '../material/Coin'
 import { CardsInPlay } from '../material/Condition'
 import { Effect, EffectOf, EffectType } from '../material/Effect'
+import { Fame, fames, fameScore, fameThresholds } from '../material/Fame'
 import { getAnimalSpaces, getArchaeologistSpaces, getJungleBonuses, getPlantIcons, Jungle } from '../material/Jungle'
 import { freeArchaeologistSlots, givesTempleTile, hasAnimalBonus, hasDigSite, isCompletedJungle, playerJungleCards } from '../material/JungleState'
 import { LocationType } from '../material/LocationType'
@@ -20,14 +21,20 @@ import { RuleId } from '../rules/RuleId'
  * How good a position is for the player an automatic player is playing. One number, in which
  * everything is priced against the same unit: a Discovery or Fame tile, of which 7 win the game.
  *
- * The scale is set by the three things the strategy of the game turns on:
+ * The scale is set by the four things the strategy of the game turns on:
  *
  * - a Temple tile is worth far more than the tile it is, and the second one more than the first,
  *   because the third ends the game on the spot (rulebook p.11). The only place one ever comes from
  *   is the Bonus Exploration of 5 Jungle cards, so those cards carry that value long before they
- *   are completed, which is why they have to be taken the moment they show up;
+ *   are completed, which is why they have to be taken the moment they show up — and why a fourth
+ *   such card is worth almost nothing: three of them are the whole game;
+ * - nothing else a Jungle card is worth is worth having more of it. A card that gives no Temple
+ *   tile is taken for its own two bonuses and for the Fame tiles it counts towards, and both of
+ *   those are thresholds: 3 Jungle cards, 3 Plant symbols (rulebook p.10). Past them, one more card
+ *   is one more card nobody will ever finish, so it is priced as what it is — work owed;
  * - 7 gold is the price of a Jungle card at the Camp de base, so gold up to that mark buys the one
- *   thing gold can always buy, and gold beyond it buys nothing in particular;
+ *   thing gold can always buy; a little beyond it is change, and past 10 there is nothing left on
+ *   the market that gold reaches;
  * - a bonus space half filled is worth much less than half its bonus: what pays is finishing a card,
  *   not spreading pawns over three of them. Hence the convex curve below.
  *
@@ -37,6 +44,8 @@ import { RuleId } from '../rules/RuleId'
 
 /** A Discovery or Fame tile. 7 of them win the game: each is a seventh of it. */
 const TILE = 12
+/** Temple tiles that end the game on the spot (rulebook p.11). */
+const TEMPLES_TO_WIN = 3
 /**
  * What holding 0, 1, 2 and 3 Temple tiles is worth on top of the tiles themselves. The steps grow
  * because the third one ends the game on the spot (rulebook p.11).
@@ -52,9 +61,34 @@ const TEMPLE_TOTALS = [0, 50, 160, 660]
  * fewer of them with its pawns: over 120 games played from both seats, 0.4 beat 0.6 by 73 to 47.
  */
 const TEMPLE_CARD_HELD = 0.4
-/** A Jungle card in itself: one card towards the Fame tile, and one more card the row can reach. */
-const JUNGLE_CARD = 6
-const PLANT_ICON = 3
+/**
+ * A Temple card past the third the player is already on course for. It wins nothing — the third one
+ * ends the game — and it no longer denies anything either, since a player holding three has left
+ * the opponent at most two of the five. What is left of it is a card off the market.
+ */
+const TEMPLE_SPARE_CARD = 6
+/**
+ * A Jungle card in itself, once the Fame it counts towards is priced apart in {@link fameValue}:
+ * one more card the row can reach, and one the opponent will not have.
+ */
+const JUNGLE_CARD = 1.5
+/**
+ * Jungle cards the team can be working on at once. A card is completed by filling every
+ * Archaeologist slot on it, spending a whole turn on the Dig Site, then filling every Animal space
+ * (rulebook p.5 and p.7): five or six pawns and a turn each, out of 7 Archaeologists and the twenty
+ * or so turns a game lasts.
+ */
+const CARDS_WORKED = 3
+/**
+ * An unfinished Jungle card past those. It is not worth nothing, it is worth less than nothing: a
+ * card gives up its Bonus Exploration only once *both* its bonus spaces have been taken, so a row
+ * of half-worked cards is a row that has been paid for and hands out nothing.
+ *
+ * This, with the Fame thresholds below, is what stopped the bot hoarding: it used to end its games
+ * with 6.5 Jungle cards of which 1.8 were completed, and it ends them now with 4.9 of which 2.7 are.
+ * Over 300 games played from both seats, the two together won 200 to 100.
+ */
+const CROWDED_CARD = 12
 /** An Archaeologist a send has nowhere better to put than where it already stands. */
 const IDLE_PAWN = 0.3
 /**
@@ -70,8 +104,15 @@ const PAWN_ADVANCE = 0.5
 const SPARE_MOVE = 0.15
 /** "At least 7 gold at all times": the price of a Jungle card at the Camp de base. */
 const GOLD_TARGET = 7
+/** Past this there is nothing left for gold to buy: one purchase is all a turn ever affords. */
+const GOLD_ENOUGH = 10
 const GOLD_KEPT = 1.6
 const GOLD_SPARE = 0.5
+/**
+ * Gold to a player already on course for the third Temple tile. Barely anything: that player wins
+ * by finishing the three cards in front of them, and the game ends before the gold is ever spent.
+ */
+const GOLD_IDLE = 0.1
 /**
  * What a pawn is worth when a gain is priced from inside another gain: the Bonus Fouilles of a card
  * hands out Archaeologists, and pricing those the careful way would ask what that very card is worth.
@@ -108,6 +149,18 @@ const templeValue = (expected: number): number => {
   return TEMPLE_TOTALS[step] + (TEMPLE_TOTALS[step + 1] - TEMPLE_TOTALS[step]) * (capped - step)
 }
 
+/**
+ * How many Temple tiles the row is on course for, counting only the three that win. A fourth Temple
+ * card raises nothing: the third one ends the game, so the three best-placed cards are the only ones
+ * the count ever looks at.
+ */
+const expectedTemples = (tiles: number, shares: number[]): number =>
+  tiles +
+  [...shares]
+    .sort((a, b) => b - a)
+    .slice(0, Math.max(0, TEMPLES_TO_WIN - tiles))
+    .reduce((total, share) => total + share, 0)
+
 /** How much of its Temple tile one of the player's Temple cards is already worth. */
 const templeCardShare = (jungle: JungleCardState): number =>
   TEMPLE_CARD_HELD +
@@ -132,6 +185,14 @@ export type JungleCardState = {
   animalSpaces: number
 }
 
+/** One Fame objective: whether the tile is already in front of the player, and what it would take. */
+type FameState = {
+  held: boolean
+  own: number
+  /** The threshold, or the owner's score when the opponent holds the tile and is above it. */
+  target: number
+}
+
 /** Everything an evaluation asks of the position, read once. */
 export type AiContext = {
   rules: AurealisRules
@@ -140,6 +201,14 @@ export type AiContext = {
   gold: number
   jungles: JungleCardState[]
   templeTiles: number
+  /** How much of its tile each unfinished Temple card of the row is already worth, by card. */
+  templeShares: { index: number, share: number }[]
+  /** Temple cards past the third the player is on course for: they win nothing more. */
+  spareTempleCards: number
+  /** Jungle cards of the row still to be completed: what the team owes. */
+  unfinished: number
+  /** Where the player stands on each of the four Fame objectives, and what it takes to take it. */
+  fame: Record<Fame, FameState>
   relicsLeft: number
   legendaryAnimalsLeft: number[]
   /** Temple tiles held, plus the Jungle cards that will give one: how close the game is to won. */
@@ -168,21 +237,47 @@ const jungleState = (rules: AurealisRules, index: number): JungleCardState => {
   }
 }
 
+/**
+ * Where the player stands on the four Fame objectives. A tile is taken by *equalling* whoever holds
+ * it, so what it takes is the threshold — unless the opponent is holding the tile above it, and then
+ * it is their score (rulebook p.10).
+ */
+const fameState = (rules: AurealisRules, player: number, opponent: number): Record<Fame, FameState> =>
+  Object.fromEntries(
+    fames.map((fame) => {
+      const owner = rules.material(MaterialType.Tile).id(fame).getItems()[0]?.location.player
+      return [
+        fame,
+        {
+          held: owner === player,
+          own: fameScore(rules, fame, player),
+          target: Math.max(fameThresholds[fame], owner === opponent ? fameScore(rules, fame, opponent) : 0)
+        }
+      ]
+    })
+  ) as Record<Fame, FameState>
+
 export const buildContext = (rules: AurealisRules, player: number): AiContext => {
   const jungles = playerJungleCards(rules, player)
     .getIndexes()
     .map((index) => jungleState(rules, index))
     .sort((a, b) => a.x - b.x)
+  const opponent = rules.players.find((other) => other !== player) ?? player
   const templeTiles = rules.material(MaterialType.Tile).location(LocationType.PlayerTiles).player(player).id(isTemple).length
   const templeCards = jungles.filter((jungle) => givesTempleTile(jungle.id) && !jungle.completed)
+  const templeShares = templeCards.map((jungle) => ({ index: jungle.index, share: templeCardShare(jungle) }))
   const templeProspects = templeTiles + templeCards.length
   return {
     rules,
     player,
-    opponent: rules.players.find((other) => other !== player) ?? player,
+    opponent,
     gold: playerGold(rules, player),
     jungles,
     templeTiles,
+    templeShares,
+    spareTempleCards: Math.max(0, templeProspects - TEMPLES_TO_WIN),
+    unfinished: jungles.filter((jungle) => !jungle.completed).length,
+    fame: fameState(rules, player, opponent),
     relicsLeft: rules.material(MaterialType.Tile).location(LocationType.Reserve).locationId(TilePile.Relic).length,
     legendaryAnimalsLeft: rules
       .material(MaterialType.Tile)
@@ -191,8 +286,11 @@ export const buildContext = (rules: AurealisRules, player: number): AiContext =>
       .getItems<Tile>()
       .map((item) => item.id),
     templeProspects,
-    templeExpectation: templeTiles + templeCards.reduce((total, jungle) => total + templeCardShare(jungle), 0),
-    needsGold: templeProspects < 3,
+    templeExpectation: expectedTemples(
+      templeTiles,
+      templeShares.map((card) => card.share)
+    ),
+    needsGold: templeProspects < TEMPLES_TO_WIN,
     idlePawns: [
       ...archaeologistsAtCamp(rules, player)
         .getIndexes()
@@ -209,9 +307,10 @@ export const buildContext = (rules: AurealisRules, player: number): AiContext =>
 // ------------------------------------------------------------------ gold
 
 const goldValue = (gold: number, needsGold: boolean): number => {
-  if (!needsGold) return gold * GOLD_SPARE
-  const kept = Math.min(gold, GOLD_TARGET)
-  return kept * GOLD_KEPT + (gold - kept) * GOLD_SPARE
+  const useful = Math.min(gold, GOLD_ENOUGH)
+  if (!needsGold) return useful * GOLD_IDLE
+  const kept = Math.min(useful, GOLD_TARGET)
+  return kept * GOLD_KEPT + (useful - kept) * GOLD_SPARE
 }
 
 /** What gaining that much gold is worth from where we stand, or paying it when the amount is negative. */
@@ -229,9 +328,26 @@ const goldGain = (ctx: AiContext, amount: number): number =>
 const bonusValue = (effects: Effect[], ctx: AiContext, skipTemple = false): number =>
   effects.reduce((total, effect) => total + (skipTemple && effect.type === EffectType.TempleTile ? 0 : effectValue(effect, ctx, 1)), 0)
 
-/** What the Bonus Exploration of a card is worth, once both its bonus spaces have been taken. */
-const explorationValue = (jungle: JungleCardState, ctx: AiContext, skipTemple = false): number =>
-  jungle.completed ? 0 : bonusValue(getJungleBonuses(jungle.id).exploration, ctx, skipTemple)
+/**
+ * What the Bonus Exploration of a card is worth, once both its bonus spaces have been taken.
+ *
+ * A Temple tile among them is never priced as a tile of its own: what finishing a Temple card brings
+ * is the step the *row* takes towards the third tile, which is nothing at all when the row is on
+ * course for three without it (see {@link templeFinishGain}).
+ */
+const explorationValue = (jungle: JungleCardState, ctx: AiContext): number =>
+  jungle.completed ? 0 : bonusValue(getJungleBonuses(jungle.id).exploration, ctx, true) + templeFinishGain(jungle, ctx)
+
+/**
+ * What finishing that Temple card brings: the tile itself, and the step the row takes towards the
+ * third. Nothing for a card the row does not need — the fourth Temple card of a player already on
+ * course for three wins no fourth game.
+ */
+const templeFinishGain = (jungle: JungleCardState, ctx: AiContext): number => {
+  if (jungle.completed || !givesTempleTile(jungle.id)) return 0
+  const others = ctx.templeShares.filter((card) => card.index !== jungle.index).map((card) => card.share)
+  return TILE + templeValue(expectedTemples(ctx.templeTiles + 1, others)) - templeValue(ctx.templeExpectation)
+}
 
 /** What one more Archaeologist on a printed slot of that card brings: the Dig Site drawing nearer. */
 const slotMarginal = (jungle: JungleCardState, filled: number, ctx: AiContext): number => {
@@ -340,7 +456,7 @@ const movesValue = (ctx: AiContext, count: number): number => {
  * is worth depends on how many the player already holds, so no card can price its own.
  */
 const jungleCardValue = (jungle: JungleCardState, ctx: AiContext): number => {
-  const value = JUNGLE_CARD + getPlantIcons(jungle.id) * PLANT_ICON
+  const value = JUNGLE_CARD
   if (jungle.completed) return value
   const bonuses = getJungleBonuses(jungle.id)
   const diggers = jungle.digSiteDone ? 1 : jungle.archaeologists / jungle.archaeologistSpaces
@@ -364,21 +480,76 @@ export const newJungleValue = (jungle: Jungle, ctx: AiContext): number => {
     animals: 0,
     animalSpaces: getAnimalSpaces(jungle)
   }
-  return jungleCardValue(fresh, ctx) + (givesTempleTile(jungle) ? templeCardGain(ctx) : 0)
+  return (
+    jungleCardValue(fresh, ctx) +
+    fameGain(ctx, Fame.Jungle, 1) +
+    fameGain(ctx, Fame.Plant, getPlantIcons(jungle)) +
+    crowdingGain(ctx) +
+    (givesTempleTile(jungle) ? templeCardGain(ctx) + (ctx.templeProspects >= TEMPLES_TO_WIN ? TEMPLE_SPARE_CARD : 0) : 0)
+  )
 }
 
-/** What one more Temple card in the row is worth, untouched: the step it takes towards the third. */
-const templeCardGain = (ctx: AiContext): number => templeValue(ctx.templeExpectation + TEMPLE_CARD_HELD) - templeValue(ctx.templeExpectation)
+/**
+ * What one more Temple card in the row is worth, untouched: the step it takes towards the third, and
+ * nothing when the row already takes that step without it.
+ */
+const templeCardGain = (ctx: AiContext): number =>
+  templeValue(expectedTemples(ctx.templeTiles, [...ctx.templeShares.map((card) => card.share), TEMPLE_CARD_HELD])) - templeValue(ctx.templeExpectation)
 
 /**
  * How close the player is to the third Temple tile, which ends the game. A tile already won counts
  * in full; a Jungle card that will give one counts for what it promises, which is a great deal even
  * untouched: there are only 5 such cards in the game, and the opponent wants them too.
+ *
+ * Three of them, and no more. A player on course for three has left the opponent two at the most,
+ * so a fourth Temple card neither wins anything nor denies anything: it is priced apart, as the
+ * ordinary card off the market that it is.
  */
-const templeProspectsValue = (ctx: AiContext): number => templeValue(ctx.templeExpectation)
+const templeProspectsValue = (ctx: AiContext): number => templeValue(ctx.templeExpectation) + ctx.spareTempleCards * TEMPLE_SPARE_CARD
 
-/** What the next Temple tile is worth: the tile itself, and the step it takes towards the third. */
-const templeTileGain = (ctx: AiContext): number => TILE + templeValue(ctx.templeTiles + 1) - templeValue(ctx.templeTiles)
+/**
+ * What the next Temple tile is worth: the tile itself, and the step it takes towards the third. Read
+ * off the row's expectation rather than off the tiles already won, so that a player holding two
+ * Temple cards and no tile prices the tile they are working towards, not the first tile of a player
+ * with nothing.
+ */
+const templeTileGain = (ctx: AiContext): number => TILE + templeValue(ctx.templeExpectation + 1) - templeValue(ctx.templeExpectation)
+
+// ------------------------------------------------------------------ Fame, and what a row owes
+
+/**
+ * How near the player is to the Fame tiles they do not hold. A tile already in front of them is
+ * counted by {@link countPlayerTiles} and adds nothing here.
+ *
+ * This is where a Jungle card that gives no Temple tile is worth taking, and where it stops being
+ * worth taking. Every Fame objective is a threshold — 3 Jungle cards, 3 Plant symbols, 2 Legendary
+ * Animals, 2 Relics (rulebook p.10) — so the fourth Jungle card carries none of the Fame the first
+ * three carry. Priced over the whole row rather than card by card, the way {@link templeValue}
+ * prices the Temple cards: a threshold is reached by the row, never by one card of it.
+ */
+const fameValue = (ctx: AiContext): number => fames.reduce((total, fame) => total + fameProgress(ctx.fame[fame], ctx.fame[fame].own), 0)
+
+const fameProgress = (state: FameState, score: number): number => (state.held ? 0 : TILE * curve(score / state.target))
+
+/** What that much more towards an objective is worth, for a gain not yet in the row. */
+const fameGain = (ctx: AiContext, fame: Fame, amount: number): number => {
+  if (!amount) return 0
+  const state = ctx.fame[fame]
+  return fameProgress(state, state.own + amount) - fameProgress(state, state.own)
+}
+
+/**
+ * What the row owes, and what taking one more card would add to the debt.
+ *
+ * A card is completed by filling every Archaeologist slot on it, spending a whole turn on the Dig
+ * Site, then filling every Animal space (rulebook p.5 and p.7) — and a card gives up its Bonus
+ * Exploration only when *both* of its bonus spaces have been taken. So a row of half-worked cards is
+ * a row that has been paid for and hands out nothing, and past the few cards a team of 7
+ * Archaeologists can be working on at once, one more card is one more card nobody finishes.
+ */
+const crowdingValue = (ctx: AiContext): number => -CROWDED_CARD * Math.max(0, ctx.unfinished - CARDS_WORKED)
+
+const crowdingGain = (ctx: AiContext): number => (ctx.unfinished >= CARDS_WORKED ? -CROWDED_CARD : 0)
 
 // ------------------------------------------------------------------ buying a Jungle card
 
@@ -408,7 +579,7 @@ const deckBottomValue = (ctx: AiContext): number => {
   ].filter((item) => givesTempleTile(item.id)).length
   const hidden = Math.max(1, deck - 1)
   const chance = Math.min(1, ((5 - shown) * Math.min(3, hidden)) / hidden)
-  return chance * templeCardGain(ctx) + JUNGLE_CARD
+  return chance * templeCardGain(ctx) + JUNGLE_CARD + fameGain(ctx, Fame.Jungle, 1) + crowdingGain(ctx)
 }
 
 const buyJungleValue = (ctx: AiContext, effect: EffectOf<EffectType.BuyJungle>): number => {
@@ -547,6 +718,8 @@ export const evaluate = (rules: AurealisRules, player: number): number => {
   return (
     countPlayerTiles(rules, player) * TILE +
     templeProspectsValue(ctx) +
+    fameValue(ctx) +
+    crowdingValue(ctx) +
     ctx.jungles.reduce((total, jungle) => total + jungleCardValue(jungle, ctx), 0) +
     goldValue(ctx.gold, ctx.needsGold) +
     pawnsValue(ctx) +
