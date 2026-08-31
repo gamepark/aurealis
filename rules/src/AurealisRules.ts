@@ -126,10 +126,10 @@ export class AurealisRules
     [MaterialType.ArchaeologistPawn]: {
       [LocationType.BaseCampArchaeologists]: new FillGapStrategy(),
       [LocationType.JungleArchaeologistSpace]: new PositiveSequenceStrategy(),
-      [LocationType.JungleExtraArchaeologists]: new FillGapStrategy()
+      [LocationType.JungleExtraArchaeologists]: new PositiveSequenceStrategy()
     },
     [MaterialType.AnimalPawn]: {
-      [LocationType.JungleAnimalSpace]: new PositiveSequenceStrategy()
+      [LocationType.JungleAnimalSpace]: new FillGapStrategy()
     },
     [MaterialType.Tile]: {
       [LocationType.Reserve]: new PositiveSequenceStrategy(),

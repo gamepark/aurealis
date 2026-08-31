@@ -1,5 +1,5 @@
 import { CustomMove, isCustomMoveType, isMoveItemType, isMoveItemTypeAtOnce } from '@gamepark/rules-api'
-import { archaeologistsLeavingOrder } from '../material/Archaeologists'
+import { archaeologistsLeavingCamp, archaeologistsLeavingTogether } from '../material/Archaeologists'
 import { EffectType } from '../material/Effect'
 import { MaterialType } from '../material/MaterialType'
 import { Memory } from '../Memory'
@@ -62,7 +62,7 @@ export class MoveArchaeologistsRule extends AurealisRule {
     const row = this.jungleRow
     if (!row.length) return []
     const moves: AurealisMove[] = []
-    for (const pawn of this.campArchaeologists.getIndexes()) {
+    for (const pawn of archaeologistsLeavingCamp(this, this.player)) {
       moves.push(this.movePawn(pawn, row[0]))
     }
     row.forEach((card, x) => {
@@ -87,17 +87,22 @@ export class MoveArchaeologistsRule extends AurealisRule {
    * player spends moves on, and a group is nothing but the same step taken by several pawns, so a
    * button playing it says exactly what the single one says and how many times over.
    *
+   * A team is the pawns nothing is given up by walking on: the heap of the Camp de base, and the
+   * ones gathered in the middle of a card (see {@link archaeologistsLeavingTogether}). Whoever
+   * stands on a printed slot is building a Dig Site and stays out of it, so the group stops at the
+   * middle of the card however many moves are left to spend.
+   *
    * Only offered where it is worth a button — two pawns or more — since a group of one is the single
    * move already on the table.
    */
   get moveTogetherMoves(): AurealisMove[] {
     const row = this.jungleRow
     if (!row.length) return []
-    // Every place a pawn stands, and the card one step to the right of it. The Camp de base is the
+    // Every place a team stands, and the card one step to the right of it. The Camp de base is the
     // card before the first Jungle one, and the last card of the row leads nowhere.
     const departures = [
-      { pawns: this.campArchaeologists.getIndexes(), to: row[0] },
-      ...row.slice(0, -1).map((card, x) => ({ pawns: archaeologistsLeavingOrder(this, card), to: row[x + 1] }))
+      { pawns: archaeologistsLeavingCamp(this, this.player), to: row[0] },
+      ...row.slice(0, -1).map((card, x) => ({ pawns: archaeologistsLeavingTogether(this, card), to: row[x + 1] }))
     ]
     return departures.flatMap(({ pawns, to }) => {
       const group = this.groupSize(pawns.length, to)
@@ -106,13 +111,14 @@ export class MoveArchaeologistsRule extends AurealisRule {
   }
 
   /**
-   * How many pawns of one place walk right together: never more than the moves left to spend, and
+   * How many pawns of one team walk right together: never more than the moves left to spend, and
    * never more than land in the same spot of the card they reach.
    *
    * That second limit is what makes the group one move rather than two: the printed slots of a card
    * are filled before its middle, so a group overrunning the last free slot would be two moves to
    * two different places. It stops at the slots instead, and what is left of the team follows on
-   * another press of the button.
+   * another press of the button. A card with no slot left to take gathers everyone in its middle,
+   * which holds a whole team.
    */
   private groupSize(pawns: number, card: number): number {
     const freeSlots = this.freeArchaeologistSlots(card)

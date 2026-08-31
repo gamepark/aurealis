@@ -44,6 +44,30 @@ export const archaeologistsLeavingOrder = (source: MaterialSource, card: number)
 /** The one Archaeologist a player is offered to move off that card: the first to leave it. */
 export const lastArchaeologistOn = (source: MaterialSource, card: number): number | undefined => archaeologistsLeavingOrder(source, card)[0]
 
-/** Likewise at the Camp de base, where the team is one heap of pawns nothing tells apart. */
-export const lastArchaeologistAtCamp = (source: MaterialSource, player: number): number | undefined =>
-  archaeologistsAtCamp(source, player).getIndexes()[0]
+/**
+ * The Archaeologists of a card that a whole team may walk off it in one move: the ones gathered in
+ * its middle, the last arrived first.
+ *
+ * The ones standing on its printed slots are left out, however many moves the player has left. A
+ * pawn on a slot is building the Dig Site of the card, and taking it off gives that up (rulebook
+ * p.7) — one of the few things in the game a player can undo their own work with, so it is a
+ * decision taken one pawn at a time and never a button that takes several at once. The ones in the
+ * middle only got there once the slots were full: they are building nothing, and walking them all
+ * on costs the player nothing but the moves it is worth.
+ */
+export const archaeologistsLeavingTogether = (source: MaterialSource, card: number): number[] => lastFirst(extraArchaeologistsOn(source, card))
+
+/**
+ * The team of the Camp de base in the order it walks out: the highest `x` first, as on a card. The
+ * pawns of the camp are one heap nothing else tells apart, and the state lists them in the order
+ * they were created, which is no order at all once some of them have been away and come back.
+ *
+ * `x` is the spot each pawn holds in the hexagon the team is drawn as, and a spot left empty is
+ * filled again by the next pawn coming home. Walking them out from the far end of that hexagon is
+ * what keeps the camp emptying from its edge rather than out of its middle, and what makes the pawn
+ * one press of a button takes the pawn the next press takes again.
+ */
+export const archaeologistsLeavingCamp = (source: MaterialSource, player: number): number[] => lastFirst(archaeologistsAtCamp(source, player))
+
+/** The one Archaeologist a player is offered to send out of the camp: the first to leave it. */
+export const lastArchaeologistAtCamp = (source: MaterialSource, player: number): number | undefined => archaeologistsLeavingCamp(source, player)[0]

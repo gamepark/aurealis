@@ -48,13 +48,31 @@ describe('Walking a team of Archaeologists right together', () => {
     return row
   }
 
+  /** The pawns still on the Camp de base, in the order the state lists them. */
+  const campPawns = (): number[] =>
+    game.items[MaterialType.ArchaeologistPawn]!.flatMap((pawn, index) =>
+      pawn.location.type === LocationType.BaseCampArchaeologists && pawn.location.player === PLAYER ? [index] : []
+    )
+
+  /**
+   * The team spread over the hexagon spots of the camp from either end of it in turn, so that the
+   * order the pawns were created in says nothing about the spots they hold: the 7 of them get
+   * `x` 0, 6, 1, 5, 2, 4, 3.
+   */
+  const scatterCamp = (): number[] => {
+    const camp = campPawns()
+    camp.forEach((pawn, i) => {
+      game.items[MaterialType.ArchaeologistPawn]![pawn].location.x = i % 2 ? camp.length - 1 - (i >> 1) : i >> 1
+    })
+    return camp
+  }
+
   /** Takes pawns off the Camp de base and stands them on a card, on its slots or in its middle. */
   const stand = (card: number, type: LocationType, count: number) => {
     const pawns = game.items[MaterialType.ArchaeologistPawn]!
-    const camp = pawns.flatMap((pawn, index) =>
-      pawn.location.type === LocationType.BaseCampArchaeologists && pawn.location.player === PLAYER ? [index] : []
-    )
-    camp.slice(0, count).forEach((pawn, x) => (pawns[pawn].location = { type, parent: card, x }))
+    campPawns()
+      .slice(0, count)
+      .forEach((pawn, x) => (pawns[pawn].location = { type, parent: card, x }))
   }
 
   /** The Bonus Fouilles of a card taken, which is what closes it to a second Dig Site. */
@@ -133,17 +151,45 @@ describe('Walking a team of Archaeologists right together', () => {
   })
 
   /**
-   * The pawns gathered in the middle of a card leave it first: they only got there once its slots
-   * were full, so they are the ones whose leaving does not undo a Dig Site being built.
+   * A team is the pawns gathered in the middle of a card, and only those: whoever stands on a
+   * printed slot is building the Dig Site of the card, and taking them off it gives that up.
+   *
+   * So the group stops at the middle however many moves are left over — here 4 moves and 6 pawns on
+   * the card, of which the group walks the 2 that are building nothing.
    */
-  it('walks the pawns of the middle of a card away before those on its slots', () => {
+  it('walks the pawns of the middle of a card away, and never those on its slots', () => {
     const row = setRow([WIDE, WIDE])
     stand(row[0], LocationType.JungleArchaeologistSpace, 4)
     stand(row[0], LocationType.JungleExtraArchaeologists, 2)
-    start(2)
+    start(4)
     const middle = extraArchaeologistsOn(new AurealisRules(game), row[0]).getIndexes()
     const group = groupMoves().find((move) => move.location.parent === row[1])!
     expect(group.indexes.slice().sort()).toEqual(middle.slice().sort())
+  })
+
+  /**
+   * And nothing at all where every pawn of the card is on a slot: each of them is a Dig Site given
+   * up, which is a decision taken one press at a time.
+   */
+  it('offers no group off a card whose Archaeologists all stand on its slots', () => {
+    const row = setRow([WIDE, SINGLE])
+    stand(row[1], LocationType.JungleArchaeologistSpace, 1)
+    stand(row[0], LocationType.JungleArchaeologistSpace, 3)
+    start(3)
+    expect(groupMoves().every((move) => move.location.parent !== row[1])).toBe(true)
+  })
+
+  /**
+   * Nothing tells two pawns of the Camp de base apart, so the group is taken from the far end of the
+   * team — the highest `x`, which is the hexagon spot each of them holds — rather than from wherever
+   * the state happens to list them. The camp then empties from its end, and the pawn one press takes
+   * is the pawn the next press takes again.
+   */
+  it('walks the pawns at the end of the camp out first', () => {
+    setRow([WIDE, WIDE])
+    const camp = scatterCamp()
+    start(3)
+    expect(groupMoves()[0].indexes).toEqual([camp[1], camp[3], camp[5]])
   })
 
   /** A group is worth one move per pawn of it, and what is left of the effect carries on. */
