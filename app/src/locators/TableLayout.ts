@@ -304,8 +304,11 @@ export const JUNGLE_ANIMAL_BONUS: XYCoordinates = { x: 80.6, y: 87.4 }
  * the space they occupy. They stand *on* their space rather than in it: their feet are set on the
  * bottom edge of the space, and the piece rises off the card from there.
  *
- * Hence half the difference between the two heights, which is a lift since the piece is the taller:
- * (0.90 - 1.3) / 2 for the Archaeologist, (1.19 - 1.7) / 2 for the Dig Site.
+ * Hence half the difference between the two heights, which is a lift since the piece is the taller.
+ * The height to take is the drawing's, not the item's declared size: that size is the drawing plus
+ * the transparent margin its baked-in shadow needs (see PawnDescriptions), and the margin sits under
+ * the feet as much as over the head. So (0.90 - 1.25) / 2 for the Archaeologist, (1.19 - 1.62) / 2
+ * for the Dig Site.
  */
-export const ARCHAEOLOGIST_ON_SPACE_OFFSET: Partial<Coordinates> = { x: 0, y: -0.2, z: 1 }
-export const DIG_SITE_ON_SPACE_OFFSET: XYCoordinates = { x: 0, y: -0.26 }
+export const ARCHAEOLOGIST_ON_SPACE_OFFSET: Partial<Coordinates> = { x: 0, y: -0.175, z: 1 }
+export const DIG_SITE_ON_SPACE_OFFSET: XYCoordinates = { x: 0, y: -0.215 }

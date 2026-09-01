@@ -25,18 +25,22 @@ import digSite from '../images/pawns/DigSite.png'
  * - Animal is a disc lying flat, so its space gives both dimensions: 1.03 cm circle, 0.90 cm inside
  *   the white stroke.
  *
- * The values below are those targets grown by each image's transparent margin, so what shows on the
- * table is the pawn at the size above. The three images are low-quality placeholders whose
- * proportions are not those of the real pieces (the house comes out taller than a meeple here,
- * where the moulds are nearly level): redo this pass with the final artwork.
+ * The images are the print files' tokens redrawn at 100 px per centimetre, each carrying its own
+ * drop shadow: an image declared transparent gets none from the framework (a shadow can only be
+ * cast by a silhouette the CSS box does not know), so it is painted in, blurred evenly and with no
+ * offset, since a piece seen from straight above throws its shadow in no direction.
+ *
+ * The values below are therefore each target above grown by the transparent margin that shadow
+ * needs — 0.14 to 0.15 cm a side. The growth is symmetric, so the pawn keeps its size and its
+ * centre on the table and the locators are untouched by it.
  *
  * A standing pawn is anchored by its base, not its centre — that offset belongs to the locators.
  */
 class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType, LocationType> {
   help = ArchaeologistPawnHelp
   transparency = true
-  width = 1.3
-  height = 1.3
+  width = 1.54
+  height = 1.54
   image = archaeologist
 
   /**
@@ -64,8 +68,8 @@ class ArchaeologistPawnDescription extends TokenDescription<number, MaterialType
 class DigSitePawnDescription extends TokenDescription<number, MaterialType, LocationType> {
   help = DigSitePawnHelp
   transparency = true
-  width = 1.7
-  height = 1.7
+  width = 1.9
+  height = 1.9
   image = digSite
   stockLocation = { type: LocationType.Reserve }
   staticItems = [{ quantity: 6, location: this.stockLocation }]
@@ -74,7 +78,7 @@ class DigSitePawnDescription extends TokenDescription<number, MaterialType, Loca
 class AnimalPawnDescription extends RoundTokenDescription<number, MaterialType, LocationType> {
   help = AnimalPawnHelp
   transparency = true
-  diameter = 1.2
+  diameter = 1.4
   image = animal
   stockLocation = { type: LocationType.Reserve }
   staticItems = [{ quantity: 16, location: this.stockLocation }]
