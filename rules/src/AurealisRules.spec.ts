@@ -193,8 +193,13 @@ describe('A turn of Aurealis', () => {
   /**
    * Each Camp de base improves one of the four powers on its face A, and using that one is what
    * turns the card over. Any other power leaves it as it is.
+   *
+   * The card only turns once the power has given everything it promised, the way the rulebook
+   * example reads it (p.9): it is spent from the moment it is chosen, but it stays face A — the
+   * improved gain still printed on it — while the 3 cards it costs are discarded and the gain is
+   * being taken.
    */
-  it('turns the Camp de base onto its face B when its improved power is used', () => {
+  it('turns the Camp de base onto its face B once its improved power has been used in full', () => {
     // Whichever Camp de base was drawn, both halves need every one of its four powers on the table:
     // one of them is a purchase, and a player who cannot pay for it is never offered it.
     giveGold(game, 1, RICH_ENOUGH_FOR_ANY_POWER)
@@ -203,11 +208,14 @@ describe('A turn of Aurealis', () => {
       (power) => !isImprovedPower(camp.id, power)
     )!
     chooseBaseCampPower(game, commonPower)
+    playUntilNextTurn(game)
     expect(campOf(game).location.rotation).toBeUndefined()
 
     game = newGame()
     giveGold(game, 1, RICH_ENOUGH_FOR_ANY_POWER)
     chooseBaseCampPower(game, improvedPowerOf(game))
+    expect(campOf(game).location.rotation).toBeUndefined()
+    playUntilNextTurn(game)
     expect(campOf(game).location.rotation).toBe(true)
   })
 

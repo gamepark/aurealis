@@ -4,7 +4,7 @@ import { Adventurer, AdventurerId } from '../material/Adventurer'
 import { ConditionEffectLine, getLineEffects, getPlayableLine } from '../material/AdventurerLines'
 import { BASE_CAMP_COST, BaseCamp, BaseCampPower, getBaseCampPowerEffects, isImprovedPower } from '../material/BaseCamp'
 import { CardsInPlay } from '../material/Condition'
-import { Effect } from '../material/Effect'
+import { Effect, flipBaseCamp } from '../material/Effect'
 import { fameScores } from '../material/Fame'
 import { LocationType } from '../material/LocationType'
 import { MaterialType } from '../material/MaterialType'
@@ -105,24 +105,20 @@ export class ChooseActionRule extends AurealisRule {
     return getBaseCampPowerEffects(camp.id, power, !this.isCompleted(camp) && isImprovedPower(camp.id, power))
   }
 
-  get baseCamp() {
-    return this.material(MaterialType.BaseCampCard).location(LocationType.BaseCamp).player(this.player)
-  }
-
   /**
    * The power is chosen first and applied last: what it gives waits in the queue while the 3 cards
-   * it costs are discarded. Picking the improved one turns the card onto its face B at once — it is
-   * spent the moment it is chosen.
+   * it costs are discarded. Picking the improved one puts the card turning over at the end of that
+   * queue, behind its own gains: the improvement is spent the moment it is chosen, but the card
+   * only shows its face B once it has given everything it promised (rulebook p.9).
    */
   onCustomMove(move: CustomMove): AurealisMove[] {
     if (!isCustomMoveType(CustomMoveType.BaseCampPower)(move)) return []
     const power = move.data as BaseCampPower
     const camp = this.baseCamp.getItems<BaseCamp>()[0]
     const improved = !this.isCompleted(camp) && isImprovedPower(camp.id, power)
-    this.pushEffects(getBaseCampPowerEffects(camp.id, power, improved))
-    const moves: AurealisMove[] = improved ? [this.baseCamp.rotateItem(true)] : []
-    moves.push(this.startRule(RuleId.BaseCampDiscard))
-    return moves
+    const effects = getBaseCampPowerEffects(camp.id, power, improved)
+    this.pushEffects(improved ? [...effects, flipBaseCamp] : effects)
+    return [this.startRule(RuleId.BaseCampDiscard)]
   }
 
   /**

@@ -32,7 +32,13 @@ export enum EffectType {
    * Not printed anywhere: a bonus of a Jungle card that has fallen due and is waiting its turn in
    * the queue. See {@link JungleDue} and {@link AurealisRule.afterItemMove}.
    */
-  JungleDue
+  JungleDue,
+  /**
+   * Not printed anywhere either: the improved power of a Camp de base being spent. It is queued
+   * behind the gains of that power, so that the card only turns onto its face B once they have all
+   * been handed over — the way the rulebook example reads it (rulebook p.9).
+   */
+  FlipBaseCamp
 }
 
 /**
@@ -61,6 +67,7 @@ export type Effect =
   | { type: EffectType.LegendaryAnimalTile, animal: LegendaryAnimal }
   | { type: EffectType.Choice, options: Effect[] }
   | { type: EffectType.JungleDue, card: number, bonus: JungleDue }
+  | { type: EffectType.FlipBaseCamp }
 
 /** One member of the {@link Effect} union, to type a rule against the effect it resolves. */
 export type EffectOf<T extends EffectType> = Extract<Effect, { type: T }>
@@ -81,5 +88,7 @@ export const templeTile: Effect = { type: EffectType.TempleTile }
 export const legendaryAnimalTile = (animal: LegendaryAnimal): Effect => ({ type: EffectType.LegendaryAnimalTile, animal })
 /** Two gains parted by a slash on the card: the player takes one or the other, never both. */
 export const choice = (...options: Effect[]): Effect => ({ type: EffectType.Choice, options })
-/** A bonus of a Jungle card taking its place in the queue, the only effect no card is printed with. */
+/** A bonus of a Jungle card taking its place in the queue, printed on no card. */
 export const jungleDue = (card: number, bonus: JungleDue): Effect => ({ type: EffectType.JungleDue, card, bonus })
+/** The Camp de base turning over, queued behind what its improved power gives. Printed on no card. */
+export const flipBaseCamp: Effect = { type: EffectType.FlipBaseCamp }

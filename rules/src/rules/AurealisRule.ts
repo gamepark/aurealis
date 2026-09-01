@@ -206,6 +206,13 @@ export abstract class AurealisRule extends PlayerTurnRule<number, MaterialType, 
     return this.archaeologistsOnSlots(card).length >= getArchaeologistSpaces(item.id)
   }
 
+  // ------------------------------------------------------------------ the Camp de base
+
+  /** The player's own Camp de base card, face A while its improved power is still there to spend. */
+  get baseCamp(): AurealisMaterial {
+    return this.material(MaterialType.BaseCampCard).location(LocationType.BaseCamp).player(this.player)
+  }
+
   // ------------------------------------------------------------------ gold and tiles
 
   playerCoins(player: number = this.player): AurealisMaterial {

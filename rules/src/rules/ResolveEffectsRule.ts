@@ -101,6 +101,14 @@ export class ResolveEffectsRule extends AurealisRule {
       // A bonus of a Jungle card, waiting its turn since the pawn that unlocked it landed.
       case EffectType.JungleDue:
         return this.resolveJungleDue(effect)
+      /*
+       * The improved power of the Camp de base has been spent in full: the card turns onto its face
+       * B, where its four powers are the common ones again. Queued behind the gains rather than
+       * played when the power was chosen, so that the card is read as it is being used and only
+       * turns over once it has given everything (rulebook p.9).
+       */
+      case EffectType.FlipBaseCamp:
+        return [this.baseCamp.rotateItem(true)]
       case EffectType.AnimalOnEachJungle:
         return this.jungleCardsWithFreeAnimalSpace.map((card) =>
           this.material(MaterialType.AnimalPawn).createItem({ location: { type: LocationType.JungleAnimalSpace, parent: card } })

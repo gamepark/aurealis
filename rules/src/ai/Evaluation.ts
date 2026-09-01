@@ -628,6 +628,10 @@ export const effectValue = (effect: Effect, ctx: AiContext, depth = 0): number =
     // A bonus of a Jungle card already unlocked, waiting its turn: it is worth what the card gives.
     case EffectType.JungleDue:
       return jungleDueValue(effect, ctx, depth)
+    // The Camp de base turning over gives nothing: it is the price of the improved power, and that
+    // price is already paid for in the penalty every Camp de base action carries (see AurealisAI).
+    case EffectType.FlipBaseCamp:
+      return 0
   }
 }
 
