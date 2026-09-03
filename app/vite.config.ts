@@ -45,6 +45,12 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap: 'hidden'
     },
+    // Game Park packages ship directory imports, which Node's ESM loader refuses: a spec that
+    // reaches the rules or the tutorial wrapper only resolves once they are bundled. Same setting as
+    // the rules workspace, and inert for the browser build, which bundles them anyway.
+    ssr: {
+      noExternal: ['@gamepark/rules-api', '@gamepark/react-game', '@gamepark/react-client', 'es-toolkit']
+    },
     server: {
       port: 3000,
     },

@@ -281,6 +281,12 @@ export const JUNGLE_ARCHAEOLOGIST_SPACE_STEP = 11.9
 export const JUNGLE_ANIMAL_SPACE: XYCoordinates = { x: 84.7, y: 67.5 }
 export const JUNGLE_ANIMAL_SPACE_STEP = 13.3
 /**
+ * How wide the light is when the tutorial points at one of those discs: the size of an Animal pawn,
+ * not of the disc it lies in. The pawn is the wider of the two — it overlaps the printed stroke on
+ * every side — so a spot cut to the disc would leave a ring of the pawn out in the dark.
+ */
+export const JUNGLE_ANIMAL_SPACE_HIGHLIGHT = 1.4
+/**
  * The Archaeologists with no slot of their own: a column of their own down the middle of the card,
  * between the two printed ones and clear of both. It starts on the very line the lowest printed slot
  * stands on and grows upwards, exactly as the printed column does — so a card whose slots are full

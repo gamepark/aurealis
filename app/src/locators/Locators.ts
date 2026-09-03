@@ -12,6 +12,7 @@ import {
 } from './CommonLocators'
 import {
   jungleAnimalBonusLocator,
+  jungleAnimalSpaceHighlightLocator,
   jungleAnimalSpaceLocator,
   jungleArchaeologistSpaceLocator,
   jungleDigSiteBonusLocator,
@@ -40,6 +41,7 @@ export const Locators: Partial<Record<LocationType, Locator<number, MaterialType
   [LocationType.JungleArchaeologistSpace]: jungleArchaeologistSpaceLocator,
   [LocationType.JungleExtraArchaeologists]: jungleExtraArchaeologistsLocator,
   [LocationType.JungleAnimalSpace]: jungleAnimalSpaceLocator,
+  [LocationType.JungleAnimalSpaceHighlight]: jungleAnimalSpaceHighlightLocator,
   [LocationType.JungleDigSiteBonus]: jungleDigSiteBonusLocator,
   [LocationType.JungleAnimalBonus]: jungleAnimalBonusLocator,
   [LocationType.TempleTilesRow]: templeTilesRowLocator,

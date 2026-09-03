@@ -10,6 +10,7 @@ import { App } from './App'
 import { Locators } from './locators/Locators'
 import { Material } from './material/Material'
 import { theme } from './theme'
+import { AurealisTutorial } from './tutorial/AurealisTutorial'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
       material={Material}
       locators={Locators}
       animations={gameAnimations}
+      tutorial={new AurealisTutorial()}
       theme={theme}
     >
       <App />

@@ -4,7 +4,7 @@ import { AurealisOptions } from './AurealisOptions'
 import { AurealisRules } from './AurealisRules'
 import { HAND_SIZE, JUNGLE_MARKET_SIZE, RIVER_SIZE } from './Constants'
 import { adventurers, getAdventurerId } from './material/Adventurer'
-import { baseCamps } from './material/BaseCamp'
+import { BaseCamp, baseCamps } from './material/BaseCamp'
 import { coins } from './material/Coin'
 import { fames } from './material/Fame'
 import { jungles } from './material/Jungle'
@@ -100,7 +100,7 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
    * Jungle card was already dealt with the Jungle deck.
    */
   setupPlayers() {
-    const playerBaseCamps = shuffle(baseCamps)
+    const playerBaseCamps = this.playerBaseCamps()
     this.players.forEach((player, index) => {
       this.material(MaterialType.BaseCampCard).createItem({ id: playerBaseCamps[index], location: { type: LocationType.BaseCamp, player } })
       this.material(MaterialType.ArchaeologistPawn).createItems(
@@ -111,6 +111,15 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
         .addMoney(index === 0 ? FIRST_PLAYER_GOLD : SECOND_PLAYER_GOLD, { type: LocationType.PlayerCoins, player })
     })
     this.setupSecondPlayerHeadStart(this.players[1])
+  }
+
+  /**
+   * Which Camp de base each player is dealt, in the order the players are seated. Random, the 4 cards
+   * being cosmetic variants of one another — except in the tutorial, where the reader is given the
+   * one whose improved power the script has them use.
+   */
+  protected playerBaseCamps(): BaseCamp[] {
+    return shuffle(baseCamps)
   }
 
   /**

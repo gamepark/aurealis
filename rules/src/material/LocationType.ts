@@ -68,5 +68,15 @@ export enum LocationType {
    * `id` of the location (see {@link TilePile}); the coins and the pawns have none, being static
    * items of their descriptions rather than items of the game.
    */
-  Reserve
+  Reserve,
+
+  /**
+   * The Animal discs printed on a Jungle card, as areas rather than as spaces (`parent` is the card,
+   * `x` the disc). Nothing is ever placed here: {@link JungleAnimalSpace} holds the pawns.
+   *
+   * It exists so that the tutorial may point at the column itself — at the spaces a pawn is about to
+   * be placed on, whether one stands on them yet or not. Being a drawn location, a focus on it masks
+   * the rest of the card around it, which is what makes the discs stand out.
+   */
+  JungleAnimalSpaceHighlight
 }

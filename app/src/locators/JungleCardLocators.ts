@@ -1,12 +1,13 @@
 import { getAnimalSpaces, getArchaeologistSpaces, Jungle } from '@gamepark/aurealis/material/Jungle'
 import { MaterialType } from '@gamepark/aurealis/material/MaterialType'
-import { ListLocator, Locator, MaterialContext, ParentFace } from '@gamepark/react-game'
+import { ListLocator, LocationDescription, Locator, MaterialContext, ParentFace } from '@gamepark/react-game'
 import { Location, XYCoordinates } from '@gamepark/rules-api'
 import {
   ARCHAEOLOGIST_ON_SPACE_OFFSET,
   DIG_SITE_ON_SPACE_OFFSET,
   JUNGLE_ANIMAL_BONUS,
   JUNGLE_ANIMAL_SPACE,
+  JUNGLE_ANIMAL_SPACE_HIGHLIGHT,
   JUNGLE_ANIMAL_SPACE_STEP,
   JUNGLE_ARCHAEOLOGIST_SPACE,
   JUNGLE_ARCHAEOLOGIST_SPACE_STEP,
@@ -64,6 +65,22 @@ class JungleAnimalSpaceLocator extends JungleCardSpaceLocator {
 }
 
 /**
+ * The same discs, drawn rather than held: the areas the tutorial points at when it says that Animal
+ * pawns go there (see {@link LocationType.JungleAnimalSpaceHighlight}).
+ *
+ * They hold nothing and are shown by nothing — {@link Locator.getLocations} leaves them out, so they
+ * only ever exist while a focus asks for them. A focus on a location of an item masks that item
+ * around it, and that is the whole point: the card dims, the column stays lit.
+ */
+class JungleAnimalSpaceHighlightLocator extends JungleAnimalSpaceLocator {
+  locationDescription = new LocationDescription({
+    width: JUNGLE_ANIMAL_SPACE_HIGHLIGHT,
+    height: JUNGLE_ANIMAL_SPACE_HIGHLIGHT,
+    borderRadius: JUNGLE_ANIMAL_SPACE_HIGHLIGHT / 2
+  })
+}
+
+/**
  * The Archaeologists standing on the card outside its printed spaces: the ones that arrived once the
  * column was full, and the ones left on a card turned onto its completed face, which has no space at
  * all. Hence {@link ParentFace.Up}: they belong to the card, not to one of its faces.
@@ -100,6 +117,7 @@ class JungleAnimalBonusLocator extends JungleCardSpaceLocator {
 
 export const jungleArchaeologistSpaceLocator = new JungleArchaeologistSpaceLocator()
 export const jungleAnimalSpaceLocator = new JungleAnimalSpaceLocator()
+export const jungleAnimalSpaceHighlightLocator = new JungleAnimalSpaceHighlightLocator()
 export const jungleExtraArchaeologistsLocator = new JungleExtraArchaeologistsLocator()
 export const jungleDigSiteBonusLocator = new JungleDigSiteBonusLocator()
 export const jungleAnimalBonusLocator = new JungleAnimalBonusLocator()

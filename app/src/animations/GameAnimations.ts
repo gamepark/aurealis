@@ -13,3 +13,13 @@ export const gameAnimations = new MaterialGameAnimations()
  * nothing happen. Skipped there, and left alone for the player it is played for.
  */
 gameAnimations.configure(and(isMaterial(MaterialType.AdventurerCard), isMoveType(ItemMoveType.MoveAtOnce), not(isMyMove()))).skip()
+
+/**
+ * The Animal pawns a player puts down together on one Jungle card (see {@link PlaceAnimalsRule}).
+ *
+ * Creating items at once animates nothing by default — it is the move a game uses to lay out a whole
+ * setup at no cost — so the shortcut that places 2 or 3 pawns in one go would drop them on the card
+ * out of nowhere, while the very same pawns placed one at a time fly in from the reserve. A second,
+ * the duration of every other creation, and the two ways of placing them look alike again.
+ */
+gameAnimations.configure(and(isMaterial(MaterialType.AnimalPawn), isMoveType(ItemMoveType.CreateAtOnce))).duration(1000)
