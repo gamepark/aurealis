@@ -45,6 +45,20 @@
       "player": "{player} complète sa main"
     }
   },
+  "game-over": {
+    "title": "Fin de la partie",
+    "tiles": {
+      "you": "Vous remportez la victoire en étant le premier joueur avec {total} tuiles au début de votre tour.",
+      "player": "{player} remporte la victoire en étant le premier joueur avec {total} tuiles au début de son tour.",
+      "other": "L'autre façon de gagner : prendre une troisième tuile Temple, qui devient la tuile Victoire immédiate."
+    },
+    "temples": {
+      "you": "Vous remportez une victoire immédiate avec 3 temples.",
+      "player": "{player} remporte une victoire immédiate avec 3 temples.",
+      "other": "L'autre façon de gagner : avoir {total} tuiles devant soi au début de son tour."
+    },
+    "unknown": "La partie se gagne en ayant {total} tuiles devant soi au début de son tour, ou en prenant une troisième tuile Temple, qui devient la tuile Victoire immédiate."
+  },
   "choose-effect": {
     "choose": "Choisissez l'un des gains de la carte",
     "or": "ou"
