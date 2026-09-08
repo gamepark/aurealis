@@ -1,7 +1,9 @@
 import { Effect, EffectType } from '@gamepark/aurealis/material/Effect'
 import { FC } from 'react'
 import { Trans } from 'react-i18next'
-import { helpBlock } from './helpStyles'
+import { getEffectIcons } from './BoxIcons'
+import { GameIcons } from './GameIcons'
+import { helpBlock, helpIconRow } from './helpStyles'
 
 /**
  * What an effect gives, in words. The box prints the very same icons on the Adventurer cards, the
@@ -63,26 +65,25 @@ const buyJungleKey = (cost: number, fromDeckBottom?: boolean): string => {
 
 /**
  * The gains of one line, of one power or of one bonus. Side by side they are all applied, one after
- * the other — a slash is a {@link EffectType.Choice}, and stays inside a single item of the list.
+ * the other — a slash is a {@link EffectType.Choice}, and stays inside a single row.
+ *
+ * Each of them is given the icon the box prints for it, in front of the sentence: the very same
+ * drawing that is on the Adventurer card, on the Jungle bonus and on the Temple tile, which is how
+ * the rulebook lays out its own iconography (p.12). A list of bullets would say the same thing in
+ * words the player then has to translate back to the table.
  */
 export const Effects: FC<{ effects: Effect[] }> = ({ effects }) => {
   if (!effects.length) return null
-  if (effects.length === 1) {
-    return (
-      <div css={helpBlock}>
-        <EffectText effect={effects[0]} />
-      </div>
-    )
-  }
   return (
     <div css={helpBlock}>
-      <ul>
-        {effects.map((effect, index) => (
-          <li key={index}>
+      {effects.map((effect, index) => (
+        <div key={index} css={helpIconRow}>
+          <GameIcons icons={getEffectIcons(effect)} />
+          <span>
             <EffectText effect={effect} />
-          </li>
-        ))}
-      </ul>
+          </span>
+        </div>
+      ))}
     </div>
   )
 }

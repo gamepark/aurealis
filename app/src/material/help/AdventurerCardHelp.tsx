@@ -12,6 +12,8 @@ import { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Effects } from './EffectDescription'
 import { ConditionText } from './ConditionDescription'
+import { getConditionIcons } from './BoxIcons'
+import { GameIcons } from './GameIcons'
 import { helpBlock, helpBlockActive, helpBlockUnmet, helpCondition, helpConditionMark, helpIntro, helpLocation, helpSection, helpTitle } from './helpStyles'
 
 /**
@@ -77,7 +79,12 @@ const AdventurerLines: FC<{ card: Adventurer } & Pick<MaterialHelpProps, 'item'>
           <div key={index} css={[helpBlock, line === playable && helpBlockActive, met === false && helpBlockUnmet]}>
             <span css={helpCondition}>
               {met !== undefined && <FontAwesomeIcon icon={met ? faCheck : faXmark} css={helpConditionMark(met)} />}
-              <ConditionText condition={line.condition} />
+              {/* The drawing the card puts in front of the words, so that the line is found again on
+                  the card itself — the icons are the whole of what is printed there. */}
+              <GameIcons icons={getConditionIcons(line.condition)} />
+              <span>
+                <ConditionText condition={line.condition} />
+              </span>
             </span>
             {/* The lines that scale with the game are given their real value whenever it is known,
                 and the "?" of the card is then a number the player can act on. */}

@@ -98,11 +98,48 @@ export const helpBlockUnmet = css`
 
 /** The condition a gain is subject to, over the gain itself. */
 export const helpCondition = css`
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
   font-family: ${fontDisplay};
   font-size: 0.88em;
   color: ${colors.canvas};
   margin-bottom: 0.15em;
+`
+
+/**
+ * A line of a help dialog set the way the rulebook sets its iconography (p.12): the icons of the box
+ * on the left, the sentence that reads them out on the right.
+ *
+ * A sentence is what a player reads once; the icon is what they will meet again on the card, on a
+ * Jungle bonus and on a Temple tile, since the box draws the very same gain the same way in all
+ * three places. So the drawing leads, and it keeps its own column however long the words run.
+ */
+export const helpIconRow = css`
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  & + & {
+    margin-top: 0.35em;
+  }
+`
+
+/** The icons of one condition or one gain, kept together: a type and the arrows that qualify it. */
+export const helpIcons = css`
+  display: flex;
+  align-items: center;
+  gap: 0.15em;
+  flex: none;
+`
+
+/**
+ * Two lines of text tall: enough for the digit printed inside an icon to be read, and not so much
+ * that a gain of one line towers over the sentence beside it.
+ */
+export const helpIcon = css`
+  height: 2.2em;
+  width: auto;
 `
 
 /**
@@ -119,7 +156,7 @@ export const helpCondition = css`
  * is dimmed as a whole, and the mark has to survive that.
  */
 export const helpConditionMark = (met: boolean) => css`
-  margin-right: 0.45em;
+  flex: none;
   color: ${met ? colors.jungleLight : colors.clayLight};
 `
 
