@@ -1,1 +1,320 @@
-{}
+{
+  "header": {
+    "choose-action": {
+      "you": "Juega un Aventurero, construye un Yacimiento o usa tu Campamento base",
+      "player": "{player} realiza su acción"
+    },
+    "base-camp-discard": {
+      "you": "Descarta {count, plural, one {# Aventurero} other {# Aventureros}} para tu Campamento base",
+      "player": "{player} descarta {count, plural, one {# Aventurero} other {# Aventureros}}"
+    },
+    "choose-effect": {
+      "you": "Elige una recompensa de la carta",
+      "player": "{player} elige una recompensa de su carta"
+    },
+    "move-archaeologists": {
+      "you": "Mueve a tus Arqueólogos: {count, plural, one {# movimiento} other {# movimientos}} <pass>Pasar</pass>",
+      "player": "{player} mueve a sus Arqueólogos"
+    },
+    "move-archaeologists-or-gold": {
+      "you": "{count, plural, one {# movimiento} other {# movimientos}}: mueve a tus Arqueólogos o toma Monedas de oro",
+      "player": "{player} mueve a sus Arqueólogos o toma Monedas de oro"
+    },
+    "send-archaeologists": {
+      "you": "Envía {count, plural, one {# Arqueólogo} other {# Arqueólogos}} a tu jungla",
+      "player": "{player} envía a sus Arqueólogos"
+    },
+    "place-animals": {
+      "you": "Coloca {count, plural, one {# peón Animal} other {# peones Animal}}",
+      "player": "{player} coloca sus peones Animal"
+    },
+    "acquire-jungle": {
+      "you": "{cost, plural, =0 {Toma una carta Jungla} one {Compra una carta Jungla por # Moneda de oro} other {Compra una carta Jungla por # Monedas de oro}}",
+      "player": "{player} elige una carta Jungla"
+    },
+    "choose-temple-tile": {
+      "you": "Elige una loseta de Templo",
+      "player": "{player} elige una loseta de Templo"
+    },
+    "check-fame": {
+      "you": "Se comprueban tus objetivos de Renombre",
+      "player": "Se comprueban los objetivos de Renombre de {player}"
+    },
+    "refill-hand": {
+      "you": "Completa tu mano: {count, plural, one {# carta} other {# cartas}} del río",
+      "player": "{player} completa su mano"
+    }
+  },
+  "game-over": {
+    "title": "Fin de la partida",
+    "tiles": {
+      "you": "Ganas la partida al ser el primer jugador con {total} losetas al principio de tu turno.",
+      "player": "{player} gana la partida al ser el primer jugador con {total} losetas al principio de su turno.",
+      "other": "La otra forma de ganar: tomar una tercera loseta de Templo, que se convierte en la loseta de Victoria inmediata."
+    },
+    "temples": {
+      "you": "Ganas una victoria inmediata con 3 templos.",
+      "player": "{player} gana una victoria inmediata con 3 templos.",
+      "other": "La otra forma de ganar: tener {total} losetas ante ti al principio de tu turno."
+    },
+    "unknown": "La partida se gana teniendo {total} losetas ante uno al principio de su turno, o tomando una tercera loseta de Templo, que se convierte en la loseta de Victoria inmediata."
+  },
+  "choose-effect": {
+    "choose": "Elige una de las recompensas de la carta",
+    "or": "o"
+  },
+  "deck-bottom": {
+    "choose": "Elige una carta",
+    "intro": "Las 3 cartas del fondo del mazo de Jungla.",
+    "pick": "Tomar esta carta"
+  },
+  "button": {
+    "play-card": "Jugar esta carta",
+    "discard-card": "Descartar esta carta",
+    "draw-card": "Tomar esta carta",
+    "base-camp": {
+      "gold": "Acción de Campamento base: Monedas de oro",
+      "animal": "Acción de Campamento base: peones Animal",
+      "moves": "Acción de Campamento base: movimientos de Arqueólogo",
+      "jungle": "Acción de Campamento base: comprar una carta Jungla"
+    },
+    "take-gold": "Tomar el resto en Monedas de oro",
+    "take-temple": "Tomar esta loseta de Templo",
+    "build-dig-site": "Construir un Yacimiento",
+    "place-animal": "Colocar un peón Animal",
+    "place-animals-together": "Colocar {count} peones Animal en esta carta de una sola vez",
+    "buy-jungle": "Tomar esta carta Jungla",
+    "move-left": "Mover un Arqueólogo a la izquierda",
+    "move-right": "Mover un Arqueólogo a la derecha",
+    "move-right-together": "Mover {count} Arqueólogos a la derecha de una sola vez",
+    "select-archaeologist": "Elegir un Arqueólogo de esta carta",
+    "unselect-archaeologist": "Dejar de mover a este Arqueólogo",
+    "send-archaeologist": "Enviar al Arqueólogo a esta carta"
+  },
+  "adventurer": {
+    "1": "Naturalista",
+    "2": "Arqueólogo",
+    "3": "Explorador",
+    "4": "Jefe de expedición"
+  },
+  "effect": {
+    "gold": "Gana {gold, plural, one {# Moneda de oro} other {# Monedas de oro}}",
+    "moves": "{count, plural, one {# movimiento de Arqueólogo} other {# movimientos de Arqueólogo}}: cada movimiento hace avanzar o retroceder a un Arqueólogo una carta a lo largo de tu jungla",
+    "moves-or-gold": "{count, plural, one {# movimiento de Arqueólogo} other {# movimientos de Arqueólogo}}, cada uno de los cuales puede tomarse como 1 Moneda de oro en su lugar",
+    "send-archaeologists": "Envía {count, plural, one {# Arqueólogo} other {# Arqueólogos}} a la carta Jungla que quieras, desde tu Campamento base o desde otra carta",
+    "place-animals": "Coloca {count, plural, one {# peón Animal} other {# peones Animal}} en los espacios Animal libres de tus cartas Jungla",
+    "animal-on-each-jungle": "Coloca 1 peón Animal en cada una de tus cartas Jungla",
+    "buy-jungle": "Compra una carta Jungla del mercado por {cost, plural, one {# Moneda de oro} other {# Monedas de oro}}",
+    "take-jungle": "Toma gratis una carta Jungla del mercado",
+    "buy-jungle.deck-bottom": "Compra por {cost, plural, one {# Moneda de oro} other {# Monedas de oro}} una de las 3 cartas del fondo del mazo de Jungla, que nadie ha visto",
+    "relic-tile": "Gana una loseta de Reliquia",
+    "temple-tile": "Elige una loseta de Templo en juego y aplica su efecto",
+    "legendary-animal-tile": "Gana la loseta de Animal legendario de esta carta",
+    "or": " o "
+  },
+  "condition": {
+    "none-in-hand": "Ninguna carta {adventurer} en tu expositor",
+    "all-types-in-hand": "Los 4 tipos de Aventurero en tu expositor",
+    "min-in-hand": "Al menos {count, plural, one {# carta} other {# cartas}} {adventurer} en tu expositor",
+    "min-in-play": "Al menos {count, plural, one {# carta} other {# cartas}} {adventurer} en juego: los dos expositores y el río",
+    "min-elsewhere.or": "Al menos {count, plural, one {# carta} other {# cartas}} {adventurer} en el expositor rival o en el río",
+    "min-elsewhere.and": "Al menos {count, plural, one {# carta} other {# cartas}} {adventurer} en el expositor rival y en el río",
+    "more-than.or": "Más cartas {adventurer} en tu expositor que en el expositor rival o que en el río",
+    "more-than.and": "Más cartas {adventurer} en tu expositor que en el expositor rival y que en el río",
+    "fewer-than.or": "Menos cartas {adventurer} en tu expositor que en el expositor rival o que en el río",
+    "fewer-than.and": "Menos cartas {adventurer} en tu expositor que en el expositor rival y que en el río",
+    "cards-in-play": "Por cada carta {adventurer} en juego: los dos expositores y el río"
+  },
+  "help": {
+    "adventurer": {
+      "title": "Aventurero {adventurer}",
+      "title.hidden": "Aventurero {adventurer} — anverso oculto",
+      "types": "Tipo principal: <0>{main}</0>. Tipo secundario: <1>{secondary}</1>. Solo el tipo principal cuenta para las condiciones; ambos se leen en el reverso de la carta, así que también en el expositor rival y en el río.",
+      "hidden": "El anverso de esta carta no está a tu alcance. Su reverso, en cambio, siempre es legible: muestra su tipo principal y su tipo secundario.",
+      "lines": "Efectos de la carta",
+      "best-line": "Si se cumplen varias condiciones, solo se aplica un efecto: el más potente, es decir, la última línea cumplida.",
+      "unplayable": "No se cumple ninguna condición: esta carta no se puede jugar por ahora.",
+      "in-my-hand": "En tu expositor.",
+      "in-hand": "En el expositor de {player}.",
+      "in-river": "En el río: ahí es donde completas tu mano al final del turno, y los 5 reversos visibles cuentan para las condiciones de las cartas.",
+      "in-discard": "En el descarte.",
+      "face-down.mine": " Acabas de tomarla del río: permanece boca abajo, tanto para ti como para tu rival, hasta que tu mano esté completa; entonces todas las que hayas robado se giran a la vez.",
+      "face-down": " {player} acaba de tomarla del río: permanece boca abajo hasta que su mano esté completa."
+    },
+    "jungle": {
+      "title": "Carta Jungla",
+      "intro": "Una carta Jungla se añade a la derecha de tu jungla, a continuación del Campamento base. Tus Arqueólogos avanzan por ella, tus peones Animal se instalan en ella, y las tres bonificaciones impresas en la parte inferior de la carta se desbloquean poco a poco.",
+      "spaces": "Espacios",
+      "archaeologist-spaces": "{count, plural, one {# espacio Arqueólogo} other {# espacios Arqueólogo}}, a lo largo del borde izquierdo.",
+      "archaeologist-spaces.taken": "{count, plural, one {# espacio Arqueólogo} other {# espacios Arqueólogo}}, de los cuales {taken, plural, one {# ocupado} other {# ocupados}}.",
+      "animal-spaces": "{count, plural, one {# espacio Animal} other {# espacios Animal}}, a lo largo del borde derecho.",
+      "animal-spaces.taken": "{count, plural, one {# espacio Animal} other {# espacios Animal}}, de los cuales {taken, plural, one {# ocupado} other {# ocupados}}.",
+      "dig-site-bonus": "Bonificación de Excavación",
+      "dig-site-rule": "Se desbloquea construyendo un Yacimiento en esta carta. Todos sus espacios Arqueólogo deben estar ocupados, y te cuesta la acción de tu turno; los Arqueólogos que ocupaban esos espacios vuelven entonces al Campamento base.",
+      "animal-bonus": "Bonificación de Animal",
+      "animal-rule": "Se desbloquea en cuanto todos los espacios Animal de la carta están ocupados. Un peón se queda en la casilla de bonificación para dejar constancia, los demás vuelven a la reserva.",
+      "exploration-bonus": "Bonificación de Exploración",
+      "exploration-rule": "Se desbloquea una vez obtenidas las otras dos bonificaciones. La carta se gira entonces a su cara completada: ya no tiene espacios ni bonificaciones, pero conserva sus símbolos Planta.",
+      "no-gain": "Ninguna recompensa en esta carta, pero aun así hay que obtener esta bonificación para desbloquear la Bonificación de Exploración.",
+      "already-taken": "Ya obtenida.",
+      "plants": "{count, plural, =0 {Esta carta no vale ningún símbolo Planta.} one {Esta carta vale # símbolo Planta para la loseta de Renombre de Planta, por sus dos caras.} other {Esta carta vale # símbolos Planta para la loseta de Renombre de Planta, por sus dos caras.}}",
+      "on-market": "En el mercado: cualquiera de los dos jugadores puede comprarla.",
+      "in-my-jungle": "En tu jungla.",
+      "in-jungle": "En la jungla de {player}.",
+      "completed": " Está girada a su cara completada."
+    },
+    "base-camp": {
+      "title": "Campamento base",
+      "intro": "Acción de turno: descarta <0>{count} cartas Aventurero</0> de tu expositor y elige después uno de los cuatro poderes de la carta. Es también lo que permite renovar una mano de la que no se puede jugar nada.",
+      "powers": "Los cuatro poderes",
+      "power.1": "Monedas de oro",
+      "power.2": "Peones Animal",
+      "power.3": "Movimientos de Arqueólogo",
+      "power.4": "Carta Jungla",
+      "improved": "Es el poder mejorado de esta carta, sobre fondo claro: solo sirve una vez.",
+      "face-a": "La carta está por su cara A: su poder mejorado sigue disponible. Usarlo gira la carta a su cara B, donde los cuatro poderes vuelven a ser los poderes comunes a todos los jugadores.",
+      "face-b": "La carta está por su cara B: su poder mejorado ya se ha usado, los cuatro poderes son ahora los poderes comunes.",
+      "team": "El equipo",
+      "team-text": "{count, plural, =0 {Ningún Arqueólogo espera en el Campamento base: todos han partido a la jungla.} one {# Arqueólogo espera en el Campamento base.} other {# Arqueólogos esperan en el Campamento base.}} Cada jugador tiene 7 en total.",
+      "mine": "Tu Campamento base.",
+      "player": "El Campamento base de {player}."
+    },
+    "tile": {
+      "to-win": "Las losetas de Descubrimiento y las losetas de Renombre cuentan todas para el final de la partida: el jugador que tenga {total} ante sí al principio de su turno gana la partida.",
+      "owned.mine": " Tienes {count} de {total}.",
+      "owned": " {player} tiene {count} de {total}."
+    },
+    "temple": {
+      "title": "Loseta de Templo",
+      "intro": "Las losetas de Templo son las cuatro losetas expuestas bajo el mercado de Jungla. Algunas bonificaciones de cartas Jungla te permiten elegir una: la tomas y aplicas su efecto de inmediato.",
+      "effect": "Efecto",
+      "plants": "Esta loseta vale además {count, plural, one {# símbolo Planta} other {# símbolos Planta}} para la loseta de Renombre de Planta.",
+      "third": "La tercera loseta de Templo",
+      "third-text": "Un jugador nunca posee tres losetas de Templo: en el momento en que debería tomar una tercera, gana la loseta de Victoria inmediata y gana la partida."
+    },
+    "fame": {
+      "title": "Loseta de Renombre",
+      "intro": "Las cuatro losetas de Renombre premian cada una un objetivo. Nunca son definitivas: pasan de un jugador a otro a lo largo de la partida.",
+      "objective": "Objetivo",
+      "objective.7": "{count} símbolos Planta, contados en tus cartas Jungla y en tus losetas de Templo.",
+      "objective.8": "{count} cartas Jungla en tu jungla.",
+      "objective.9": "{count} losetas de Animal legendario ante ti.",
+      "objective.10": "{count} losetas de Reliquia ante ti.",
+      "changing-hands": "Cambia de manos",
+      "changing-hands-text": "Al final de su turno, el jugador activo toma la loseta en cuanto alcanza el objetivo e iguala a quien la tiene: basta con igualar, la loseta pasa al último que lo ha demostrado.",
+      "mine": "Tú tienes esta loseta.",
+      "player": "{player} tiene esta loseta.",
+      "unclaimed": "Nadie tiene todavía esta loseta."
+    },
+    "relic": {
+      "title": "Loseta de Reliquia",
+      "intro": "Las losetas de Reliquia son todas idénticas. Se obtienen mediante las bonificaciones de las cartas Jungla y mediante algunas losetas de Templo.",
+      "fame": "{count} losetas de Reliquia te dan la loseta de Renombre de Reliquia."
+    },
+    "legendary-animal": {
+      "title": "Loseta de Animal legendario",
+      "intro": "Las nueve losetas de Animal legendario son todas distintas. Cada una está ligada a una carta Jungla concreta: es la Bonificación de Animal de esa carta la que te la hace ganar.",
+      "fame": "{count} losetas de Animal legendario te dan la loseta de Renombre de Animal legendario."
+    },
+    "instant-victory": {
+      "title": "Loseta de Victoria inmediata",
+      "intro": "Esta loseta única sustituye a una tercera loseta de Templo: el jugador que debería tomar una la gana y <0>gana la partida de inmediato</0>.",
+      "other-end": "Es una de las dos formas de ganar. La otra es tener {total} losetas ante uno al principio de su turno."
+    },
+    "archaeologist": {
+      "title": "Arqueólogo",
+      "intro": "Cada jugador dispone de 7 Arqueólogos. Esperan en el Campamento base y parten a explorar las cartas Jungla de su propietario.",
+      "moving": "Hacerlos avanzar",
+      "send": "Enviar a un Arqueólogo: parte hacia la carta Jungla que quieras, desde el Campamento base o desde otra carta.",
+      "move": "Mover a un Arqueólogo: avanza o retrocede una sola carta cada vez, contando el Campamento base como la carta anterior a la primera.",
+      "dig-site": "Los espacios",
+      "dig-site-text": "Un Arqueólogo ocupa primero un espacio impreso en la carta; una vez tomados todos los espacios, los siguientes se reúnen en el centro de la carta. Solo los que ocupan un espacio permiten construir un Yacimiento, y entonces vuelven al Campamento base.",
+      "place.camp": "En el Campamento base.",
+      "place.slot": "En un espacio impreso de una carta Jungla.",
+      "place.extra": "En el centro de una carta Jungla, sin espacio: o bien todos los espacios estaban tomados, o bien la carta está completada y ya no tiene.",
+      "at-camp.mine": " {count, plural, =0 {Ninguno de tus Arqueólogos espera en el Campamento base.} one {# de tus Arqueólogos espera todavía en el Campamento base.} other {# de tus Arqueólogos esperan todavía en el Campamento base.}}",
+      "at-camp": " {count, plural, =0 {Ningún Arqueólogo de {player} espera en el Campamento base.} one {# Arqueólogo de {player} espera todavía en el Campamento base.} other {# Arqueólogos de {player} esperan todavía en el Campamento base.}}"
+    },
+    "dig-site": {
+      "title": "Yacimiento",
+      "intro": "Construir un Yacimiento es <0>una acción de turno completa</0>: no cuesta ninguna carta, pero ocupa todo tu turno.",
+      "building": "Construirlo",
+      "requirement": "Todos los espacios Arqueólogo de la carta Jungla deben estar ocupados.",
+      "archaeologists-return": "Los Arqueólogos que ocupaban esos espacios vuelven al Campamento base; los reunidos en el centro de la carta se quedan ahí.",
+      "bonus": "El Yacimiento se coloca en la casilla de Bonificación de Excavación de la carta y te hace ganar su contenido. Ya no abandona la carta."
+    },
+    "animal": {
+      "title": "Peón Animal",
+      "intro": "Los peones Animal se colocan en los espacios Animal libres de tus propias cartas Jungla, en el orden que quieras.",
+      "bonus": "La Bonificación de Animal",
+      "filling": "En cuanto todos los espacios Animal de una carta están ocupados, obtienes su Bonificación de Animal.",
+      "returned": "Un peón se desliza entonces a la casilla de bonificación para dejar constancia, los demás vuelven a la reserva.",
+      "exploration": "Junto con la Bonificación de Excavación de la misma carta, desbloquea la Bonificación de Exploración, y la carta se gira a su cara completada."
+    },
+    "gold": {
+      "title": "Monedas de oro",
+      "intro": "El oro sirve para una sola cosa: <0>comprar cartas Jungla</0>. Una carta cuya única recompensa es una compra que no puedes pagar no se puede jugar.",
+      "earning": "Conseguirlo",
+      "from-cards": "Las cartas de Jefe de expedición, el poder Monedas de oro del Campamento base y algunas bonificaciones de cartas Jungla lo proporcionan.",
+      "from-moves": "Los movimientos de Arqueólogo marcados con una moneda pueden tomarse en oro en su lugar, uno por uno, en tu Campamento base.",
+      "denominations": "Las monedas valen 1 o 3: el cambio se hace por ti, nunca tienes que elegir cuáles gastar.",
+      "mine": "Tienes {gold, plural, one {# Moneda de oro} other {# Monedas de oro}}.",
+      "player": "{player} tiene {gold, plural, one {# Moneda de oro} other {# Monedas de oro}}.",
+      "reserve": "En la reserva general, que se considera inagotable."
+    }
+  },
+  "tutorial": {
+    "welcome": "¡Bienvenido al tutorial de <b>Aurealis</b>!",
+    "theme": "En Aurealis, diriges una expedición por una jungla inexplorada. Reclutas <b>Aventureros</b> y envías a tus <b>Arqueólogos</b> a explorar el terreno. ¡Enfrente de ti, tu rival dirige la expedición contraria!",
+    "tiles": "A medida que vayas descubriendo, estas son las <b>losetas</b> que puedes ganar. El primer jugador que tenga <b>7</b> ante sí al principio de su turno gana la partida.",
+    "jungle": "Este es tu <b>Campamento base</b>, y tu primera <b>carta Jungla</b>.",
+    "hand": "¡Y esta es tu mano de cartas <b>Aventurero</b>! En tu turno, lo más habitual será jugar una carta Aventurero.",
+    "types": {
+      "intro": "Hay 4 tipos de cartas Aventurero:",
+      "leader": "<leader/> Los <b>Jefes de expedición</b> permiten obtener Monedas de oro <gold/> para financiar la expedición.",
+      "naturalist": "<naturalist/> Los <b>Naturalistas</b> observan a los animales y permiten colocar peones Animal <animal/> en tus cartas Jungla.",
+      "explorer": "<explorer/> Los <b>Exploradores</b> permiten comprar y añadir cartas Jungla a tu juego.",
+      "archaeologist": "<digger/> Los <b>Arqueólogos</b> permiten mover tus peones Arqueólogo <archaeologist/> de una carta Jungla a otra."
+    },
+    "river": "En el espacio común hay 5 cartas Aventurero boca abajo: forman el <b>río</b>. El reverso de las cartas Aventurero indica el <b>tipo principal</b> de la carta y un <b>tipo secundario</b> que anuncia sus efectos.",
+    "opponent-hand": "Tu rival también tiene 5 cartas Aventurero en la mano, de las que solo ves el reverso.",
+    "conditions": "Cada carta Aventurero lleva <b>Condiciones</b> a la izquierda y <b>Efectos</b> a la derecha. ¡Las Condiciones dependen a menudo de las cartas del río y de la mano de tu rival!",
+    "play-leader": "Por ejemplo, este <b>Jefe de expedición</b> <leader/> te reporta ahora mismo <b>7</b> Monedas de oro <gold/>. Haz clic en él para saber por qué y después juégalo.",
+    "gold": "Como primer jugador, has empezado la partida con 3 <gold/>: ahora tienes <b>10</b>. Tu rival, segundo jugador, tiene 4. El oro sirve para una sola cosa: comprar nuevas cartas Jungla, gracias a los Exploradores <explorer/>.",
+    "refill": "Al final de tu turno, completas tu mano hasta 5 cartas robando del río. Toma esta.",
+    "opponent-turn": "Ahora es el turno de tu rival.",
+    "opponent-card": "Tu rival ha jugado esta carta Aventurero. Tenía <b>2 Naturalistas</b> <naturalist/> en la mano: puede por tanto colocar <b>2 peones Animal</b> <animal/> en sus cartas Jungla.",
+    "animal-spaces": "Los peones Animal se colocan en estos espacios, a lo largo del borde derecho de las cartas Jungla. Como segundo jugador, tu rival ya tenía uno al empezar.",
+    "animal-column": "Cuando la columna está completa, un peón Animal se desliza al final de esta, los demás vuelven a la reserva, y el jugador gana la bonificación asociada.",
+    "legendary-animal": "Aquí, esa bonificación es la <b>loseta de Animal legendario</b> de la carta. Una primera loseta para tu rival.",
+    "play-explorer": "Te toca. Juega este <b>Explorador</b> <explorer/>: te permite comprar una carta Jungla por <b>3</b> <gold/>.",
+    "jungle-market": "Este es el mercado común de cartas Jungla. Toma la que quieras: se colocará a la derecha de tu jungla.",
+    "refill-2": "Ahora, toma la carta que quieras para completar tu mano.",
+    "opponent-archaeologist": "Tu rival ha jugado este <b>Arqueólogo</b> <digger/>. Va a poder mover <b>4 veces</b> sus peones Arqueólogo <archaeologist/>.",
+    "archaeologist-pawns": "Cada jugador dispone de 7 peones Arqueólogo <archaeologist/>, que esperan en su Campamento base. Como tú has empezado, tu rival ya tenía uno en su primera Jungla.",
+    "moves": "Cada movimiento hace avanzar 1 Arqueólogo a una carta Jungla vecina. ¡Cuanto más lejos está una Jungla, más difícil es llegar hasta ella!",
+    "base-camp": {
+      "intro": "Te toca. En tu turno, en lugar de jugar una carta Aventurero, puedes realizar una <b>acción de Campamento base</b>:",
+      "gold": "ganar 3 <gold/>;",
+      "animal": "obtener 1 peón Animal <animal/>;",
+      "moves": "ganar 3 movimientos de Arqueólogo <archaeologist/>;",
+      "jungle": "comprar una carta Jungla por 7 <gold/>."
+    },
+    "improved-power": "Cada Campamento base tiene además un <b>poder mejorado</b>: el tuyo compra una carta Jungla por <b>5</b> <gold/> en lugar de 7. Úsalo.",
+    "base-camp-discard": "Una acción de Campamento base cuesta <b>3 cartas Aventurero</b>, descartadas de tu mano. ¡También es muy práctico para renovar una mala mano! Descarta 3 cartas a tu elección.",
+    "base-camp-buy": "Ahora, compra la carta Jungla que quieras.",
+    "base-camp-flip": "Tu Campamento base se ha girado: su poder mejorado es de <b>un solo uso</b>.",
+    "fame-tiles": "Estas son las 4 <b>losetas de Renombre</b>. En cuanto cumples la condición inscrita en una de ellas, la tomas.",
+    "fame-jungle": "Esta se obtiene con <b>3 cartas Jungla</b>: acabas de colocar la tercera, así que vas a recuperarla.",
+    "fame-warning": "¡Pero cuidado! Durante su turno, tu rival puede quitarte una loseta de Renombre colocada ante ti en cuanto te <b>iguala o te supera</b> en su objetivo.",
+    "refill-3": "Completa tu mano tomando las cartas Aventurero que quieras.",
+    "dig-site": "Cuando todos los espacios Arqueólogo de una carta Jungla están ocupados, es posible construir en ella un <b>Yacimiento</b>. Es una acción de turno completa.",
+    "dig-site-return": "Tras la construcción, los Arqueólogos que ocupaban los espacios vuelven al Campamento base. Los demás, de paso por la carta, se quedan ahí.",
+    "exploration": "Cuando el Yacimiento <b>y</b> la Bonificación de Animal de una carta Jungla están ambos cumplidos, se gana la bonificación central y la carta se gira a su cara completada. Tu rival consigue por tanto una <b>loseta de Reliquia</b> y 3 <gold/>.",
+    "my-temple": "En tu primera carta Jungla, esta bonificación central es una <b>loseta de Templo</b>.",
+    "temple-tiles": "Cuando ganas una loseta de Templo, tomas la que quieras de entre las 4 en juego y aplicas su efecto de inmediato.",
+    "temple-tiles-hint": "Haz clic en las losetas para conocer su efecto.",
+    "victory": "Puedes ganar de 2 formas: tener <b>7 losetas</b> ante ti al principio de tu turno, u obtener tu <b>3.ª loseta de Templo</b>, ¡que es una victoria inmediata!",
+    "good-luck": "¡Ahora te toca jugar, buena suerte!"
+  }
+}

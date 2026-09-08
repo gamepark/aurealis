@@ -1,1 +1,320 @@
-{}
+{
+  "header": {
+    "choose-action": {
+      "you": "Play an Adventurer, build an Excavation site or use your Base camp",
+      "player": "{player} is performing their action"
+    },
+    "base-camp-discard": {
+      "you": "Discard {count, plural, one {# Adventurer} other {# Adventurers}} for your Base camp",
+      "player": "{player} discards {count, plural, one {# Adventurer} other {# Adventurers}}"
+    },
+    "choose-effect": {
+      "you": "Choose one of the card's rewards",
+      "player": "{player} chooses a reward from their card"
+    },
+    "move-archaeologists": {
+      "you": "Move your Archeologists: {count, plural, one {# movement} other {# movements}} <pass>Pass</pass>",
+      "player": "{player} moves their Archeologists"
+    },
+    "move-archaeologists-or-gold": {
+      "you": "{count, plural, one {# movement} other {# movements}}: move your Archeologists or take Gold coins",
+      "player": "{player} moves their Archeologists or takes Gold coins"
+    },
+    "send-archaeologists": {
+      "you": "Send {count, plural, one {# Archeologist} other {# Archeologists}} into your jungle",
+      "player": "{player} sends their Archeologists"
+    },
+    "place-animals": {
+      "you": "Place {count, plural, one {# Animal pawn} other {# Animal pawns}}",
+      "player": "{player} places their Animal pawns"
+    },
+    "acquire-jungle": {
+      "you": "{cost, plural, =0 {Take a Jungle card} one {Buy a Jungle card for # Gold coin} other {Buy a Jungle card for # Gold coins}}",
+      "player": "{player} chooses a Jungle card"
+    },
+    "choose-temple-tile": {
+      "you": "Choose a Temple tile",
+      "player": "{player} chooses a Temple tile"
+    },
+    "check-fame": {
+      "you": "Your Renown objectives are being checked",
+      "player": "{player}'s Renown objectives are being checked"
+    },
+    "refill-hand": {
+      "you": "Complete your hand: {count, plural, one {# card} other {# cards}} from the pool",
+      "player": "{player} completes their hand"
+    }
+  },
+  "game-over": {
+    "title": "End of the game",
+    "tiles": {
+      "you": "You win the game by being the first player with {total} tiles at the start of your turn.",
+      "player": "{player} wins the game by being the first player with {total} tiles at the start of their turn.",
+      "other": "The other way to win: taking a third Temple tile, which becomes the Instant victory tile."
+    },
+    "temples": {
+      "you": "You win an instant victory with 3 temples.",
+      "player": "{player} wins an instant victory with 3 temples.",
+      "other": "The other way to win: having {total} tiles in front of you at the start of your turn."
+    },
+    "unknown": "The game is won by having {total} tiles in front of you at the start of your turn, or by taking a third Temple tile, which becomes the Instant victory tile."
+  },
+  "choose-effect": {
+    "choose": "Choose one of the card's rewards",
+    "or": "or"
+  },
+  "deck-bottom": {
+    "choose": "Choose a card",
+    "intro": "The 3 cards from the bottom of the Jungle deck.",
+    "pick": "Take this card"
+  },
+  "button": {
+    "play-card": "Play this card",
+    "discard-card": "Discard this card",
+    "draw-card": "Take this card",
+    "base-camp": {
+      "gold": "Base camp action: Gold coins",
+      "animal": "Base camp action: Animal pawns",
+      "moves": "Base camp action: Archeologist movements",
+      "jungle": "Base camp action: buy a Jungle card"
+    },
+    "take-gold": "Take the rest as Gold coins",
+    "take-temple": "Take this Temple tile",
+    "build-dig-site": "Build an Excavation site",
+    "place-animal": "Place an Animal pawn",
+    "place-animals-together": "Place {count} Animal pawns on this card at once",
+    "buy-jungle": "Take this Jungle card",
+    "move-left": "Move an Archeologist to the left",
+    "move-right": "Move an Archeologist to the right",
+    "move-right-together": "Move {count} Archeologists to the right at once",
+    "select-archaeologist": "Select an Archeologist on this card",
+    "unselect-archaeologist": "Stop moving this Archeologist",
+    "send-archaeologist": "Send the Archeologist to this card"
+  },
+  "adventurer": {
+    "1": "Naturalist",
+    "2": "Archeologist",
+    "3": "Explorer",
+    "4": "Expedition leader"
+  },
+  "effect": {
+    "gold": "Gain {gold, plural, one {# Gold coin} other {# Gold coins}}",
+    "moves": "{count, plural, one {# Archeologist movement} other {# Archeologist movements}}: each movement moves one Archeologist forward or backward by one card along your jungle",
+    "moves-or-gold": "{count, plural, one {# Archeologist movement} other {# Archeologist movements}}, each of which may be taken as 1 Gold coin instead",
+    "send-archaeologists": "Send {count, plural, one {# Archeologist} other {# Archeologists}} to the Jungle card of your choice, from your Base camp or from another card",
+    "place-animals": "Place {count, plural, one {# Animal pawn} other {# Animal pawns}} on the free Animal slots of your Jungle cards",
+    "animal-on-each-jungle": "Place 1 Animal pawn on each of your Jungle cards",
+    "buy-jungle": "Buy a Jungle card from the market for {cost, plural, one {# Gold coin} other {# Gold coins}}",
+    "take-jungle": "Take a Jungle card from the market for free",
+    "buy-jungle.deck-bottom": "Pay {cost, plural, one {# Gold coin} other {# Gold coins}} for one of the 3 cards at the bottom of the Jungle deck, which nobody has seen",
+    "relic-tile": "Gain a Relic tile",
+    "temple-tile": "Choose a Temple tile in play and apply its effect",
+    "legendary-animal-tile": "Gain the Legendary animal tile of this card",
+    "or": " or "
+  },
+  "condition": {
+    "none-in-hand": "No {adventurer} card on your card holder",
+    "all-types-in-hand": "All 4 Adventurer types on your card holder",
+    "min-in-hand": "At least {count, plural, one {# {adventurer} card} other {# {adventurer} cards}} on your card holder",
+    "min-in-play": "At least {count, plural, one {# {adventurer} card} other {# {adventurer} cards}} in play: both card holders and the pool",
+    "min-elsewhere.or": "At least {count, plural, one {# {adventurer} card} other {# {adventurer} cards}} on your opponent's card holder or in the pool",
+    "min-elsewhere.and": "At least {count, plural, one {# {adventurer} card} other {# {adventurer} cards}} on your opponent's card holder and in the pool",
+    "more-than.or": "More {adventurer} cards on your card holder than on your opponent's card holder or than in the pool",
+    "more-than.and": "More {adventurer} cards on your card holder than on your opponent's card holder and than in the pool",
+    "fewer-than.or": "Fewer {adventurer} cards on your card holder than on your opponent's card holder or than in the pool",
+    "fewer-than.and": "Fewer {adventurer} cards on your card holder than on your opponent's card holder and than in the pool",
+    "cards-in-play": "For each {adventurer} card in play: both card holders and the pool"
+  },
+  "help": {
+    "adventurer": {
+      "title": "Adventurer: {adventurer}",
+      "title.hidden": "Adventurer: {adventurer} — front hidden",
+      "types": "Primary type: <0>{main}</0>. Secondary type: <1>{secondary}</1>. Only the primary type counts for the conditions; both can be read on the back of the card, and therefore also on your opponent's card holder and in the pool.",
+      "hidden": "The front of this card is not accessible to you. Its back, however, is always readable: it carries its primary type and its secondary type.",
+      "lines": "Card effects",
+      "best-line": "If several conditions are met, only one effect applies: the most powerful one, that is to say the last line met.",
+      "unplayable": "No condition is met: this card cannot be played for now.",
+      "in-my-hand": "On your card holder.",
+      "in-hand": "On {player}'s card holder.",
+      "in-river": "In the pool: this is where you complete your hand at the end of your turn, and the 5 visible card backs count for the conditions of the cards.",
+      "in-discard": "In the discard pile.",
+      "face-down.mine": " You have just taken it from the pool: it stays face down, for you as well as for your opponent, until your hand is complete — then all the cards you have drawn are revealed at once.",
+      "face-down": " {player} has just taken it from the pool: it stays face down until their hand is complete."
+    },
+    "jungle": {
+      "title": "Jungle card",
+      "intro": "A Jungle card is added to the right of your jungle, following the Base camp. Your Archeologists advance along it, your Animal pawns settle on it, and the three bonuses printed at the bottom of the card are unlocked one after another.",
+      "spaces": "Slots",
+      "archaeologist-spaces": "{count, plural, one {# Archeologist slot} other {# Archeologist slots}}, along the left edge.",
+      "archaeologist-spaces.taken": "{count, plural, one {# Archeologist slot} other {# Archeologist slots}}, including {taken} occupied.",
+      "animal-spaces": "{count, plural, one {# Animal slot} other {# Animal slots}}, along the right edge.",
+      "animal-spaces.taken": "{count, plural, one {# Animal slot} other {# Animal slots}}, including {taken} occupied.",
+      "dig-site-bonus": "Excavation bonus",
+      "dig-site-rule": "Unlocked by building an Excavation site on this card. All its Archeologist slots must be occupied, and it costs you your turn action; the Archeologists that occupied those slots then return to the Base camp.",
+      "animal-bonus": "Animal bonus",
+      "animal-rule": "Unlocked as soon as all the Animal slots on the card are occupied. One pawn stays on the bonus space to keep track of it, the others return to the supply.",
+      "exploration-bonus": "Exploration bonus",
+      "exploration-rule": "Unlocked once the two other bonuses have been claimed. The card is then flipped to its completed side: it no longer has any slot or bonus, but it keeps its Plant icons.",
+      "no-gain": "No reward on this card — but this bonus must still be claimed in order to unlock the Exploration bonus.",
+      "already-taken": "Already claimed.",
+      "plants": "{count, plural, =0 {This card is not worth any Plant icon.} one {This card is worth # Plant icon for the Plant Renown tile, on both sides.} other {This card is worth # Plant icons for the Plant Renown tile, on both sides.}}",
+      "on-market": "On the market: either player can buy it.",
+      "in-my-jungle": "In your jungle.",
+      "in-jungle": "In {player}'s jungle.",
+      "completed": " It has been flipped to its completed side."
+    },
+    "base-camp": {
+      "title": "Base camp",
+      "intro": "Turn action: discard <0>{count} Adventurer cards</0> from your card holder, then choose one of the card's four abilities. This is also what lets you renew a hand from which nothing can be played.",
+      "powers": "The four abilities",
+      "power.1": "Gold coins",
+      "power.2": "Animal pawns",
+      "power.3": "Archeologist movements",
+      "power.4": "Jungle card",
+      "improved": "This is this card's enhanced ability, on a light background: it can only be used once.",
+      "face-a": "The card is on its A-side: its enhanced ability is still available. Using it flips the card to its B-side, where the four abilities become the abilities shared by all players again.",
+      "face-b": "The card is on its B-side: its enhanced ability has been used, the four abilities are now the shared abilities.",
+      "team": "The team",
+      "team-text": "{count, plural, =0 {No Archeologist is waiting at the Base camp: they have all left for the jungle.} one {# Archeologist is waiting at the Base camp.} other {# Archeologists are waiting at the Base camp.}} Each player has 7 in total.",
+      "mine": "Your Base camp.",
+      "player": "{player}'s Base camp."
+    },
+    "tile": {
+      "to-win": "Discovery tiles and Renown tiles all count towards the end of the game: the player who has {total} of them in front of them at the start of their turn wins the game.",
+      "owned.mine": " You have {count} out of {total}.",
+      "owned": " {player} has {count} out of {total}."
+    },
+    "temple": {
+      "title": "Temple tile",
+      "intro": "The Temple tiles are the four tiles displayed under the Jungle market. Some Jungle card bonuses let you choose one: you take it and apply its effect immediately.",
+      "effect": "Effect",
+      "plants": "This tile is also worth {count, plural, one {# Plant icon} other {# Plant icons}} for the Plant Renown tile.",
+      "third": "The third Temple tile",
+      "third-text": "A player never owns three Temple tiles: the moment they would take a third one, they gain the Instant victory tile and win the game."
+    },
+    "fame": {
+      "title": "Renown tile",
+      "intro": "The four Renown tiles each reward an objective. They are never yours for good: they pass from one player to the other over the course of the game.",
+      "objective": "Objective",
+      "objective.7": "{count} Plant icons, counted on your Jungle cards and on your Temple tiles.",
+      "objective.8": "{count} Jungle cards in your jungle.",
+      "objective.9": "{count} Legendary animal tiles in front of you.",
+      "objective.10": "{count} Relic tiles in front of you.",
+      "changing-hands": "It changes hands",
+      "changing-hands-text": "At the end of their turn, the active player takes the tile as soon as they reach the objective and match its holder: matching is enough, the tile goes to the last player who proved it.",
+      "mine": "You hold this tile.",
+      "player": "{player} holds this tile.",
+      "unclaimed": "Nobody holds this tile yet."
+    },
+    "relic": {
+      "title": "Relic tile",
+      "intro": "The Relic tiles are all identical. They are obtained through Jungle card bonuses, and through some Temple tiles.",
+      "fame": "{count} Relic tiles give you the Relic Renown tile."
+    },
+    "legendary-animal": {
+      "title": "Legendary animal tile",
+      "intro": "The nine Legendary animal tiles are all different. Each one is tied to a specific Jungle card: it is that card's Animal bonus that earns it for you.",
+      "fame": "{count} Legendary animal tiles give you the Legendary animal Renown tile."
+    },
+    "instant-victory": {
+      "title": "Instant victory tile",
+      "intro": "This unique tile replaces a third Temple tile: the player who would take one gains it and <0>immediately wins the game</0>.",
+      "other-end": "This is one of the two ways to win. The other one is to have {total} tiles in front of you at the start of your turn."
+    },
+    "archaeologist": {
+      "title": "Archeologist",
+      "intro": "Each player has 7 Archeologists. They wait on the Base camp and set out to explore their owner's Jungle cards.",
+      "moving": "Moving them forward",
+      "send": "Send an Archeologist: it leaves for the Jungle card of your choice, from the Base camp or from another card.",
+      "move": "Move an Archeologist: it advances or goes back one single card at a time, the Base camp counting as the card that precedes the first one.",
+      "dig-site": "The slots",
+      "dig-site-text": "An Archeologist first occupies a slot printed on the card; once all the slots are taken, the following ones gather in the middle of the card. Only those occupying a slot allow an Excavation site to be built — and they then return to the Base camp.",
+      "place.camp": "At the Base camp.",
+      "place.slot": "On a printed slot of a Jungle card.",
+      "place.extra": "In the middle of a Jungle card, with no slot: either all the slots were taken, or the card is completed and has none left.",
+      "at-camp.mine": " {count, plural, =0 {None of your Archeologists is waiting at the Base camp.} one {# of your Archeologists is still waiting at the Base camp.} other {# of your Archeologists are still waiting at the Base camp.}}",
+      "at-camp": " {count, plural, =0 {None of {player}'s Archeologists is waiting at the Base camp.} one {# of {player}'s Archeologists is still waiting at the Base camp.} other {# of {player}'s Archeologists are still waiting at the Base camp.}}"
+    },
+    "dig-site": {
+      "title": "Excavation site",
+      "intro": "Building an Excavation site is <0>a full turn action</0>: it costs no card, but it takes up your whole turn.",
+      "building": "Building it",
+      "requirement": "All the Archeologist slots on the Jungle card must be occupied.",
+      "archaeologists-return": "The Archeologists that occupied those slots return to the Base camp; those gathered in the middle of the card stay there.",
+      "bonus": "The Excavation site is placed on the card's Excavation bonus space and earns you its contents. It never leaves the card again."
+    },
+    "animal": {
+      "title": "Animal pawn",
+      "intro": "Animal pawns are placed on the free Animal slots of your own Jungle cards, in any order you like.",
+      "bonus": "The Animal bonus",
+      "filling": "As soon as all the Animal slots on a card are occupied, you claim its Animal bonus.",
+      "returned": "One pawn then slides onto the bonus space to keep track of it, the others return to the supply.",
+      "exploration": "Together with the Excavation bonus of the same card, it unlocks the Exploration bonus, and the card is flipped to its completed side."
+    },
+    "gold": {
+      "title": "Gold coins",
+      "intro": "Gold has only one use: <0>buying Jungle cards</0>. A card whose only reward is a purchase you cannot afford cannot be played.",
+      "earning": "Earning some",
+      "from-cards": "Expedition leader cards, the Base camp's Gold coins ability and some Jungle card bonuses earn you some.",
+      "from-moves": "Archeologist movements marked with a coin can be taken as gold instead, one for one, on your Base camp.",
+      "denominations": "Coins are worth 1 or 3: change is made for you, you never have to choose which ones to spend.",
+      "mine": "You have {gold, plural, one {# Gold coin} other {# Gold coins}}.",
+      "player": "{player} has {gold, plural, one {# Gold coin} other {# Gold coins}}.",
+      "reserve": "In the general supply, which is considered inexhaustible."
+    }
+  },
+  "tutorial": {
+    "welcome": "Welcome to the <b>Aurealis</b> tutorial!",
+    "theme": "In Aurealis, you lead an expedition into an unexplored jungle. You recruit <b>Adventurers</b> and send your <b>Archeologists</b> to explore the terrain. Across from you, your opponent leads the rival expedition!",
+    "tiles": "As your discoveries unfold, here are the <b>tiles</b> you can earn. The first player to have <b>7</b> of them in front of them at the start of their turn wins the game.",
+    "jungle": "Here is your <b>Base camp</b>, and your first <b>Jungle card</b>.",
+    "hand": "And here is your hand of <b>Adventurer</b> cards! On your turn, you will most often play an Adventurer card.",
+    "types": {
+      "intro": "There are 4 types of Adventurer cards:",
+      "leader": "<leader/> <b>Expedition leaders</b> let you obtain Gold coins <gold/> to finance the expedition.",
+      "naturalist": "<naturalist/> <b>Naturalists</b> observe animals and let you place Animal pawns <animal/> on your Jungle cards.",
+      "explorer": "<explorer/> <b>Explorers</b> let you buy Jungle cards and add them to your play area.",
+      "archaeologist": "<digger/> <b>Archeologists</b> let you move your Archeologist pawns <archaeologist/> from one Jungle card to another."
+    },
+    "river": "In the common area, 5 Adventurer cards are laid face down: they form the <b>pool</b>. The back of an Adventurer card shows the card's <b>primary type</b>, and a <b>secondary type</b> that announces its effects.",
+    "opponent-hand": "Your opponent also has 5 Adventurer cards in hand, of which you only see the backs.",
+    "conditions": "Each Adventurer card carries <b>Conditions</b> on the left and <b>Effects</b> on the right. The Conditions often depend on the cards in the pool and in your opponent's hand!",
+    "play-leader": "For example, this <b>Expedition leader</b> <leader/> currently earns you <b>7</b> Gold coins <gold/>. Click on it to find out why, then play it.",
+    "gold": "As the first player, you started the game with 3 <gold/>: you now have <b>10</b>. Your opponent, the second player, has 4. Gold has only one use: buying new Jungle cards, thanks to the Explorers <explorer/>.",
+    "refill": "At the end of your turn, you complete your hand back to 5 cards by drawing from the pool. Take this one.",
+    "opponent-turn": "It is now your opponent's turn.",
+    "opponent-card": "Your opponent has played this Adventurer card. They had <b>2 Naturalists</b> <naturalist/> in hand: they can therefore place <b>2 Animal pawns</b> <animal/> on their Jungle cards.",
+    "animal-spaces": "Animal pawns are placed on these slots, along the right edge of the Jungle cards. As the second player, your opponent already had one at the start.",
+    "animal-column": "When the column is full, one Animal pawn slides to the bottom of it, the others return to the supply, and the player earns the associated bonus.",
+    "legendary-animal": "Here, that bonus is the card's <b>Legendary animal tile</b>. A first tile for your opponent.",
+    "play-explorer": "Your turn to play. Play this <b>Explorer</b> <explorer/>: it lets you buy a Jungle card for <b>3</b> <gold/>.",
+    "jungle-market": "Here is the common Jungle card market. Take the one of your choice: it will be placed to the right of your jungle.",
+    "refill-2": "Now, take the card of your choice to complete your hand.",
+    "opponent-archaeologist": "Your opponent has played this <b>Archeologist</b> <digger/>. They will be able to move their Archeologist pawns <archaeologist/> <b>4 times</b>.",
+    "archaeologist-pawns": "Each player has 7 Archeologist pawns <archaeologist/>, waiting on their Base camp. Since you started, your opponent already had one on their first Jungle.",
+    "moves": "Each movement moves 1 Archeologist onto a neighboring Jungle card. The further away a Jungle is, the harder it is to get there!",
+    "base-camp": {
+      "intro": "Your turn to play. On your turn, instead of playing an Adventurer card, you may perform a <b>Base camp action</b>:",
+      "gold": "gain 3 <gold/>;",
+      "animal": "obtain 1 Animal pawn <animal/>;",
+      "moves": "gain 3 Archeologist movements <archaeologist/>;",
+      "jungle": "buy a Jungle card for 7 <gold/>."
+    },
+    "improved-power": "Each Base camp also has an <b>enhanced ability</b>: yours buys a Jungle card for <b>5</b> <gold/> instead of 7. Use it.",
+    "base-camp-discard": "A Base camp action costs <b>3 Adventurer cards</b>, discarded from your hand. It is also very handy for renewing a bad hand! Discard 3 cards of your choice.",
+    "base-camp-buy": "Now, buy the Jungle card of your choice.",
+    "base-camp-flip": "Your Base camp has been flipped: its enhanced ability is <b>single-use</b>.",
+    "fame-tiles": "Here are the 4 <b>Renown tiles</b>. As soon as you meet the condition written on one of them, you take it.",
+    "fame-jungle": "This one is obtained with <b>3 Jungle cards</b>: you have just placed the third one, so you are going to claim it.",
+    "fame-warning": "Be careful though! During their turn, your opponent can take back a Renown tile placed in front of you as soon as they <b>match or beat you</b> on its objective.",
+    "refill-3": "Complete your hand by taking the Adventurer cards of your choice.",
+    "dig-site": "When all the Archeologist slots on a Jungle card are occupied, it becomes possible to build an <b>Excavation site</b> there. It is a full turn action.",
+    "dig-site-return": "After the construction, the Archeologists that occupied the slots return to the Base camp. The others, in transit on the card, stay there.",
+    "exploration": "When the Excavation site <b>and</b> the Animal bonus of a Jungle card are both completed, the central bonus is earned and the card is flipped to its completed side. Your opponent therefore gains a <b>Relic tile</b> and 3 <gold/>.",
+    "my-temple": "On your first Jungle card, this central bonus is a <b>Temple tile</b>.",
+    "temple-tiles": "When you earn a Temple tile, you take the one of your choice among the 4 in play, and you apply its effect immediately.",
+    "temple-tiles-hint": "Click on the tiles to learn their effect.",
+    "victory": "You can win in 2 ways: having <b>7 tiles</b> in front of you at the start of your turn, or obtaining your <b>3rd Temple tile</b>, which is an instant victory!",
+    "good-luck": "Now it is up to you, good luck!"
+  }
+}

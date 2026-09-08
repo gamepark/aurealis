@@ -1,1 +1,320 @@
-{}
+{
+  "header": {
+    "choose-action": {
+      "you": "Gioca un Avventuriero, costruisci un Sito di scavo o usa il tuo Campo base",
+      "player": "{player} esegue la sua azione"
+    },
+    "base-camp-discard": {
+      "you": "Scarta {count, plural, one {# Avventuriero} other {# Avventurieri}} per il tuo Campo base",
+      "player": "{player} scarta {count, plural, one {# Avventuriero} other {# Avventurieri}}"
+    },
+    "choose-effect": {
+      "you": "Scegli una ricompensa della carta",
+      "player": "{player} sceglie una ricompensa della sua carta"
+    },
+    "move-archaeologists": {
+      "you": "Muovi i tuoi Archeologi: {count, plural, one {# movimento} other {# movimenti}} <pass>Passa</pass>",
+      "player": "{player} muove i suoi Archeologi"
+    },
+    "move-archaeologists-or-gold": {
+      "you": "{count, plural, one {# movimento} other {# movimenti}}: muovi i tuoi Archeologi o prendi Monete d'oro",
+      "player": "{player} muove i suoi Archeologi o prende Monete d'oro"
+    },
+    "send-archaeologists": {
+      "you": "Invia {count, plural, one {# Archeologo} other {# Archeologi}} nella tua giungla",
+      "player": "{player} invia i suoi Archeologi"
+    },
+    "place-animals": {
+      "you": "Piazza {count, plural, one {# segnalino Animale} other {# segnalini Animale}}",
+      "player": "{player} piazza i suoi segnalini Animale"
+    },
+    "acquire-jungle": {
+      "you": "{cost, plural, =0 {Prendi una carta Giungla} one {Compra una carta Giungla per # Moneta d'oro} other {Compra una carta Giungla per # Monete d'oro}}",
+      "player": "{player} sceglie una carta Giungla"
+    },
+    "choose-temple-tile": {
+      "you": "Scegli una tessera Tempio",
+      "player": "{player} sceglie una tessera Tempio"
+    },
+    "check-fame": {
+      "you": "I tuoi obiettivi di Fama vengono verificati",
+      "player": "Gli obiettivi di Fama di {player} vengono verificati"
+    },
+    "refill-hand": {
+      "you": "Completa la tua mano: {count, plural, one {# carta} other {# carte}} dal fiume",
+      "player": "{player} completa la sua mano"
+    }
+  },
+  "game-over": {
+    "title": "Fine della partita",
+    "tiles": {
+      "you": "Vinci la partita essendo il primo giocatore con {total} tessere all'inizio del tuo turno.",
+      "player": "{player} vince la partita essendo il primo giocatore con {total} tessere all'inizio del suo turno.",
+      "other": "L'altro modo di vincere: prendere una terza tessera Tempio, che diventa la tessera Vittoria immediata."
+    },
+    "temples": {
+      "you": "Ottieni una vittoria immediata con 3 templi.",
+      "player": "{player} ottiene una vittoria immediata con 3 templi.",
+      "other": "L'altro modo di vincere: avere {total} tessere davanti a sé all'inizio del proprio turno."
+    },
+    "unknown": "La partita si vince avendo {total} tessere davanti a sé all'inizio del proprio turno, oppure prendendo una terza tessera Tempio, che diventa la tessera Vittoria immediata."
+  },
+  "choose-effect": {
+    "choose": "Scegli una delle ricompense della carta",
+    "or": "oppure"
+  },
+  "deck-bottom": {
+    "choose": "Scegli una carta",
+    "intro": "Le 3 carte in fondo al mazzo Giungla.",
+    "pick": "Prendi questa carta"
+  },
+  "button": {
+    "play-card": "Gioca questa carta",
+    "discard-card": "Scarta questa carta",
+    "draw-card": "Prendi questa carta",
+    "base-camp": {
+      "gold": "Azione Campo base: Monete d'oro",
+      "animal": "Azione Campo base: segnalini Animale",
+      "moves": "Azione Campo base: movimenti di Archeologo",
+      "jungle": "Azione Campo base: comprare una carta Giungla"
+    },
+    "take-gold": "Prendi il resto in Monete d'oro",
+    "take-temple": "Prendi questa tessera Tempio",
+    "build-dig-site": "Costruisci un Sito di scavo",
+    "place-animal": "Piazza un segnalino Animale",
+    "place-animals-together": "Piazza {count} segnalini Animale su questa carta in una sola volta",
+    "buy-jungle": "Prendi questa carta Giungla",
+    "move-left": "Muovi un Archeologo verso sinistra",
+    "move-right": "Muovi un Archeologo verso destra",
+    "move-right-together": "Muovi {count} Archeologi verso destra in una sola volta",
+    "select-archaeologist": "Scegli un Archeologo su questa carta",
+    "unselect-archaeologist": "Non muovere più questo Archeologo",
+    "send-archaeologist": "Invia l'Archeologo su questa carta"
+  },
+  "adventurer": {
+    "1": "Naturalista",
+    "2": "Archeologo",
+    "3": "Esploratore",
+    "4": "Capo spedizione"
+  },
+  "effect": {
+    "gold": "Guadagna {gold, plural, one {# Moneta d'oro} other {# Monete d'oro}}",
+    "moves": "{count, plural, one {# movimento di Archeologo} other {# movimenti di Archeologo}}: ogni movimento fa avanzare o indietreggiare un Archeologo di una carta lungo la tua giungla",
+    "moves-or-gold": "{count, plural, one {# movimento di Archeologo} other {# movimenti di Archeologo}}, ognuno dei quali può essere preso come 1 Moneta d'oro",
+    "send-archaeologists": "Invia {count, plural, one {# Archeologo} other {# Archeologi}} sulla carta Giungla che preferisci, dal tuo Campo base o da un'altra carta",
+    "place-animals": "Piazza {count, plural, one {# segnalino Animale} other {# segnalini Animale}} sugli spazi Animale liberi delle tue carte Giungla",
+    "animal-on-each-jungle": "Piazza 1 segnalino Animale su ciascuna delle tue carte Giungla",
+    "buy-jungle": "Compra una carta Giungla dal mercato per {cost, plural, one {# Moneta d'oro} other {# Monete d'oro}}",
+    "take-jungle": "Prendi gratuitamente una carta Giungla dal mercato",
+    "buy-jungle.deck-bottom": "Compra per {cost, plural, one {# Moneta d'oro} other {# Monete d'oro}} una delle 3 carte in fondo al mazzo Giungla, che nessuno ha visto",
+    "relic-tile": "Guadagna una tessera Reliquia",
+    "temple-tile": "Scegli una tessera Tempio in gioco e applica il suo effetto",
+    "legendary-animal-tile": "Guadagna la tessera Animale leggendario di questa carta",
+    "or": " oppure "
+  },
+  "condition": {
+    "none-in-hand": "Nessuna carta {adventurer} sul tuo espositore",
+    "all-types-in-hand": "Tutti e 4 i tipi di Avventuriero sul tuo espositore",
+    "min-in-hand": "Almeno {count, plural, one {# carta} other {# carte}} {adventurer} sul tuo espositore",
+    "min-in-play": "Almeno {count, plural, one {# carta} other {# carte}} {adventurer} in gioco: i due espositori e il fiume",
+    "min-elsewhere.or": "Almeno {count, plural, one {# carta} other {# carte}} {adventurer} sull'espositore avversario o nel fiume",
+    "min-elsewhere.and": "Almeno {count, plural, one {# carta} other {# carte}} {adventurer} sull'espositore avversario e nel fiume",
+    "more-than.or": "Più carte {adventurer} sul tuo espositore che sull'espositore avversario o che nel fiume",
+    "more-than.and": "Più carte {adventurer} sul tuo espositore che sull'espositore avversario e che nel fiume",
+    "fewer-than.or": "Meno carte {adventurer} sul tuo espositore che sull'espositore avversario o che nel fiume",
+    "fewer-than.and": "Meno carte {adventurer} sul tuo espositore che sull'espositore avversario e che nel fiume",
+    "cards-in-play": "Per ogni carta {adventurer} in gioco: i due espositori e il fiume"
+  },
+  "help": {
+    "adventurer": {
+      "title": "Avventuriero {adventurer}",
+      "title.hidden": "Avventuriero {adventurer} — fronte nascosto",
+      "types": "Tipo principale: <0>{main}</0>. Tipo secondario: <1>{secondary}</1>. Solo il tipo principale conta per le condizioni; entrambi si leggono sul retro della carta, quindi anche sull'espositore avversario e nel fiume.",
+      "hidden": "Il fronte di questa carta non ti è accessibile. Il suo retro, invece, è sempre leggibile: riporta il suo tipo principale e il suo tipo secondario.",
+      "lines": "Effetti della carta",
+      "best-line": "Se più condizioni sono soddisfatte, si applica un solo effetto: il più potente, cioè l'ultima riga soddisfatta.",
+      "unplayable": "Nessuna condizione è soddisfatta: questa carta non è giocabile per ora.",
+      "in-my-hand": "Sul tuo espositore.",
+      "in-hand": "Sull'espositore di {player}.",
+      "in-river": "Nel fiume: è lì che completi la tua mano a fine turno, e i 5 retri visibili contano per le condizioni delle carte.",
+      "in-discard": "Negli scarti.",
+      "face-down.mine": " L'hai appena presa dal fiume: resta coperta, sia per te sia per il tuo avversario, finché la tua mano non è completa; allora tutte quelle che hai pescato si girano insieme.",
+      "face-down": " {player} l'ha appena presa dal fiume: resta coperta finché la sua mano non è completa."
+    },
+    "jungle": {
+      "title": "Carta Giungla",
+      "intro": "Una carta Giungla si aggiunge a destra della tua giungla, di seguito al Campo base. I tuoi Archeologi vi avanzano, i tuoi segnalini Animale vi si installano, e i tre bonus stampati in fondo alla carta si sbloccano man mano.",
+      "spaces": "Spazi",
+      "archaeologist-spaces": "{count, plural, one {# spazio Archeologo} other {# spazi Archeologo}}, lungo il bordo sinistro.",
+      "archaeologist-spaces.taken": "{count, plural, one {# spazio Archeologo} other {# spazi Archeologo}}, di cui {taken, plural, one {# occupato} other {# occupati}}.",
+      "animal-spaces": "{count, plural, one {# spazio Animale} other {# spazi Animale}}, lungo il bordo destro.",
+      "animal-spaces.taken": "{count, plural, one {# spazio Animale} other {# spazi Animale}}, di cui {taken, plural, one {# occupato} other {# occupati}}.",
+      "dig-site-bonus": "Bonus Scavo",
+      "dig-site-rule": "Si sblocca costruendo un Sito di scavo su questa carta. Tutti i suoi spazi Archeologo devono essere occupati, e ti costa l'azione del turno; gli Archeologi che occupavano quegli spazi tornano allora al Campo base.",
+      "animal-bonus": "Bonus Animale",
+      "animal-rule": "Si sblocca non appena tutti gli spazi Animale della carta sono occupati. Un segnalino resta sulla casella bonus per tenerne traccia, gli altri tornano nella riserva.",
+      "exploration-bonus": "Bonus Esplorazione",
+      "exploration-rule": "Si sblocca una volta ottenuti gli altri due bonus. La carta viene allora girata sul suo lato completato: non ha più né spazi né bonus, ma conserva i suoi simboli Pianta.",
+      "no-gain": "Nessuna ricompensa su questa carta, ma questo bonus deve comunque essere ottenuto per sbloccare il Bonus Esplorazione.",
+      "already-taken": "Già ottenuto.",
+      "plants": "{count, plural, =0 {Questa carta non vale alcun simbolo Pianta.} one {Questa carta vale # simbolo Pianta per la tessera Fama Pianta, su entrambi i lati.} other {Questa carta vale # simboli Pianta per la tessera Fama Pianta, su entrambi i lati.}}",
+      "on-market": "Al mercato: entrambi i giocatori possono comprarla.",
+      "in-my-jungle": "Nella tua giungla.",
+      "in-jungle": "Nella giungla di {player}.",
+      "completed": " È girata sul suo lato completato."
+    },
+    "base-camp": {
+      "title": "Campo base",
+      "intro": "Azione del turno: scarta <0>{count} carte Avventuriero</0> dal tuo espositore, poi scegli uno dei quattro poteri della carta. È anche ciò che permette di rinnovare una mano da cui non si può giocare nulla.",
+      "powers": "I quattro poteri",
+      "power.1": "Monete d'oro",
+      "power.2": "Segnalini Animale",
+      "power.3": "Movimenti di Archeologo",
+      "power.4": "Carta Giungla",
+      "improved": "È il potere potenziato di questa carta, su sfondo chiaro: serve una volta sola.",
+      "face-a": "La carta è sul suo lato A: il suo potere potenziato è ancora disponibile. Usarlo gira la carta sul suo lato B, dove i quattro poteri tornano a essere i poteri comuni a tutti i giocatori.",
+      "face-b": "La carta è sul suo lato B: il suo potere potenziato è stato usato, i quattro poteri sono ormai i poteri comuni.",
+      "team": "La squadra",
+      "team-text": "{count, plural, =0 {Nessun Archeologo aspetta al Campo base: sono tutti partiti nella giungla.} one {# Archeologo aspetta al Campo base.} other {# Archeologi aspettano al Campo base.}} Ogni giocatore ne ha 7 in tutto.",
+      "mine": "Il tuo Campo base.",
+      "player": "Il Campo base di {player}."
+    },
+    "tile": {
+      "to-win": "Le tessere Scoperta e le tessere Fama contano tutte per la fine della partita: il giocatore che ne ha {total} davanti a sé all'inizio del proprio turno vince la partita.",
+      "owned.mine": " Ne hai {count} su {total}.",
+      "owned": " {player} ne ha {count} su {total}."
+    },
+    "temple": {
+      "title": "Tessera Tempio",
+      "intro": "Le tessere Tempio sono le quattro tessere esposte sotto il mercato Giungla. Alcuni bonus delle carte Giungla ti permettono di sceglierne una: la prendi e ne applichi subito l'effetto.",
+      "effect": "Effetto",
+      "plants": "Questa tessera vale inoltre {count, plural, one {# simbolo Pianta} other {# simboli Pianta}} per la tessera Fama Pianta.",
+      "third": "La terza tessera Tempio",
+      "third-text": "Un giocatore non possiede mai tre tessere Tempio: nel momento in cui dovrebbe prenderne una terza, ottiene la tessera Vittoria immediata e vince la partita."
+    },
+    "fame": {
+      "title": "Tessera Fama",
+      "intro": "Le quattro tessere Fama premiano ciascuna un obiettivo. Non sono mai acquisite per sempre: passano da un giocatore all'altro nel corso della partita.",
+      "objective": "Obiettivo",
+      "objective.7": "{count} simboli Pianta, contati sulle tue carte Giungla e sulle tue tessere Tempio.",
+      "objective.8": "{count} carte Giungla nella tua giungla.",
+      "objective.9": "{count} tessere Animale leggendario davanti a te.",
+      "objective.10": "{count} tessere Reliquia davanti a te.",
+      "changing-hands": "Cambia di mano",
+      "changing-hands-text": "Alla fine del proprio turno, il giocatore attivo prende la tessera non appena raggiunge l'obiettivo e pareggia con chi la detiene: pareggiare basta, la tessera va all'ultimo che l'ha dimostrato.",
+      "mine": "Detieni questa tessera.",
+      "player": "{player} detiene questa tessera.",
+      "unclaimed": "Nessuno detiene ancora questa tessera."
+    },
+    "relic": {
+      "title": "Tessera Reliquia",
+      "intro": "Le tessere Reliquia sono tutte identiche. Si ottengono grazie ai bonus delle carte Giungla e ad alcune tessere Tempio.",
+      "fame": "{count} tessere Reliquia ti danno la tessera Fama Reliquia."
+    },
+    "legendary-animal": {
+      "title": "Tessera Animale leggendario",
+      "intro": "Le nove tessere Animale leggendario sono tutte diverse. Ciascuna è legata a una carta Giungla precisa: è il Bonus Animale di quella carta a fartela guadagnare.",
+      "fame": "{count} tessere Animale leggendario ti danno la tessera Fama Animale leggendario."
+    },
+    "instant-victory": {
+      "title": "Tessera Vittoria immediata",
+      "intro": "Questa tessera unica sostituisce una terza tessera Tempio: il giocatore che dovrebbe prenderne una la guadagna e <0>vince immediatamente la partita</0>.",
+      "other-end": "È uno dei due modi di vincere. L'altro è avere {total} tessere davanti a sé all'inizio del proprio turno."
+    },
+    "archaeologist": {
+      "title": "Archeologo",
+      "intro": "Ogni giocatore dispone di 7 Archeologi. Aspettano al Campo base e partono a esplorare le carte Giungla di chi li possiede.",
+      "moving": "Farli avanzare",
+      "send": "Inviare un Archeologo: parte sulla carta Giungla che preferisci, dal Campo base o da un'altra carta.",
+      "move": "Muovere un Archeologo: avanza o indietreggia di una sola carta alla volta, considerando il Campo base come la carta che precede la prima.",
+      "dig-site": "Gli spazi",
+      "dig-site-text": "Un Archeologo occupa prima uno spazio stampato sulla carta; una volta presi tutti gli spazi, i successivi si radunano al centro della carta. Solo quelli che occupano uno spazio permettono di costruire un Sito di scavo, e tornano allora al Campo base.",
+      "place.camp": "Al Campo base.",
+      "place.slot": "Su uno spazio stampato di una carta Giungla.",
+      "place.extra": "Al centro di una carta Giungla, senza spazio: o tutti gli spazi erano presi, oppure la carta è completata e non ne ha più.",
+      "at-camp.mine": " {count, plural, =0 {Nessuno dei tuoi Archeologi aspetta al Campo base.} one {# dei tuoi Archeologi aspetta ancora al Campo base.} other {# dei tuoi Archeologi aspettano ancora al Campo base.}}",
+      "at-camp": " {count, plural, =0 {Nessun Archeologo di {player} aspetta al Campo base.} one {# Archeologo di {player} aspetta ancora al Campo base.} other {# Archeologi di {player} aspettano ancora al Campo base.}}"
+    },
+    "dig-site": {
+      "title": "Sito di scavo",
+      "intro": "Costruire un Sito di scavo è <0>un'azione del turno a tutti gli effetti</0>: non costa alcuna carta, ma occupa tutto il tuo turno.",
+      "building": "Costruirlo",
+      "requirement": "Tutti gli spazi Archeologo della carta Giungla devono essere occupati.",
+      "archaeologists-return": "Gli Archeologi che occupavano quegli spazi tornano al Campo base; quelli radunati al centro della carta vi restano.",
+      "bonus": "Il Sito di scavo si posa sulla casella Bonus Scavo della carta e te ne fa guadagnare il contenuto. Non lascia più la carta."
+    },
+    "animal": {
+      "title": "Segnalino Animale",
+      "intro": "I segnalini Animale si piazzano sugli spazi Animale liberi delle tue carte Giungla, nell'ordine che preferisci.",
+      "bonus": "Il Bonus Animale",
+      "filling": "Non appena tutti gli spazi Animale di una carta sono occupati, ne ottieni il Bonus Animale.",
+      "returned": "Un segnalino scivola allora sulla casella bonus per tenerne traccia, gli altri tornano nella riserva.",
+      "exploration": "Insieme al Bonus Scavo della stessa carta, sblocca il Bonus Esplorazione, e la carta viene girata sul suo lato completato."
+    },
+    "gold": {
+      "title": "Monete d'oro",
+      "intro": "L'oro serve a una cosa sola: <0>comprare carte Giungla</0>. Una carta la cui unica ricompensa è un acquisto che non puoi pagare non è giocabile.",
+      "earning": "Guadagnarne",
+      "from-cards": "Le carte Capo spedizione, il potere Monete d'oro del Campo base e alcuni bonus delle carte Giungla ne fanno guadagnare.",
+      "from-moves": "I movimenti di Archeologo indicati con una moneta possono essere presi in oro, uno per uno, sul tuo Campo base.",
+      "denominations": "Le monete valgono 1 o 3: il resto è già pronto, non devi mai scegliere quali spendere.",
+      "mine": "Hai {gold, plural, one {# Moneta d'oro} other {# Monete d'oro}}.",
+      "player": "{player} ha {gold, plural, one {# Moneta d'oro} other {# Monete d'oro}}.",
+      "reserve": "Nella riserva generale, considerata inesauribile."
+    }
+  },
+  "tutorial": {
+    "welcome": "Benvenuto nel tutorial di <b>Aurealis</b>!",
+    "theme": "In Aurealis guidi una spedizione in una giungla inesplorata. Recluti <b>Avventurieri</b> e mandi i tuoi <b>Archeologi</b> a esplorare il terreno. Di fronte a te, il tuo avversario guida la spedizione rivale!",
+    "tiles": "Man mano che fai scoperte, ecco le <b>tessere</b> che puoi guadagnare. Il primo giocatore che ne ha <b>7</b> davanti a sé all'inizio del proprio turno vince la partita.",
+    "jungle": "Ecco il tuo <b>Campo base</b> e la tua prima <b>carta Giungla</b>.",
+    "hand": "Ed ecco la tua mano di carte <b>Avventuriero</b>! Nel tuo turno giocherai il più delle volte una carta Avventuriero.",
+    "types": {
+      "intro": "Esistono 4 tipi di carte Avventuriero:",
+      "leader": "<leader/> I <b>Capi spedizione</b> permettono di ottenere Monete d'oro <gold/> per finanziare la spedizione.",
+      "naturalist": "<naturalist/> I <b>Naturalisti</b> osservano gli animali e permettono di piazzare segnalini Animale <animal/> sulle tue carte Giungla.",
+      "explorer": "<explorer/> Gli <b>Esploratori</b> permettono di comprare e aggiungere carte Giungla al tuo gioco.",
+      "archaeologist": "<digger/> Gli <b>Archeologi</b> permettono di spostare i tuoi segnalini Archeologo <archaeologist/> da una carta Giungla all'altra."
+    },
+    "river": "Nello spazio comune, 5 carte Avventuriero sono posate coperte: formano il <b>fiume</b>. Il retro delle carte Avventuriero indica il <b>tipo principale</b> della carta e un <b>tipo secondario</b> che ne annuncia gli effetti.",
+    "opponent-hand": "Anche il tuo avversario ha 5 carte Avventuriero in mano, di cui vedi solo il retro.",
+    "conditions": "Ogni carta Avventuriero riporta delle <b>Condizioni</b> a sinistra e degli <b>Effetti</b> a destra. Le Condizioni dipendono spesso dalle carte del fiume e dalla mano del tuo avversario!",
+    "play-leader": "Per esempio, questo <b>Capo spedizione</b> <leader/> ti frutta in questo momento <b>7</b> Monete d'oro <gold/>. Cliccaci sopra per sapere perché, poi giocalo.",
+    "gold": "Primo giocatore, hai iniziato la partita con 3 <gold/>: ora ne hai <b>10</b>. Il tuo avversario, secondo giocatore, ne ha 4. L'oro serve a una cosa sola: comprare nuove carte Giungla, grazie agli Esploratori <explorer/>.",
+    "refill": "Alla fine del tuo turno, completi la tua mano a 5 carte pescando dal fiume. Prendi questa.",
+    "opponent-turn": "Ora è il turno del tuo avversario.",
+    "opponent-card": "Il tuo avversario ha giocato questa carta Avventuriero. Aveva <b>2 Naturalisti</b> <naturalist/> in mano: può quindi piazzare <b>2 segnalini Animale</b> <animal/> sulle sue carte Giungla.",
+    "animal-spaces": "I segnalini Animale si piazzano su questi spazi, lungo il bordo destro delle carte Giungla. Secondo giocatore, il tuo avversario ne aveva già uno all'inizio.",
+    "animal-column": "Quando la colonna è completa, un segnalino Animale scivola in fondo a essa, gli altri tornano nella riserva, e il giocatore guadagna il bonus associato.",
+    "legendary-animal": "Qui questo bonus è la <b>tessera Animale leggendario</b> della carta. Una prima tessera per il tuo avversario.",
+    "play-explorer": "Tocca a te. Gioca questo <b>Esploratore</b> <explorer/>: ti permette di comprare una carta Giungla per <b>3</b> <gold/>.",
+    "jungle-market": "Ecco il mercato comune di carte Giungla. Prendi quella che preferisci: andrà a posizionarsi a destra della tua giungla.",
+    "refill-2": "Ora prendi la carta che preferisci per completare la tua mano.",
+    "opponent-archaeologist": "Il tuo avversario ha giocato questo <b>Archeologo</b> <digger/>. Potrà spostare <b>4 volte</b> i suoi segnalini Archeologo <archaeologist/>.",
+    "archaeologist-pawns": "Ogni giocatore dispone di 7 segnalini Archeologo <archaeologist/>, che aspettano sul proprio Campo base. Dato che hai iniziato tu, il tuo avversario ne aveva già uno sulla sua prima Giungla.",
+    "moves": "Ogni movimento fa avanzare 1 Archeologo su una carta Giungla vicina. Più una Giungla è lontana, più è difficile raggiungerla!",
+    "base-camp": {
+      "intro": "Tocca a te. Nel tuo turno, invece di giocare una carta Avventuriero, puoi eseguire un'<b>azione di Campo base</b>:",
+      "gold": "guadagnare 3 <gold/>;",
+      "animal": "ottenere 1 segnalino Animale <animal/>;",
+      "moves": "guadagnare 3 movimenti di Archeologo <archaeologist/>;",
+      "jungle": "comprare una carta Giungla per 7 <gold/>."
+    },
+    "improved-power": "Ogni Campo base possiede inoltre un <b>potere potenziato</b>: il tuo compra una carta Giungla per <b>5</b> <gold/> invece di 7. Usalo.",
+    "base-camp-discard": "Un'azione di Campo base costa <b>3 carte Avventuriero</b>, scartate dalla tua mano. È anche molto comodo per rinnovare una mano scadente! Scarta 3 carte a tua scelta.",
+    "base-camp-buy": "Ora compra la carta Giungla che preferisci.",
+    "base-camp-flip": "Il tuo Campo base è girato: il suo potere potenziato è a <b>uso unico</b>.",
+    "fame-tiles": "Ecco le 4 <b>tessere Fama</b>. Non appena soddisfi la condizione scritta su una di esse, la prendi.",
+    "fame-jungle": "Questa si ottiene con <b>3 carte Giungla</b>: hai appena posato la terza, quindi la recupererai.",
+    "fame-warning": "Attenzione però! Durante il suo turno, il tuo avversario può riprendere una tessera Fama posata davanti a te non appena ti <b>pareggia o ti supera</b> sul suo obiettivo.",
+    "refill-3": "Completa la tua mano prendendo le carte Avventuriero che preferisci.",
+    "dig-site": "Quando tutti gli spazi Archeologo di una carta Giungla sono occupati, diventa possibile costruirvi un <b>Sito di scavo</b>. È un'azione del turno a tutti gli effetti.",
+    "dig-site-return": "Dopo la costruzione, gli Archeologi che occupavano gli spazi tornano al Campo base. Gli altri, di passaggio sulla carta, vi restano.",
+    "exploration": "Quando il Sito di scavo <b>e</b> il Bonus Animale di una carta Giungla sono entrambi compiuti, il bonus centrale viene guadagnato e la carta è girata sul suo lato completato. Il tuo avversario ottiene quindi una <b>tessera Reliquia</b> e 3 <gold/>.",
+    "my-temple": "Sulla tua prima carta Giungla, questo bonus centrale è una <b>tessera Tempio</b>.",
+    "temple-tiles": "Quando guadagni una tessera Tempio, prendi quella che preferisci tra le 4 in gioco e ne applichi subito l'effetto.",
+    "temple-tiles-hint": "Clicca sulle tessere per conoscerne l'effetto.",
+    "victory": "Puoi vincere in 2 modi: avere <b>7 tessere</b> davanti a te all'inizio del tuo turno, oppure ottenere la tua <b>3ª tessera Tempio</b>, che è una vittoria immediata!",
+    "good-luck": "Ora tocca a te, buona fortuna!"
+  }
+}

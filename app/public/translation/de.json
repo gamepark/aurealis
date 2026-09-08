@@ -1,1 +1,320 @@
-{}
+{
+  "header": {
+    "choose-action": {
+      "you": "Spiele einen Abenteurer, baue eine Ausgrabungsstätte oder nutze dein Basislager",
+      "player": "{player} führt eine Aktion aus"
+    },
+    "base-camp-discard": {
+      "you": "Lege {count, plural, one {# Abenteurer} other {# Abenteurer}} für dein Basislager ab",
+      "player": "{player} legt {count, plural, one {# Abenteurer} other {# Abenteurer}} ab"
+    },
+    "choose-effect": {
+      "you": "Wähle eine Belohnung der Karte",
+      "player": "{player} wählt eine Belohnung der Karte"
+    },
+    "move-archaeologists": {
+      "you": "Bewege deine Archäologen: {count, plural, one {# Bewegung} other {# Bewegungen}} <pass>Passen</pass>",
+      "player": "{player} bewegt die eigenen Archäologen"
+    },
+    "move-archaeologists-or-gold": {
+      "you": "{count, plural, one {# Bewegung} other {# Bewegungen}}: Bewege deine Archäologen oder nimm Goldmünzen",
+      "player": "{player} bewegt Archäologen oder nimmt Goldmünzen"
+    },
+    "send-archaeologists": {
+      "you": "Schicke {count, plural, one {# Archäologen} other {# Archäologen}} in deinen Dschungel",
+      "player": "{player} schickt Archäologen los"
+    },
+    "place-animals": {
+      "you": "Setze {count, plural, one {# Tierfigur} other {# Tierfiguren}}",
+      "player": "{player} setzt Tierfiguren"
+    },
+    "acquire-jungle": {
+      "you": "{cost, plural, =0 {Nimm eine Dschungelkarte} one {Kaufe eine Dschungelkarte für # Goldmünze} other {Kaufe eine Dschungelkarte für # Goldmünzen}}",
+      "player": "{player} wählt eine Dschungelkarte"
+    },
+    "choose-temple-tile": {
+      "you": "Wähle ein Tempelplättchen",
+      "player": "{player} wählt ein Tempelplättchen"
+    },
+    "check-fame": {
+      "you": "Deine Ruhmesziele werden überprüft",
+      "player": "Die Ruhmesziele von {player} werden überprüft"
+    },
+    "refill-hand": {
+      "you": "Fülle deine Hand auf: {count, plural, one {# Karte} other {# Karten}} aus der Auslage",
+      "player": "{player} füllt die eigene Hand auf"
+    }
+  },
+  "game-over": {
+    "title": "Spielende",
+    "tiles": {
+      "you": "Du gewinnst das Spiel, weil du zuerst zu Beginn deines Zuges {total} Plättchen hattest.",
+      "player": "{player} gewinnt das Spiel mit {total} Plättchen zu Beginn des eigenen Zuges.",
+      "other": "Der andere Weg zum Sieg: ein drittes Tempelplättchen nehmen, das dann zum Sofortsieg-Plättchen wird."
+    },
+    "temples": {
+      "you": "Du gewinnst sofort mit 3 Tempeln.",
+      "player": "{player} gewinnt sofort mit 3 Tempeln.",
+      "other": "Der andere Weg zum Sieg: zu Beginn des eigenen Zuges {total} Plättchen vor sich liegen haben."
+    },
+    "unknown": "Das Spiel gewinnt, wer zu Beginn des eigenen Zuges {total} Plättchen vor sich liegen hat oder ein drittes Tempelplättchen nimmt, das dann zum Sofortsieg-Plättchen wird."
+  },
+  "choose-effect": {
+    "choose": "Wähle eine der Belohnungen der Karte",
+    "or": "oder"
+  },
+  "deck-bottom": {
+    "choose": "Wähle eine Karte",
+    "intro": "Die 3 untersten Karten des Dschungel-Nachziehstapels.",
+    "pick": "Diese Karte nehmen"
+  },
+  "button": {
+    "play-card": "Diese Karte spielen",
+    "discard-card": "Diese Karte ablegen",
+    "draw-card": "Diese Karte nehmen",
+    "base-camp": {
+      "gold": "Basislager-Aktion: Goldmünzen",
+      "animal": "Basislager-Aktion: Tierfiguren",
+      "moves": "Basislager-Aktion: Archäologen-Bewegungen",
+      "jungle": "Basislager-Aktion: eine Dschungelkarte kaufen"
+    },
+    "take-gold": "Den Rest als Goldmünzen nehmen",
+    "take-temple": "Dieses Tempelplättchen nehmen",
+    "build-dig-site": "Eine Ausgrabungsstätte bauen",
+    "place-animal": "Eine Tierfigur setzen",
+    "place-animals-together": "{count} Tierfiguren auf einmal auf diese Karte setzen",
+    "buy-jungle": "Diese Dschungelkarte nehmen",
+    "move-left": "Einen Archäologen nach links bewegen",
+    "move-right": "Einen Archäologen nach rechts bewegen",
+    "move-right-together": "{count} Archäologen auf einmal nach rechts bewegen",
+    "select-archaeologist": "Einen Archäologen auf dieser Karte auswählen",
+    "unselect-archaeologist": "Diesen Archäologen doch nicht bewegen",
+    "send-archaeologist": "Den Archäologen auf diese Karte schicken"
+  },
+  "adventurer": {
+    "1": "Naturforscher",
+    "2": "Archäologe",
+    "3": "Entdecker",
+    "4": "Expeditionsleiter"
+  },
+  "effect": {
+    "gold": "Erhalte {gold, plural, one {# Goldmünze} other {# Goldmünzen}}",
+    "moves": "{count, plural, one {# Archäologen-Bewegung} other {# Archäologen-Bewegungen}}: Jede Bewegung bringt einen Archäologen eine Karte weiter vor oder zurück entlang deines Dschungels",
+    "moves-or-gold": "{count, plural, one {# Archäologen-Bewegung} other {# Archäologen-Bewegungen}}, von denen jede stattdessen als 1 Goldmünze genommen werden kann",
+    "send-archaeologists": "Schicke {count, plural, one {# Archäologen} other {# Archäologen}} auf eine Dschungelkarte deiner Wahl, von deinem Basislager oder von einer anderen Karte",
+    "place-animals": "Setze {count, plural, one {# Tierfigur} other {# Tierfiguren}} auf freie Tierfelder deiner Dschungelkarten",
+    "animal-on-each-jungle": "Setze 1 Tierfigur auf jede deiner Dschungelkarten",
+    "buy-jungle": "Kaufe eine Dschungelkarte vom Markt für {cost, plural, one {# Goldmünze} other {# Goldmünzen}}",
+    "take-jungle": "Nimm kostenlos eine Dschungelkarte vom Markt",
+    "buy-jungle.deck-bottom": "Kaufe für {cost, plural, one {# Goldmünze} other {# Goldmünzen}} eine der 3 untersten Karten des Dschungel-Nachziehstapels, die niemand gesehen hat",
+    "relic-tile": "Erhalte ein Reliktplättchen",
+    "temple-tile": "Wähle ein Tempelplättchen im Spiel und wende seinen Effekt an",
+    "legendary-animal-tile": "Erhalte das Fabeltier-Plättchen dieser Karte",
+    "or": " oder "
+  },
+  "condition": {
+    "none-in-hand": "Keine {adventurer}-Karte auf deinem Kartenhalter",
+    "all-types-in-hand": "Alle 4 Abenteurertypen auf deinem Kartenhalter",
+    "min-in-hand": "Mindestens {count, plural, one {# {adventurer}-Karte} other {# {adventurer}-Karten}} auf deinem Kartenhalter",
+    "min-in-play": "Mindestens {count, plural, one {# {adventurer}-Karte} other {# {adventurer}-Karten}} im Spiel: beide Kartenhalter und die Auslage",
+    "min-elsewhere.or": "Mindestens {count, plural, one {# {adventurer}-Karte} other {# {adventurer}-Karten}} auf dem gegnerischen Kartenhalter oder in der Auslage",
+    "min-elsewhere.and": "Mindestens {count, plural, one {# {adventurer}-Karte} other {# {adventurer}-Karten}} auf dem gegnerischen Kartenhalter und in der Auslage",
+    "more-than.or": "Mehr {adventurer}-Karten auf deinem Kartenhalter als auf dem gegnerischen Kartenhalter oder als in der Auslage",
+    "more-than.and": "Mehr {adventurer}-Karten auf deinem Kartenhalter als auf dem gegnerischen Kartenhalter und als in der Auslage",
+    "fewer-than.or": "Weniger {adventurer}-Karten auf deinem Kartenhalter als auf dem gegnerischen Kartenhalter oder als in der Auslage",
+    "fewer-than.and": "Weniger {adventurer}-Karten auf deinem Kartenhalter als auf dem gegnerischen Kartenhalter und als in der Auslage",
+    "cards-in-play": "Für jede {adventurer}-Karte im Spiel: beide Kartenhalter und die Auslage"
+  },
+  "help": {
+    "adventurer": {
+      "title": "Abenteurer: {adventurer}",
+      "title.hidden": "Abenteurer: {adventurer} — Vorderseite verdeckt",
+      "types": "Haupttyp: <0>{main}</0>. Nebentyp: <1>{secondary}</1>. Nur der Haupttyp zählt für die Bedingungen; beide sind auf der Kartenrückseite ablesbar, also auch auf dem gegnerischen Kartenhalter und in der Auslage.",
+      "hidden": "Die Vorderseite dieser Karte ist für dich nicht einsehbar. Ihre Rückseite ist dagegen immer lesbar: Sie trägt ihren Haupttyp und ihren Nebentyp.",
+      "lines": "Effekte der Karte",
+      "best-line": "Sind mehrere Bedingungen erfüllt, gilt nur ein Effekt: der stärkste, also die letzte erfüllte Zeile.",
+      "unplayable": "Keine Bedingung ist erfüllt: Diese Karte ist im Moment nicht spielbar.",
+      "in-my-hand": "Auf deinem Kartenhalter.",
+      "in-hand": "Auf dem Kartenhalter von {player}.",
+      "in-river": "In der Auslage: Dort füllst du am Ende deines Zuges deine Hand auf, und die 5 sichtbaren Rückseiten zählen für die Bedingungen der Karten.",
+      "in-discard": "Im Ablagestapel.",
+      "face-down.mine": " Du hast sie gerade aus der Auslage genommen: Sie bleibt verdeckt, für dich wie für die Gegenseite, bis deine Hand vollständig ist — dann werden alle gezogenen Karten auf einmal aufgedeckt.",
+      "face-down": " {player} hat sie gerade aus der Auslage genommen: Sie bleibt verdeckt, bis die Hand dort wieder vollständig ist."
+    },
+    "jungle": {
+      "title": "Dschungelkarte",
+      "intro": "Eine Dschungelkarte wird rechts an deinen Dschungel angelegt, im Anschluss an das Basislager. Deine Archäologen rücken dort vor, deine Tierfiguren lassen sich dort nieder, und die drei unten auf der Karte abgedruckten Boni werden nach und nach freigeschaltet.",
+      "spaces": "Felder",
+      "archaeologist-spaces": "{count, plural, one {# Archäologenfeld} other {# Archäologenfelder}}, entlang des linken Randes.",
+      "archaeologist-spaces.taken": "{count, plural, one {# Archäologenfeld} other {# Archäologenfelder}}, davon {taken} besetzt.",
+      "animal-spaces": "{count, plural, one {# Tierfeld} other {# Tierfelder}}, entlang des rechten Randes.",
+      "animal-spaces.taken": "{count, plural, one {# Tierfeld} other {# Tierfelder}}, davon {taken} besetzt.",
+      "dig-site-bonus": "Ausgrabungsbonus",
+      "dig-site-rule": "Wird freigeschaltet, indem du auf dieser Karte eine Ausgrabungsstätte baust. Alle ihre Archäologenfelder müssen besetzt sein, und es kostet dich deine Zugaktion; die Archäologen, die diese Felder besetzt haben, kehren dann ins Basislager zurück.",
+      "animal-bonus": "Tierbonus",
+      "animal-rule": "Wird freigeschaltet, sobald alle Tierfelder der Karte besetzt sind. Eine Figur bleibt auf dem Bonusfeld, um dies festzuhalten, die anderen kehren in den Vorrat zurück.",
+      "exploration-bonus": "Erkundungsbonus",
+      "exploration-rule": "Wird freigeschaltet, sobald die beiden anderen Boni erhalten wurden. Die Karte wird dann auf ihre abgeschlossene Seite gedreht: Sie hat weder Felder noch Boni mehr, behält aber ihre Pflanzensymbole.",
+      "no-gain": "Keine Belohnung auf dieser Karte — dieser Bonus muss aber trotzdem erhalten werden, um den Erkundungsbonus freizuschalten.",
+      "already-taken": "Bereits erhalten.",
+      "plants": "{count, plural, =0 {Diese Karte ist kein Pflanzensymbol wert.} one {Diese Karte ist auf beiden Seiten # Pflanzensymbol für das Pflanzen-Ruhmesplättchen wert.} other {Diese Karte ist auf beiden Seiten # Pflanzensymbole für das Pflanzen-Ruhmesplättchen wert.}}",
+      "on-market": "Auf dem Markt: Beide Seiten können sie kaufen.",
+      "in-my-jungle": "In deinem Dschungel.",
+      "in-jungle": "Im Dschungel von {player}.",
+      "completed": " Sie ist auf ihre abgeschlossene Seite gedreht."
+    },
+    "base-camp": {
+      "title": "Basislager",
+      "intro": "Zugaktion: Lege <0>{count} Abenteurerkarten</0> von deinem Kartenhalter ab und wähle dann eine der vier Fähigkeiten der Karte. So erneuerst du auch eine Hand, aus der nichts spielbar ist.",
+      "powers": "Die vier Fähigkeiten",
+      "power.1": "Goldmünzen",
+      "power.2": "Tierfiguren",
+      "power.3": "Archäologen-Bewegungen",
+      "power.4": "Dschungelkarte",
+      "improved": "Das ist die verbesserte Fähigkeit dieser Karte, auf hellem Grund: Sie ist nur einmal nutzbar.",
+      "face-a": "Die Karte liegt auf ihrer A-Seite: Ihre verbesserte Fähigkeit ist noch verfügbar. Wird sie genutzt, wird die Karte auf ihre B-Seite gedreht, wo die vier Fähigkeiten wieder die für alle gleichen Fähigkeiten sind.",
+      "face-b": "Die Karte liegt auf ihrer B-Seite: Ihre verbesserte Fähigkeit wurde genutzt, die vier Fähigkeiten sind nun die für alle gleichen Fähigkeiten.",
+      "team": "Das Team",
+      "team-text": "{count, plural, =0 {Kein Archäologe wartet im Basislager: Sie sind alle in den Dschungel aufgebrochen.} one {# Archäologe wartet im Basislager.} other {# Archäologen warten im Basislager.}} Jede Seite hat insgesamt 7 davon.",
+      "mine": "Dein Basislager.",
+      "player": "Das Basislager von {player}."
+    },
+    "tile": {
+      "to-win": "Entdeckungsplättchen und Ruhmesplättchen zählen alle für das Spielende: Wer zu Beginn des eigenen Zuges {total} davon vor sich liegen hat, gewinnt das Spiel.",
+      "owned.mine": " Du hast {count} von {total}.",
+      "owned": " {player} hat {count} von {total}."
+    },
+    "temple": {
+      "title": "Tempelplättchen",
+      "intro": "Die Tempelplättchen sind die vier Plättchen, die unter dem Dschungelmarkt ausliegen. Manche Boni von Dschungelkarten lassen dich eines davon wählen: Du nimmst es und wendest seinen Effekt sofort an.",
+      "effect": "Effekt",
+      "plants": "Dieses Plättchen ist zusätzlich {count, plural, one {# Pflanzensymbol} other {# Pflanzensymbole}} für das Pflanzen-Ruhmesplättchen wert.",
+      "third": "Das dritte Tempelplättchen",
+      "third-text": "Niemand besitzt jemals drei Tempelplättchen: In dem Moment, in dem ein drittes genommen werden müsste, gibt es stattdessen das Sofortsieg-Plättchen und die Partie ist gewonnen."
+    },
+    "fame": {
+      "title": "Ruhmesplättchen",
+      "intro": "Die vier Ruhmesplättchen belohnen je ein Ziel. Sie sind nie sicher: Sie wandern im Lauf der Partie von einer Seite zur anderen.",
+      "objective": "Ziel",
+      "objective.7": "{count} Pflanzensymbole, gezählt auf deinen Dschungelkarten und deinen Tempelplättchen.",
+      "objective.8": "{count} Dschungelkarten in deinem Dschungel.",
+      "objective.9": "{count} Fabeltier-Plättchen vor dir.",
+      "objective.10": "{count} Reliktplättchen vor dir.",
+      "changing-hands": "Es wechselt den Besitz",
+      "changing-hands-text": "Am Ende des eigenen Zuges nimmt die aktive Seite das Plättchen, sobald sie das Ziel erreicht und mit dem aktuellen Stand gleichzieht: Gleichstand genügt, das Plättchen geht an die Seite, die es zuletzt bewiesen hat.",
+      "mine": "Du hast dieses Plättchen.",
+      "player": "{player} hat dieses Plättchen.",
+      "unclaimed": "Dieses Plättchen hat noch niemand."
+    },
+    "relic": {
+      "title": "Reliktplättchen",
+      "intro": "Die Reliktplättchen sind alle gleich. Man erhält sie über die Boni der Dschungelkarten und über bestimmte Tempelplättchen.",
+      "fame": "{count} Reliktplättchen bringen dir das Relikt-Ruhmesplättchen."
+    },
+    "legendary-animal": {
+      "title": "Fabeltier-Plättchen",
+      "intro": "Die neun Fabeltier-Plättchen sind alle verschieden. Jedes gehört zu einer bestimmten Dschungelkarte: Der Tierbonus dieser Karte bringt es dir ein.",
+      "fame": "{count} Fabeltier-Plättchen bringen dir das Fabeltier-Ruhmesplättchen."
+    },
+    "instant-victory": {
+      "title": "Sofortsieg-Plättchen",
+      "intro": "Dieses einzigartige Plättchen ersetzt ein drittes Tempelplättchen: Wer ein drittes nehmen müsste, erhält es und <0>gewinnt sofort die Partie</0>.",
+      "other-end": "Das ist einer der beiden Wege zum Sieg. Der andere ist, zu Beginn des eigenen Zuges {total} Plättchen vor sich liegen zu haben."
+    },
+    "archaeologist": {
+      "title": "Archäologe",
+      "intro": "Jede Seite verfügt über 7 Archäologen. Sie warten im Basislager und brechen auf, um die eigenen Dschungelkarten zu erkunden.",
+      "moving": "Sie vorrücken lassen",
+      "send": "Einen Archäologen schicken: Er zieht auf eine Dschungelkarte deiner Wahl, vom Basislager oder von einer anderen Karte.",
+      "move": "Einen Archäologen bewegen: Er rückt jeweils nur eine einzige Karte vor oder zurück, wobei das Basislager als die Karte vor der ersten gilt.",
+      "dig-site": "Die Felder",
+      "dig-site-text": "Ein Archäologe besetzt zuerst ein auf der Karte abgedrucktes Feld; sind alle Felder belegt, sammeln sich die weiteren in der Mitte der Karte. Nur wer ein Feld besetzt, ermöglicht den Bau einer Ausgrabungsstätte — und kehrt dann ins Basislager zurück.",
+      "place.camp": "Im Basislager.",
+      "place.slot": "Auf einem abgedruckten Feld einer Dschungelkarte.",
+      "place.extra": "In der Mitte einer Dschungelkarte, ohne Feld: Entweder waren alle Felder belegt, oder die Karte ist abgeschlossen und hat keine mehr.",
+      "at-camp.mine": " {count, plural, =0 {Keiner deiner Archäologen wartet im Basislager.} one {# deiner Archäologen wartet noch im Basislager.} other {# deiner Archäologen warten noch im Basislager.}}",
+      "at-camp": " {count, plural, =0 {Kein Archäologe von {player} wartet im Basislager.} one {# Archäologe von {player} wartet noch im Basislager.} other {# Archäologen von {player} warten noch im Basislager.}}"
+    },
+    "dig-site": {
+      "title": "Ausgrabungsstätte",
+      "intro": "Eine Ausgrabungsstätte zu bauen ist <0>eine vollwertige Zugaktion</0>: Sie kostet keine Karte, nimmt aber deinen ganzen Zug in Anspruch.",
+      "building": "Sie bauen",
+      "requirement": "Alle Archäologenfelder der Dschungelkarte müssen besetzt sein.",
+      "archaeologists-return": "Die Archäologen, die diese Felder besetzt haben, kehren ins Basislager zurück; die in der Mitte der Karte versammelten bleiben dort.",
+      "bonus": "Die Ausgrabungsstätte wird auf das Feld des Ausgrabungsbonus der Karte gelegt und bringt dir dessen Inhalt ein. Sie verlässt die Karte nicht mehr."
+    },
+    "animal": {
+      "title": "Tierfigur",
+      "intro": "Tierfiguren werden auf die freien Tierfelder deiner eigenen Dschungelkarten gesetzt, in beliebiger Reihenfolge.",
+      "bonus": "Der Tierbonus",
+      "filling": "Sobald alle Tierfelder einer Karte besetzt sind, erhältst du ihren Tierbonus.",
+      "returned": "Eine Figur rutscht dann auf das Bonusfeld, um dies festzuhalten, die anderen kehren in den Vorrat zurück.",
+      "exploration": "Zusammen mit dem Ausgrabungsbonus derselben Karte schaltet er den Erkundungsbonus frei, und die Karte wird auf ihre abgeschlossene Seite gedreht."
+    },
+    "gold": {
+      "title": "Goldmünzen",
+      "intro": "Gold dient nur einem Zweck: <0>Dschungelkarten kaufen</0>. Eine Karte, deren einzige Belohnung ein Kauf ist, den du nicht bezahlen kannst, ist nicht spielbar.",
+      "earning": "Gold verdienen",
+      "from-cards": "Expeditionsleiter-Karten, die Goldmünzen-Fähigkeit des Basislagers und manche Boni von Dschungelkarten bringen Gold ein.",
+      "from-moves": "Archäologen-Bewegungen, die mit einer Münze vermerkt sind, können auf deinem Basislager stattdessen eins zu eins als Gold genommen werden.",
+      "denominations": "Die Münzen haben den Wert 1 oder 3: Das Wechseln wird für dich erledigt, du musst nie wählen, welche du ausgibst.",
+      "mine": "Du hast {gold, plural, one {# Goldmünze} other {# Goldmünzen}}.",
+      "player": "{player} hat {gold, plural, one {# Goldmünze} other {# Goldmünzen}}.",
+      "reserve": "Im allgemeinen Vorrat, der als unerschöpflich gilt."
+    }
+  },
+  "tutorial": {
+    "welcome": "Willkommen im Tutorial von <b>Aurealis</b>!",
+    "theme": "In Aurealis führst du eine Expedition in einen unerforschten Dschungel. Du wirbst <b>Abenteurer</b> an und schickst deine <b>Archäologen</b> los, um das Gelände zu erkunden. Auf der anderen Seite führt dein Gegenüber die rivalisierende Expedition!",
+    "tiles": "Bei deinen Entdeckungen kannst du diese <b>Plättchen</b> gewinnen. Wer zuerst <b>7</b> davon zu Beginn des eigenen Zuges vor sich liegen hat, gewinnt das Spiel.",
+    "jungle": "Hier ist dein <b>Basislager</b> und deine erste <b>Dschungelkarte</b>.",
+    "hand": "Und hier ist deine Hand mit <b>Abenteurerkarten</b>! In deinem Zug spielst du meistens eine Abenteurerkarte.",
+    "types": {
+      "intro": "Es gibt 4 Typen von Abenteurerkarten:",
+      "leader": "<leader/> <b>Expeditionsleiter</b> bringen Goldmünzen <gold/> ein, um die Expedition zu finanzieren.",
+      "naturalist": "<naturalist/> <b>Naturforscher</b> beobachten die Tiere und erlauben es, Tierfiguren <animal/> auf deine Dschungelkarten zu setzen.",
+      "explorer": "<explorer/> <b>Entdecker</b> erlauben es, Dschungelkarten zu kaufen und deinem Spiel hinzuzufügen.",
+      "archaeologist": "<digger/> <b>Archäologen</b> erlauben es, deine Archäologenfiguren <archaeologist/> von einer Dschungelkarte zur nächsten zu bewegen."
+    },
+    "river": "Im gemeinsamen Bereich liegen 5 Abenteurerkarten verdeckt aus: Sie bilden die <b>Auslage</b>. Die Rückseite der Abenteurerkarten zeigt den <b>Haupttyp</b> der Karte und einen <b>Nebentyp</b>, der ihre Effekte ankündigt.",
+    "opponent-hand": "Auch dein Gegenüber hat 5 Abenteurerkarten auf der Hand, von denen du nur die Rückseiten siehst.",
+    "conditions": "Jede Abenteurerkarte trägt links <b>Bedingungen</b> und rechts <b>Effekte</b>. Die Bedingungen hängen oft von den Karten der Auslage und von der Hand deines Gegenübers ab!",
+    "play-leader": "Zum Beispiel bringt dir dieser <b>Expeditionsleiter</b> <leader/> gerade <b>7</b> Goldmünzen <gold/> ein. Klicke darauf, um zu erfahren warum, und spiele ihn dann.",
+    "gold": "Als Startspieler hast du die Partie mit 3 <gold/> begonnen: Jetzt hast du <b>10</b>. Dein Gegenüber, an zweiter Position, hat 4. Gold dient nur einem Zweck: neue Dschungelkarten kaufen, dank der Entdecker <explorer/>.",
+    "refill": "Am Ende deines Zuges füllst du deine Hand aus der Auslage wieder auf 5 Karten auf. Nimm diese hier.",
+    "opponent-turn": "Jetzt ist dein Gegenüber am Zug.",
+    "opponent-card": "Dein Gegenüber hat diese Abenteurerkarte gespielt und hatte <b>2 Naturforscher</b> <naturalist/> auf der Hand: Es dürfen also <b>2 Tierfiguren</b> <animal/> auf die eigenen Dschungelkarten gesetzt werden.",
+    "animal-spaces": "Die Tierfiguren werden auf diese Felder gesetzt, entlang des rechten Randes der Dschungelkarten. An zweiter Position hatte dein Gegenüber schon zu Beginn eine davon.",
+    "animal-column": "Ist die Spalte vollständig, rutscht eine Tierfigur an ihr unteres Ende, die anderen kehren in den Vorrat zurück, und der zugehörige Bonus wird gewonnen.",
+    "legendary-animal": "Hier ist dieser Bonus das <b>Fabeltier-Plättchen</b> der Karte. Ein erstes Plättchen für dein Gegenüber.",
+    "play-explorer": "Du bist dran. Spiele diesen <b>Entdecker</b> <explorer/>: Damit kannst du eine Dschungelkarte für <b>3</b> <gold/> kaufen.",
+    "jungle-market": "Hier ist der gemeinsame Markt für Dschungelkarten. Nimm die Karte deiner Wahl: Sie wird rechts an deinen Dschungel angelegt.",
+    "refill-2": "Nimm jetzt die Karte deiner Wahl, um deine Hand aufzufüllen.",
+    "opponent-archaeologist": "Dein Gegenüber hat diesen <b>Archäologen</b> <digger/> gespielt und kann die eigenen Archäologenfiguren <archaeologist/> nun <b>4-mal</b> bewegen.",
+    "archaeologist-pawns": "Jede Seite verfügt über 7 Archäologenfiguren <archaeologist/>, die im eigenen Basislager warten. Da du begonnen hast, hatte dein Gegenüber schon eine auf dem ersten Dschungel.",
+    "moves": "Jede Bewegung bringt 1 Archäologen auf eine benachbarte Dschungelkarte. Je weiter ein Dschungel entfernt ist, desto schwieriger ist er zu erreichen!",
+    "base-camp": {
+      "intro": "Du bist dran. In deinem Zug kannst du statt einer Abenteurerkarte auch eine <b>Basislager-Aktion</b> ausführen:",
+      "gold": "3 <gold/> erhalten;",
+      "animal": "1 Tierfigur <animal/> erhalten;",
+      "moves": "3 Archäologen-Bewegungen <archaeologist/> erhalten;",
+      "jungle": "eine Dschungelkarte für 7 <gold/> kaufen."
+    },
+    "improved-power": "Jedes Basislager hat zusätzlich eine <b>verbesserte Fähigkeit</b>: Deine kauft eine Dschungelkarte für <b>5</b> <gold/> statt 7. Nutze sie.",
+    "base-camp-discard": "Eine Basislager-Aktion kostet <b>3 Abenteurerkarten</b>, die du von deiner Hand ablegst. Das ist auch sehr praktisch, um eine schlechte Hand zu erneuern! Lege 3 Karten deiner Wahl ab.",
+    "base-camp-buy": "Kaufe jetzt die Dschungelkarte deiner Wahl.",
+    "base-camp-flip": "Dein Basislager ist umgedreht: Seine verbesserte Fähigkeit ist <b>einmalig</b>.",
+    "fame-tiles": "Hier sind die 4 <b>Ruhmesplättchen</b>. Sobald du die darauf angegebene Bedingung erfüllst, nimmst du es.",
+    "fame-jungle": "Dieses hier erhält man mit <b>3 Dschungelkarten</b>: Du hast gerade die dritte ausgelegt und wirst es dir also holen.",
+    "fame-warning": "Aber Vorsicht! Im eigenen Zug kann dein Gegenüber ein vor dir liegendes Ruhmesplättchen zurückholen, sobald es dich beim Ziel <b>einholt oder übertrifft</b>.",
+    "refill-3": "Fülle deine Hand auf, indem du die Abenteurerkarten deiner Wahl nimmst.",
+    "dig-site": "Wenn alle Archäologenfelder einer Dschungelkarte besetzt sind, kann dort eine <b>Ausgrabungsstätte</b> gebaut werden. Das ist eine vollwertige Zugaktion.",
+    "dig-site-return": "Nach dem Bau kehren die Archäologen, die die Felder besetzt haben, ins Basislager zurück. Die anderen, die auf der Karte durchreisen, bleiben dort.",
+    "exploration": "Wenn die Ausgrabungsstätte <b>und</b> der Tierbonus einer Dschungelkarte beide erfüllt sind, wird der mittlere Bonus gewonnen und die Karte auf ihre abgeschlossene Seite gedreht. Dein Gegenüber erhält also ein <b>Reliktplättchen</b> und 3 <gold/>.",
+    "my-temple": "Auf deiner ersten Dschungelkarte ist dieser mittlere Bonus ein <b>Tempelplättchen</b>.",
+    "temple-tiles": "Wenn du ein Tempelplättchen gewinnst, nimmst du das Plättchen deiner Wahl aus den 4 im Spiel und wendest seinen Effekt sofort an.",
+    "temple-tiles-hint": "Klicke auf die Plättchen, um ihren Effekt zu erfahren.",
+    "victory": "Du kannst auf 2 Arten gewinnen: <b>7 Plättchen</b> zu Beginn deines Zuges vor dir haben oder dein <b>3. Tempelplättchen</b> erhalten, was ein Sofortsieg ist!",
+    "good-luck": "Jetzt bist du dran, viel Glück!"
+  }
+}
