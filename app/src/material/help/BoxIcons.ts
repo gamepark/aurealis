@@ -67,6 +67,7 @@ import moveOrGold6 from '../../images/icons/effects/MoveOrGold6.png'
 import moveOrGold9 from '../../images/icons/effects/MoveOrGold9.png'
 import relicTile from '../../images/icons/effects/RelicTile.png'
 import sendArchaeologists from '../../images/icons/effects/SendArchaeologists.png'
+import slash from '../../images/icons/effects/Slash.png'
 import templeTile from '../../images/icons/effects/TempleTile.png'
 import legendaryAnimal1 from '../../images/tiles/LegendaryAnimal1.jpg'
 import legendaryAnimal2 from '../../images/tiles/LegendaryAnimal2.jpg'
@@ -177,7 +178,8 @@ const legendaryAnimalIcons: Record<LegendaryAnimal, string> = {
 
 /**
  * The drawing of a gain. A slash on a card is two gains and two icons, which is how the card sets
- * them out — the choice is between the drawings as much as between the sentences.
+ * them out — the choice is between the drawings as much as between the sentences, and the slash the
+ * card prints between them is an icon of the box like any other.
  */
 export const getEffectIcons = (effect: Effect): string[] => {
   switch (effect.type) {
@@ -202,8 +204,12 @@ export const getEffectIcons = (effect: Effect): string[] => {
       return [templeTile]
     case EffectType.LegendaryAnimalTile:
       return [legendaryAnimalIcons[effect.animal]]
-    case EffectType.Choice:
-      return effect.options.flatMap(getEffectIcons)
+    case EffectType.Choice: {
+      // The slash goes between the drawings, exactly where the card prints it. Options that draw
+      // nothing are dropped first, so a slash never ends up hanging on its own.
+      const drawnOptions = effect.options.map(getEffectIcons).filter((icons) => icons.length > 0)
+      return drawnOptions.flatMap((icons, index) => (index > 0 ? [slash, ...icons] : icons))
+    }
     // Printed on no card, so drawn nowhere: a bonus waiting its turn in the queue, and the Camp de
     // base turning over.
     case EffectType.JungleDue:
