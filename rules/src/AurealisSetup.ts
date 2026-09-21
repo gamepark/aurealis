@@ -7,7 +7,7 @@ import { adventurers, getAdventurerId } from './material/Adventurer'
 import { BaseCamp, baseCamps } from './material/BaseCamp'
 import { coins } from './material/Coin'
 import { fames } from './material/Fame'
-import { jungles } from './material/Jungle'
+import { getAnimalSpaces, Jungle, jungles } from './material/Jungle'
 import { legendaryAnimals } from './material/LegendaryAnimal'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
@@ -126,9 +126,15 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
    * Playing second is compensated with one more gold (above) and a head start on the board: an
    * Archaeologist already stands on the first Jungle card, and an Animal pawn is on its first Animal
    * space (rulebook p.3).
+   *
+   * On a card with a single Animal space (Jungles 1, 11 and 20), that pawn fills the column: the
+   * Bonus Animal is obtained on the spot, and the pawn is laid straight on the bonus space, where it
+   * records it — otherwise nothing would ever claim it, the card being full, and the Bonus Exploration
+   * could never come. The Bonus Animal of those three cards is empty, so nothing else is owed.
    */
   setupSecondPlayerHeadStart(player: number) {
-    const parent = this.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player).getIndex()
+    const card = this.material(MaterialType.JungleCard).location(LocationType.PlayerJungle).player(player)
+    const parent = card.getIndex()
     // The 7 pawns of a Camp de base are 7 items, each with a spot of its own on the card: one leaves.
     this.material(MaterialType.ArchaeologistPawn)
       .location(LocationType.BaseCampArchaeologists)
@@ -136,7 +142,10 @@ export class AurealisSetup extends MaterialGameSetup<number, MaterialType, Locat
       .limit(1)
       .moveItem({ type: LocationType.JungleArchaeologistSpace, parent, x: 0 })
     // The Animal pawn comes from the inexhaustible supply, which holds no item: it is born on the card.
-    this.material(MaterialType.AnimalPawn).createItem({ location: { type: LocationType.JungleAnimalSpace, parent, x: 0 } })
+    const animalBonus = getAnimalSpaces(card.getItem<Jungle>()!.id) === 1
+    this.material(MaterialType.AnimalPawn).createItem({
+      location: animalBonus ? { type: LocationType.JungleAnimalBonus, parent } : { type: LocationType.JungleAnimalSpace, parent, x: 0 }
+    })
   }
 
   start() {
