@@ -308,7 +308,12 @@ class JungleCardDescription extends CardDescription<number, MaterialType, Locati
       case RuleId.SendArchaeologists: {
         const actions: ItemMenuAction[] = []
         const selected = rules.remind<number | undefined>(Memory.SelectedArchaeologist)
-        if (pawn !== undefined) {
+        // The pick is played locally and is absent from the legal moves, so nothing but the moves of the
+        // pawn itself says whether this screen may pick it: an opponent watching, or a pawn with nowhere
+        // to go, has none.
+        const sendable =
+          pawn !== undefined && legalMoves.some((move) => isMoveItemType(MaterialType.ArchaeologistPawn)(move) && move.itemIndex === pawn)
+        if (sendable) {
           actions.push({
             move: rules.customMove(CustomMoveType.SelectArchaeologist, pawn),
             options: { local: true },
