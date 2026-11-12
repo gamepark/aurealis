@@ -96,6 +96,13 @@ Every game element is an item with a location:
 7. **Add Headers** - Display game text
 8. **Test** - Use `game.new()`, `game.view`, `game.legalMoves` in browser console
 
+## Lint
+
+After changing code, run `yarn lint` at the root alongside the `tsc` check — once per batch of
+changes. It runs **oxlint** (config in `.oxlintrc.json`) and catches what `tsc` cannot, chiefly the
+React hooks rules in `app/` (`rules-of-hooks`, `exhaustive-deps`). Fix its warnings rather than
+silencing them; a disable comment needs a reason.
+
 ## Console Commands (browser)
 
 ```javascript
@@ -125,6 +132,11 @@ getPlayerMoves() {
     .moveItems({ type: LocationType.PlayArea })
 }
 ```
+
+### Filter the Material, never loop over indexes
+Keep selections as `Material` (`filter((item, index) => …)`, `id(predicate)`…) and call `moveItems` on
+the result; never `getIndexes().map(i => this.material(X).index(i)…)`. Helpers return `Material`, not
+`number[]`. See `features/item-moves.md#filter-items`.
 
 ### Consequences
 ```typescript
@@ -189,6 +201,16 @@ Three things do **not** belong in it:
 
 Read `features/game-options.md` before changing this file — the shape is precise and the platform
 depends on it. Never reintroduce a v1 `OptionsSpec`.
+
+## Backward Compatibility
+
+Saved games store enum values as numbers (`MaterialType`, `LocationType`, `RuleId`, `Memory`, ids…).
+Check the `version` in `rules/package.json`:
+
+- **Below 1.0.0**: the game is not in production. Consistency of the code comes before stable enum
+  values: put a new value where it belongs, renumber freely, rename and restructure.
+- **1.0.0 or above**: backward compatibility wins. Never shift existing values: append new ones at
+  the end, and keep every game already started playable.
 
 ## When Helping
 

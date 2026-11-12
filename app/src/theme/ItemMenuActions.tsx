@@ -64,7 +64,7 @@ export const ItemMenuActions = ({ actions, y = 0, step = 2.4 }: Props) => {
           options={action.options}
           label={action.label}
           highlight={action.highlight}
-          title={t(action.title, action.titleValues)!}
+          title={t(action.title, action.titleValues ?? {})!}
         >
           <FontAwesomeIcon icon={action.icon} css={action.rotation !== undefined && rotated(action.rotation)} />
         </AurealisMenuButton>
